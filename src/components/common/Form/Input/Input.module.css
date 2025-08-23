@@ -1,0 +1,27 @@
+.inputWrapper {
+}
+
+.label {
+    display: flex;
+}
+
+.field {
+    width: 100%;
+    font-size: 16px;
+    font-family: inherit;
+    padding: 10px;
+    border: 1px solid #1e1e1b;
+    border-radius: 4px;
+    transition: all 300ms ease;
+}
+
+.field::placeholder {
+    opacity: 0.5;
+    color: inherit;
+}
+
+.field:active,
+.field:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 1px #9f0004 inset;
+}

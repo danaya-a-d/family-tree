@@ -1,0 +1,7 @@
+.text {
+    position: relative;
+    margin: 0;
+    font-size: 24px;
+    color: inherit;
+    z-index: 2;
+}

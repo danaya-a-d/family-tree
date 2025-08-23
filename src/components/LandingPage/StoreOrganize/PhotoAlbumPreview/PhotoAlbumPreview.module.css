@@ -1,0 +1,35 @@
+.photoAlbumPreview {
+}
+
+.list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+}
+
+.item {
+}
+
+.item:nth-child(1),
+.item:nth-child(2) {
+    margin-left: 110px;
+    width: calc(50% - 140px);
+}
+
+.item:nth-child(3),
+.item:nth-child(4),
+.item:nth-child(5),
+.item:nth-child(6) {
+    width: calc(25% - 30px);
+}
+
+.photo {
+    display: block;
+    height: 200px;
+    width: auto;
+    max-width: 410px;
+    object-fit: cover;
+}

@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "target": "ES2021",
+        "module": "ESNext",
+        "lib": ["DOM", "DOM.Iterable", "ES2021"],
+        "jsx": "react-jsx",
+        "moduleResolution": "node",
+        "strict": false, // можно начать мягко, потом включить true
+        "allowJs": true, // ✅ оставляем .js рядом с .tsx
+        "checkJs": false, // не проверяем .js строгим TS
+        "noEmit": true, // CRA не ждёт артефактов компиляции
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true
+    },
+    "include": ["src"]
+}

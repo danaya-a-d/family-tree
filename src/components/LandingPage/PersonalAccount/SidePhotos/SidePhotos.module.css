@@ -1,0 +1,28 @@
+.photoWrapper,
+.photoWrapperLeft {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 30px;
+    bottom: -72px;
+}
+
+.photoWrapper {
+    left: calc(100% - 32px);
+}
+
+.photoWrapperLeft {
+    right: calc(100% - 32px);
+    transform: scaleX(-1);
+}
+
+.photo {
+    object-fit: cover;
+    height: 200px;
+    width: auto;
+}
+
+.photo:first-child {
+    margin-left: 110px;
+}

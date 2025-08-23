@@ -1,0 +1,113 @@
+.personalAccount {
+    position: relative;
+    padding-top: 237px;
+    padding-bottom: 210px;
+    background-image: url('../../../assets/img/background-figure-2.png');
+    background-repeat: repeat-x;
+    background-size: inherit;
+    z-index: 1;
+}
+
+.personalAccount::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: white;
+    mask-image: linear-gradient(
+        to bottom,
+        rgba(217, 217, 217, 1) 12%,
+        rgba(217, 217, 217, 0.5) 51%,
+        rgba(217, 217, 217, 0.5) 61%,
+        rgba(217, 217, 217, 1) 84%
+    );
+    z-index: 1;
+}
+
+.wrapper {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: content-box;
+    width: 100%;
+    max-width: 1292px;
+    margin: 0 auto;
+    padding-right: 32px;
+    padding-left: 32px;
+}
+
+.container {
+    position: relative;
+    width: 100%;
+    z-index: 2;
+}
+
+.textBlock,
+.textBlockReverse {
+    position: relative;
+    max-width: 684px;
+}
+
+.textBlock {
+    margin-left: -376px;
+}
+
+.textBlockReverse {
+    margin-right: -376px;
+}
+
+.textBlock::before,
+.textBlockReverse::before {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 598px;
+    height: 488px;
+    background-color: white;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.textBlock::before {
+    top: -110px;
+    left: -75px;
+    transform: rotate(-18deg);
+}
+
+.textBlockReverse::before {
+    top: -80px;
+    right: -93px;
+    transform: rotate(-16deg);
+}
+
+.textBlock::after,
+.textBlockReverse::after {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 598px;
+    height: 488px;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: 28px 0px 93px 85px rgb(255, 255, 255);
+    z-index: -1;
+}
+
+.textBlock::after {
+    top: -110px;
+    left: -75px;
+    transform: rotate(-18deg);
+}
+
+.textBlockReverse::after {
+    top: -80px;
+    right: -93px;
+    transform: rotate(-16deg);
+}
+
+.about {
+    max-width: 630px;
+}

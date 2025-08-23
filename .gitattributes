@@ -1,0 +1,13 @@
+# Всегда нормализуем текстовые файлы к LF (и в репо, и в рабочей копии)
+* text=auto eol=lf
+
+# Бинарники не трогаем
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+*.ttf binary

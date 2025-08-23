@@ -1,0 +1,11 @@
+.textBlock {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.textRight {
+    text-align: right;
+    align-items: end;
+}
