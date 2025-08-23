@@ -1,0 +1,127 @@
+.inputWrapper {
+    height: 100%;
+}
+
+.inputContainer {
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+    height: 100%;
+    width: 100%;
+}
+
+.inputHolder {
+    /*display: flex;*/
+    /*align-items: start;*/
+    /*flex-wrap: wrap;*/
+    /*gap: 10px 8px;*/
+    width: 100%;
+    font-size: 16px;
+    font-family: inherit;
+    font-weight: normal;
+    padding: 10px;
+    border: 1px solid #1e1e1b;
+    border-radius: 4px;
+    transition: all 300ms ease;
+}
+
+.tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(159, 0, 4, 0.1);
+    padding: 0 5px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    margin-right: 8px;
+}
+
+.symbol {
+    opacity: 0.6;
+}
+
+.close {
+    display: block;
+    margin-left: 5px;
+    margin-bottom: -1px;
+    width: 10px;
+    height: 10px;
+    border: 0;
+    font-size: 0;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 300ms ease;
+    background-color: transparent;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: url('data:image/svg+xml,%3Csvg%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M2.29519%2029.705C2.38806%2029.798%202.49835%2029.8717%202.61975%2029.9221C2.74114%2029.9724%202.87127%2029.9983%203.00269%2029.9983C3.1341%2029.9983%203.26423%2029.9724%203.38563%2029.9221C3.50703%2029.8717%203.61731%2029.798%203.71019%2029.705L16.0002%2017.415L28.2952%2029.705C28.4828%2029.8926%2028.7373%2029.9981%2029.0027%2029.9981C29.2681%2029.9981%2029.5225%2029.8926%2029.7102%2029.705C29.8978%2029.5174%2030.0032%2029.2629%2030.0032%2028.9975C30.0032%2028.7321%2029.8978%2028.4776%2029.7102%2028.29L17.4152%2016L29.7052%203.705C29.8928%203.51736%2029.9982%203.26287%2029.9982%202.9975C29.9982%202.73214%2029.8928%202.47764%2029.7052%202.29C29.5175%202.10236%2029.2631%201.99695%2028.9977%201.99695C28.7323%201.99695%2028.4778%202.10236%2028.2902%202.29L16.0002%2014.585L3.70519%202.295C3.51389%202.13118%203.26781%202.04557%203.01613%202.05529C2.76446%202.06501%202.52572%202.16935%202.34762%202.34744C2.16953%202.52554%202.0652%202.76427%202.05548%203.01595C2.04575%203.26763%202.13136%203.5137%202.29519%203.705L14.5852%2016L2.29519%2028.295C2.10894%2028.4824%202.00439%2028.7358%202.00439%2029C2.00439%2029.2642%202.10894%2029.5176%202.29519%2029.705Z%22%20fill%3D%22black%22%2F%3E%3C%2Fsvg%3E');
+    opacity: 0.3;
+}
+
+.close:hover,
+.close:focus {
+    filter: brightness(0) saturate(100%) invert(9%) sepia(62%) saturate(6681%) hue-rotate(352deg) brightness(102%)
+        contrast(111%);
+    opacity: 1;
+}
+
+.label {
+    position: relative;
+    display: inline-block;
+}
+
+.label::before {
+    content: '#';
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #1e1e1b;
+    pointer-events: none;
+    font-size: 16px;
+    opacity: 0.6;
+    transition: all 300ms ease;
+}
+
+.label:focus-within::before {
+    opacity: 1;
+    color: #9f0004;
+}
+
+.mirror {
+    position: absolute;
+    visibility: hidden;
+    white-space: pre;
+    font: inherit;
+    padding: 3px 5px;
+    pointer-events: none;
+}
+
+.field {
+    display: inline-block;
+    min-width: 35px;
+    max-width: 250px;
+    padding: 3px 5px;
+    padding-left: 16px;
+    border-radius: 6px;
+    font-size: inherit;
+    font-family: inherit;
+    font-weight: inherit;
+    border: none;
+    background-color: rgba(30, 30, 27, 0.03);
+    transition:
+        all 300ms ease,
+        width cubic-bezier(0, 1, 0, 1);
+}
+
+.field::placeholder {
+    opacity: 0.5;
+    color: inherit;
+}
+
+.field:active,
+.field:focus {
+    outline: none;
+    background-color: rgba(159, 0, 4, 0.05);
+}

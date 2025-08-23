@@ -1,0 +1,22 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Header from './components/common/Header/Header';
+import LandingPage from './pages/LandingPage/LandingPage';
+import PhotoAlbumPage from './pages/PhotoAlbumPage/PhotoAlbumPage';
+import FamilyTreePage from './pages/FamilyTreePage/FamilyTreePage';
+import Footer from './components/common/Footer/Footer';
+
+const App = () => {
+    return (
+        <Router>
+            <Header />
+            <Routes>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/photo-album" element={<PhotoAlbumPage />} />
+                <Route path="/family-tree" element={<FamilyTreePage />} />
+            </Routes>
+            <Footer />
+        </Router>
+    );
+};
+
+export default App;

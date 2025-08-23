@@ -1,0 +1,7 @@
+.photo {
+    display: block;
+    height: 300px;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}

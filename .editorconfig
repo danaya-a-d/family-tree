@@ -1,0 +1,14 @@
+# .editorconfig ─ корень проекта
+root = true            # говорит IDE: не искать другие .editorconfig выше
+
+[*]                    # правила по умолчанию для всех файлов
+end_of_line = lf       # перевод строки  ➜  \n
+insert_final_newline = true
+charset = utf-8
+indent_style = space
+indent_size  = 4
+trim_trailing_whitespace = true
+
+[*.md]                 # только Markdown
+trim_trailing_whitespace = false  # не удаляем пробелы в конце, чтобы не ломать списки
+ф

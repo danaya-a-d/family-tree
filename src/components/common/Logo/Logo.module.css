@@ -1,0 +1,11 @@
+.logo {
+    display: block;
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+}
+
+.logoLink {
+    height: 60px;
+    width: 120px;
+}

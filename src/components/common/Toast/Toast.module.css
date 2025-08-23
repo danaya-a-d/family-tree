@@ -1,0 +1,87 @@
+.toast {
+    position: relative;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transform: translateY(-15px);
+    transition:
+        all 300ms ease,
+        max-height 500ms cubic-bezier(0, 1, 0, 1);
+    margin-bottom: 15px;
+}
+
+.content {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 16px;
+    padding: 10px 20px;
+    padding-left: 45px;
+    border: 1px solid #1e1e1b;
+    background-color: rgba(159, 0, 4, 0.1);
+    backdrop-filter: blur(15px);
+    border-radius: 4px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.14);
+}
+
+.content::before {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 25px;
+    height: 25px;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 374 374'><g><path fill='%23970004' d='M187,75.7c-17.4,0-31.5,14.1-31.5,31.5v79.5c0,17.4,14.1,31.5,31.5,31.5s31.5-14.1,31.5-31.5v-79.5C218.5,89.8,204.4,75.8,187,75.7z M204.5,186.7c0,9.7-7.8,17.5-17.5,17.5c-9.6,0-17.5-7.8-17.5-17.5v-79.5c0-9.7,7.8-17.5,17.5-17.5c9.6,0,17.5,7.8,17.5,17.5V186.7z M187,235.3c-17.4,0-31.5,14.1-31.5,31.5c0,17.4,14.1,31.5,31.5,31.5s31.5-14.1,31.5-31.5C218.5,249.4,204.4,235.3,187,235.3z M187,284.3c-9.7,0-17.5-7.8-17.5-17.5c0-9.7,7.8-17.5,17.5-17.5s17.5,7.8,17.5,17.5C204.5,276.4,196.6,284.2,187,284.3z'/><path fill='currentColor' d='M187,0C83.7,0,0,83.7,0,187s83.7,187,187,187s187-83.7,187-187C373.9,83.8,290.2,0.1,187,0z M187,360c-95.5,0-173-77.5-173-173S91.5,14,187,14s173,77.5,173,173C359.9,282.5,282.5,359.9,187,360z'/></g></svg>");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.title {
+    margin: 0;
+    cursor: default;
+}
+
+.close {
+    display: block;
+    margin-left: auto;
+    width: 20px;
+    height: 20px;
+    border: 0;
+    font-size: 0;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 300ms ease;
+    background-color: transparent;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: url('data:image/svg+xml,%3Csvg%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M2.29519%2029.705C2.38806%2029.798%202.49835%2029.8717%202.61975%2029.9221C2.74114%2029.9724%202.87127%2029.9983%203.00269%2029.9983C3.1341%2029.9983%203.26423%2029.9724%203.38563%2029.9221C3.50703%2029.8717%203.61731%2029.798%203.71019%2029.705L16.0002%2017.415L28.2952%2029.705C28.4828%2029.8926%2028.7373%2029.9981%2029.0027%2029.9981C29.2681%2029.9981%2029.5225%2029.8926%2029.7102%2029.705C29.8978%2029.5174%2030.0032%2029.2629%2030.0032%2028.9975C30.0032%2028.7321%2029.8978%2028.4776%2029.7102%2028.29L17.4152%2016L29.7052%203.705C29.8928%203.51736%2029.9982%203.26287%2029.9982%202.9975C29.9982%202.73214%2029.8928%202.47764%2029.7052%202.29C29.5175%202.10236%2029.2631%201.99695%2028.9977%201.99695C28.7323%201.99695%2028.4778%202.10236%2028.2902%202.29L16.0002%2014.585L3.70519%202.295C3.51389%202.13118%203.26781%202.04557%203.01613%202.05529C2.76446%202.06501%202.52572%202.16935%202.34762%202.34744C2.16953%202.52554%202.0652%202.76427%202.05548%203.01595C2.04575%203.26763%202.13136%203.5137%202.29519%203.705L14.5852%2016L2.29519%2028.295C2.10894%2028.4824%202.00439%2028.7358%202.00439%2029C2.00439%2029.2642%202.10894%2029.5176%202.29519%2029.705Z%22%20fill%3D%22black%22%2F%3E%3C%2Fsvg%3E');
+}
+
+.close:hover,
+.close:focus {
+    filter: brightness(0) saturate(100%) invert(9%) sepia(62%) saturate(6681%) hue-rotate(352deg) brightness(102%)
+        contrast(111%);
+}
+
+.toast.show {
+    opacity: 1;
+    transition:
+        all 300ms ease,
+        max-height 1000ms cubic-bezier(0, 1, 0, 1);
+    max-height: 1000px;
+    transform: translateY(0);
+}
+
+.toast.hide {
+    max-height: 0;
+    transition:
+        all 300ms ease,
+        max-height 500ms cubic-bezier(0, 1, 0, 1);
+    opacity: 0;
+    margin-bottom: 0;
+}

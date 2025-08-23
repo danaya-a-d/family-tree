@@ -1,0 +1,27 @@
+.form {
+    display: grid;
+    grid-gap: 20px 24px;
+}
+
+.input-title {
+    grid-area: title;
+}
+
+.input-tags {
+    grid-area: tags;
+}
+
+.input-photo {
+    grid-area: photo;
+}
+
+.buttons {
+    display: flex;
+    gap: 16px;
+    margin-top: 20px;
+    grid-area: buttons;
+}
+
+.buttons > *:nth-child(3) {
+    margin-left: auto;
+}
