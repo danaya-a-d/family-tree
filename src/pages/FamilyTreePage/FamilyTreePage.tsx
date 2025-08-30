@@ -1,4 +1,4 @@
-import styles from './FamilyTreePage.css';
+import styles from './FamilyTreePage.module.css';
 
 const FamilyTreePage = () => {
     return <div className={styles.familyTreePage}>FamilyTreePage</div>;

@@ -25,15 +25,15 @@ interface FormProps {
 }
 
 const Form = ({
-                  initialValues,
-                  fields,
-                  buttons,
-                  onSubmit,
-                  formLayout,
-                  formColumns,
-                  formRows,
-                  className,
-              }: FormProps) => {
+    initialValues,
+    fields,
+    buttons,
+    onSubmit,
+    formLayout,
+    formColumns,
+    formRows,
+    className,
+}: FormProps) => {
     const { values, globalErrors, submitCount, handleChange, handleSubmit, setCustomValue } = useForm({
         initialValues,
         onSubmit,
