@@ -1,8 +1,8 @@
-import type { RootState, AppDispatch } from '../../app/store';
+import type { RootState, AppDispatch } from '@/app/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { initialPhotos } from '../../mock/gallery';
+import { initialPhotos } from '@/mock/gallery';
 import { useEffect } from 'react';
-import { setPhotos } from '../../features/gallery/gallerySlice';
+import { setPhotos } from '@/features/gallery/gallerySlice';
 import Album from '../../components/PhotoAlbumPage/Album/Album';
 import styles from './PhotoAlbumPage.module.css';
 

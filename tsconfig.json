@@ -10,7 +10,9 @@
         "checkJs": false, // не проверяем .js строгим TS
         "noEmit": true, // CRA не ждёт артефактов компиляции
         "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true
+        "forceConsistentCasingInFileNames": true,
+        "baseUrl": ".",
+        "paths": { "@/*": ["src/*"] }
     },
     "include": ["src"]
 }
