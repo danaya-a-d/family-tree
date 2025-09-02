@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import galleryReducer from '../features/gallery/gallerySlice';
+import treeReducer from '../features/tree/treeSlice';
 
 export const store = configureStore({
     reducer: {
         gallery: galleryReducer,
+        tree: treeReducer,
     },
 });
 

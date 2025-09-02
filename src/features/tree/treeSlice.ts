@@ -1,8 +1,8 @@
 import { createSlice, createEntityAdapter, type PayloadAction, type EntityState } from '@reduxjs/toolkit';
 import { Person, Family, Id } from './types';
 
-const personsAdapter = createEntityAdapter<Person>({});
-const familiesAdapter = createEntityAdapter<Family>({});
+export const personsAdapter = createEntityAdapter<Person>({});
+export const familiesAdapter = createEntityAdapter<Family>({});
 
 export interface TreeState {
     persons: EntityState<Person, Id>;
@@ -161,4 +161,4 @@ export const {
     unlinkChild,
 } = treeSlice.actions;
 
-export const treeReducer = treeSlice.reducer;
+export default treeSlice.reducer;
