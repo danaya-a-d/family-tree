@@ -1,4 +1,4 @@
-import type { PhotoItem } from '../features/gallery/types';
+import type { PhotoItem } from '@/features/gallery/types';
 
 // Импорты изображений
 import preview1 from '../assets/img/album-preview-photo-1.jpg';

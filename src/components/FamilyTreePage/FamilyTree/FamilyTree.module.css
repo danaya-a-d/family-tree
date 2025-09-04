@@ -1,0 +1,17 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    box-sizing: content-box;
+    width: 100%;
+    max-width: 1292px;
+    margin: 0 auto;
+    padding-right: 32px;
+    padding-left: 32px;
+}
+
+.familyTree {
+    margin-top: 58px;
+    height: 692px;
+    width: 100%;
+    background-color: rgba(159, 0, 4, 0.15);
+}

@@ -1,4 +1,5 @@
-import type { Id, Person, Family } from '../features/tree/types';
+import type { Id, Person, Family } from '@/features/tree/types';
+import big1 from '../assets/img/album-photo-1.jpg';
 
 export const mockPersons: Person[] = [
     {
@@ -9,6 +10,7 @@ export const mockPersons: Person[] = [
         birth: { date: '1990-08-21' },
         parentInFamilies: [],
         spouseInFamilies: [],
+        photoUrl: big1,
     },
     {
         id: 'p2',
@@ -18,39 +20,44 @@ export const mockPersons: Person[] = [
         birth: { date: '1990-08-21' },
         parentInFamilies: [],
         spouseInFamilies: [],
+        photoUrl: big1,
     },
     {
         id: 'p3',
-        givenName: 'Alexandr',
+        givenName: 'Vasya',
         familyName: 'Davidenko',
         gender: 'male',
         parentInFamilies: [],
         spouseInFamilies: [],
+        photoUrl: big1,
     },
     {
         id: 'p4',
-        givenName: 'Anna',
+        givenName: 'Vera',
         familyName: 'Davidenko',
         maidenName: 'Ivanova',
         gender: 'female',
         parentInFamilies: [],
         spouseInFamilies: [],
+        photoUrl: big1,
     },
     {
         id: 'p5',
-        givenName: 'Child',
+        givenName: 'Child Oleg',
         familyName: 'Davidenko',
         gender: 'male',
         parentInFamilies: [],
         spouseInFamilies: [],
+        photoUrl: big1,
     },
     {
         id: 'p6',
-        givenName: 'Child',
+        givenName: 'Child Luba',
         familyName: 'Davidenko',
         gender: 'female',
         parentInFamilies: [],
         spouseInFamilies: [],
+        photoUrl: big1,
     },
 ];
 
