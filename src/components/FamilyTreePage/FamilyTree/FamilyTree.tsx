@@ -8,6 +8,7 @@ import Title from '@/components/common/Title/Title';
 import PersonNode from '@/features/tree/nodes/PersonNode';
 import FamilyNode from '@/features/tree/nodes/FamilyNode';
 import ChamferEdge from '@/features/tree/edges/ChamferEdge';
+import { PERSON_SIZE, FAMILY_SIZE } from '@/features/tree/constants';
 import '@xyflow/react/dist/style.css';
 import styles from './FamilyTree.module.css';
 
@@ -19,6 +20,46 @@ const FamilyTree = () => {
 
     const applyLayout = async () => {
         const posMap = await layoutWithELK(graph.nodes, edges);
+
+// Хелпер: размеры узла
+        const getSize = (id: string) => {
+            const n = graph.nodes.find(nn => nn.id === id);
+            if (!n) return { w: PERSON_SIZE.width, h: PERSON_SIZE.height };
+            if (n.type === 'family') return { w: FAMILY_SIZE.width, h: FAMILY_SIZE.height };
+            if (n.type === 'person') return { w: PERSON_SIZE.width, h: PERSON_SIZE.height };
+            return { w: n.width ?? PERSON_SIZE.width, h: n.height ?? PERSON_SIZE.height };
+        };
+
+        // 1) Центруем каждый family между супругами по X и Y (по центрам карточек)
+        for (const family of graph.nodes.filter(n => n.type === 'family')) {
+            const spouseEdges = graph.edges.filter(
+                (e) => e.target === family.id && (e.data as any)?.role === 'spouse'
+            );
+            if (spouseEdges.length === 2) {
+                const [e1, e2] = spouseEdges;
+                const p1 = posMap[e1.source];
+                const p2 = posMap[e2.source];
+                if (p1 && p2) {
+                    const s1 = getSize(e1.source);
+                    const s2 = getSize(e2.source);
+                    const f  = getSize(family.id);
+
+                    // центры супругов
+                    const c1x = p1.x + s1.w / 2;
+                    const c1y = p1.y + s1.h / 2;
+                    const c2x = p2.x + s2.w / 2;
+                    const c2y = p2.y + s2.h / 2;
+
+                    // средняя точка между центрами супругов
+                    const midX = (c1x + c2x) / 2;
+                    const midY = (c1y + c2y) / 2;
+
+                    // позиция family — это ЛВ-угол, чтобы его центр попал в midX/midY
+                    posMap[family.id].x = midX - f.w / 2;
+                    posMap[family.id].y = midY - f.h / 2;
+                }
+            }
+        }
 
         // запас по краям — отступ 80px
         const xs = Object.values(posMap).map(p => p.x);
@@ -39,15 +80,25 @@ const FamilyTree = () => {
 
         // Назначаем хэндлы у рёбер, чтобы линия выходила из нужного бока карточки
         const enhancedEdges: Edge[] = graph.edges.map((e) => {
+
             const role = (e.data as any)?.role as 'spouse' | 'child' | undefined;
+
             if (role === 'spouse') {
-                const sX = posMap[e.source].x;   // позиция персоны
-                const fX = posMap[e.target].x;   // позиция "ствола" (family)
-                const fromLeft = sX <= fX; // персона слева от «ствола»?
+                const sW = PERSON_SIZE.width;
+                const fW = FAMILY_SIZE.width;
+
+                const sPos = posMap[e.source];
+                const fPos = posMap[e.target];
+
+                const sCenterX = sPos.x + sW / 2;
+                const fCenterX = fPos.x + fW / 2;
+
+                const personIsLeftOfFamily = sCenterX < fCenterX;
+
                 return {
                     ...e,
                     type: 'chamfer',               // наш кастомный edge
-                    sourceHandle: fromLeft ? 'left' : 'right',   // из нужного бока карточки
+                    sourceHandle: personIsLeftOfFamily ? 'right' : 'left',
                     targetHandle: 'top',   // в соответствующий бок family
                 };
             }
@@ -61,6 +112,7 @@ const FamilyTree = () => {
             }
             return e;
         });
+
         setEdges(enhancedEdges);
 
         requestAnimationFrame(() => rf?.fitView({ padding: 0.2 }));
