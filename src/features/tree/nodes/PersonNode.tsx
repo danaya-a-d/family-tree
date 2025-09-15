@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Handle, Position, useReactFlow, type NodeProps, type Node } from '@xyflow/react';
 import { setRootPerson } from '@/features/tree/treeSlice';
 import { selectPersonById } from '@/features/tree/selectors';
-import type { RootState } from '@/app/store'
-import styles from './PersonNode.module.css';
+import type { RootState } from '@/app/store';
 import { PERSON_SIZE } from '@/features/tree/constants';
+import styles from './PersonNode.module.css';
 
 type PersonData = {
     personId: string;
@@ -22,7 +22,7 @@ const PersonNode = ({ id, data, selected }: NodeProps<RFPersonNode>) => {
     const rf = useReactFlow();
 
     const person = useSelector((s: RootState) =>
-        selectPersonById(s, data.personId)
+        selectPersonById(s, data.personId),
     );
 
     const birth = person?.birth?.date ?? data.birth;
@@ -43,8 +43,21 @@ const PersonNode = ({ id, data, selected }: NodeProps<RFPersonNode>) => {
     };
 
     return (
-        <div className={styles.card}>
+        <div className={`${styles.card} ${selected ? styles.selected : ''}`}>
+            <div className={styles.info}>
+                <div className={styles.photo}>
+                    {data.photoUrl && <img src={data.photoUrl} alt={data.name} />}
+                </div>
 
+                <div className={styles.about}>
+                    <div className={styles.name}>{data.name}</div>
+                    <div className={styles.dates}>{birth}{death ? ` – ${death}` : ''}</div>
+                </div>
+            </div>
+
+            <Handle id="left"  type="source" position={Position.Left}  />
+            <Handle id="right" type="source" position={Position.Right} />
+            <Handle id="top"   type="target" position={Position.Top}   />
         </div>
     );
 };
