@@ -15,8 +15,16 @@ const FamilyNode = (_: NodeProps<RFFamilyNode>) => {
                 pointerEvents: 'none',
             }}
         >
-            <Handle id='top' type='target' position={Position.Top} />
-            <Handle id='bottom' type='source' position={Position.Bottom} />
+            <Handle id='top'
+                    type='target'
+                    position={Position.Top}
+                    style={{ left: '50%', top: 26, transform: 'translate(-50%, -50%)' }}
+            />
+            <Handle id='bottom'
+                    type='source'
+                    position={Position.Bottom}
+                    style={{ left: '50%', transform: 'translateX(-50%)' }}
+            />
         </div>
     );
 };
