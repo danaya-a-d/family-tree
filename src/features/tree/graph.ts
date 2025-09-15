@@ -12,7 +12,7 @@ export function buildGraph(state: RootState): { nodes: Node[]; edges: Edge[] } {
 
     const personNodes: Node[] = persons.map((p) => ({
         id: pid(p.id),
-        type: 'person',        // позже заменим на кастомный 'person'
+        type: 'person',
         position: { x: 0, y: 0 }, // временно; ELK проставит координаты
         data: {
             kind: 'person',
@@ -28,7 +28,7 @@ export function buildGraph(state: RootState): { nodes: Node[]; edges: Edge[] } {
 
     const familyNodes: Node[] = families.map((f) => ({
         id: fid(f.id),
-        type: 'family',         // позже сделаем крошечный кастомный 'family'
+        type: 'family',
         position: { x: 0, y: 0 },
         data: { kind: 'family', familyId: f.id },
         width: FAMILY_SIZE.width,
@@ -43,6 +43,8 @@ export function buildGraph(state: RootState): { nodes: Node[]; edges: Edge[] } {
                 id: `e:${sId}->${fam.id}`,
                 source: pid(sId),
                 target: fid(fam.id),
+                type: 'chamfer',
+                data: { role: 'spouse' as const },
             });
         }
 
@@ -51,6 +53,8 @@ export function buildGraph(state: RootState): { nodes: Node[]; edges: Edge[] } {
                 id: `e:${fam.id}->${cId}`,
                 source: fid(fam.id),
                 target: pid(cId),
+                type: 'chamfer',
+                data: { role: 'child' as const },
             });
         }
     }
