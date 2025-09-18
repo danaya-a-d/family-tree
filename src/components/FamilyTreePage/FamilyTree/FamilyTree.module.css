@@ -10,8 +10,35 @@
 }
 
 .familyTree {
+    position: relative;
     margin-top: 58px;
     height: 692px;
     width: 100%;
     background-color: rgba(159, 0, 4, 0.15);
+    z-index: 1;
+}
+
+
+.familyTree::after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 470px;
+    width: 100%;
+    background-image: url('/src/assets/img/background-figure-tree.png');
+    background-repeat: repeat-x;
+    z-index: -1;
+}
+
+.familyTree :global(.react-flow__handle) {
+    min-width: 0;
+    min-height: 0;
+    width: 0;
+    height: 0;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    pointer-events: none;
 }
