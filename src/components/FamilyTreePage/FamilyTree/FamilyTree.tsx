@@ -33,7 +33,7 @@ const FamilyTree = () => {
         // 1) Центруем каждый family между супругами по X и Y (по центрам карточек)
         for (const family of graph.nodes.filter(n => n.type === 'family')) {
             const spouseEdges = graph.edges.filter(
-                (e) => e.target === family.id && (e.data as any)?.role === 'spouse'
+                (e) => e.target === family.id && (e.data as any)?.role === 'spouse',
             );
             if (spouseEdges.length === 2) {
                 const [e1, e2] = spouseEdges;
@@ -42,7 +42,7 @@ const FamilyTree = () => {
                 if (p1 && p2) {
                     const s1 = getSize(e1.source);
                     const s2 = getSize(e2.source);
-                    const f  = getSize(family.id);
+                    const f = getSize(family.id);
 
                     // центры супругов
                     const c1x = p1.x + s1.w / 2;
@@ -131,12 +131,13 @@ const FamilyTree = () => {
     const edgeTypes = { chamfer: ChamferEdge };
 
     return (
-        <div className={styles.wrapper}>
-            <Title level={'h1'} size={'medium'} showDecoration={false} highlightFirstLetter={false}>
-                {'Family tree'}
-            </Title>
-
-            <button onClick={applyLayout}>Auto layout</button>
+        <div className={styles.container}>
+            <div className={styles.wrapper}>
+                <Title level={'h1'} size={'medium'} showDecoration={false} highlightFirstLetter={false}>
+                    {'Family tree'}
+                </Title>
+                {/*<button onClick={applyLayout}>Auto layout</button>*/}
+            </div>
 
             <div className={styles.familyTree}>
                 <ReactFlow
@@ -147,11 +148,11 @@ const FamilyTree = () => {
                     onInit={setRf}
                     fitView
                     style={{ width: '100%', height: '100%' }}>
-                    <Background />
                     <Controls />
                 </ReactFlow>
             </div>
         </div>
+
     );
 };
 

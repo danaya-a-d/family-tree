@@ -1,0 +1,31 @@
+.node {
+    /*background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='12' viewBox='0 0 32 12' fill='none'><path d='M16.5234 10.7454L3.66699 0.688232L-0.000488281 0.687988' stroke='black'/><path d='M15.7061 10.7454L28.5625 0.688232L32 0.688477' stroke='black'/></svg>");*/
+    /*background-repeat: no-repeat;         !* чтоб не тайлилось *!*/
+    /*background-color: transparent;*/
+    /*background-position: bottom -1px center;*/
+    /*background-size: auto;*/
+
+    background-color: #F1D9DA;
+}
+
+.node::before, .node::after {
+    content: "";
+    position: absolute;
+    display: block;
+    width: 18px;
+    height: 1px;
+    background-color: black;
+    bottom: 0;
+}
+
+.node::before {
+    right: 50%;
+    transform: rotate(36deg);
+    transform-origin: right bottom;
+}
+
+.node::after {
+    left: 50%;
+    transform: rotate(-36deg);
+    transform-origin: left bottom;
+}
