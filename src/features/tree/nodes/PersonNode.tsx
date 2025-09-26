@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Handle, Position, useReactFlow, type NodeProps, type Node } from '@xyflow/react';
 import { setRootPerson } from '@/features/tree/treeSlice';
@@ -6,10 +6,13 @@ import { selectPersonById } from '@/features/tree/selectors';
 import type { RootState } from '@/app/store';
 import { PERSON_SIZE } from '@/features/tree/constants';
 import styles from './PersonNode.module.css';
+import MenuButton from '@/components/common/MenuButton/MenuButton';
+import MenuEdit from '@/components/common/MenuEdit/MenuEdit';
 
 type PersonData = {
     personId: string;
     name: string;
+    surname: string;
     photoUrl?: string;
     birth?: string;
     death?: string;
@@ -18,6 +21,7 @@ type PersonData = {
 type RFPersonNode = Node<PersonData>;
 
 const PersonNode = ({ id, data, selected }: NodeProps<RFPersonNode>) => {
+    const [isAddOpen, setIsAddOpen] = useState(false);
     const dispatch = useDispatch();
     const rf = useReactFlow();
 
@@ -42,22 +46,48 @@ const PersonNode = ({ id, data, selected }: NodeProps<RFPersonNode>) => {
         rf.setCenter(cx, cy, { zoom: 1.1, duration: 300 });
     };
 
+    const menuList = [
+        {
+            id: 1,
+            name: 'Edit person',
+            href: '#',
+        },
+        {
+            id: 2,
+            name: 'Add relative',
+            href: '#',
+        },
+        {
+            id: 3,
+            name: 'See details',
+            href: '#',
+        },
+    ];
+
     return (
-        <div className={`${styles.card} ${selected ? styles.selected : ''}`}>
+        <div className={`${styles.card} ${selected ? styles.selected : ''}`} onClick={onClick}>
             <div className={styles.info}>
                 <div className={styles.photo}>
                     {data.photoUrl && <img src={data.photoUrl} alt={data.name} />}
                 </div>
 
                 <div className={styles.about}>
-                    <div className={styles.name}>{data.name}</div>
+                    <div className={styles.name}>
+                        <span>{data.name}</span>
+                        <span>{data.surname}</span>
+                    </div>
                     <div className={styles.dates}>{birth}{death ? ` – ${death}` : ''}</div>
+                </div>
+
+                <div className={styles.edit}>
+                    <MenuButton className={styles.editButton} />
+                    <MenuEdit list={menuList} className={styles.editList} />
                 </div>
             </div>
 
-            <Handle id="left"  type="source" position={Position.Left}  />
-            <Handle id="right" type="source" position={Position.Right} />
-            <Handle id="top"   type="target" position={Position.Top}   />
+            <Handle id='left' type='source' position={Position.Left} />
+            <Handle id='right' type='source' position={Position.Right} />
+            <Handle id='top' type='target' position={Position.Top} />
         </div>
     );
 };

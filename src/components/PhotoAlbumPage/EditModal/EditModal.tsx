@@ -1,11 +1,11 @@
 import Modal from '../../common/Modal/Modal';
 import Form from '../../common/Form/Form';
 import { useDispatch } from 'react-redux';
-import { deletePhoto, updatePhoto } from '../../../features/gallery/gallerySlice';
-import { addPhoto } from '../../../features/gallery/gallerySlice';
+import { deletePhoto, updatePhoto } from '@/features/gallery/gallerySlice';
+import { addPhoto } from '@/features/gallery/gallerySlice';
 import Title from '../../common/Title/Title';
 import type { ButtonConfig, FormField } from '../../common/ui.types';
-import type { PhotoItem } from '../../../features/gallery/types';
+import type { PhotoItem } from '@/features/gallery/types';
 import styles from './EditModal.module.css';
 
 interface EditModalProps {

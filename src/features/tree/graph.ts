@@ -17,7 +17,8 @@ export function buildGraph(state: RootState): { nodes: Node[]; edges: Edge[] } {
         data: {
             kind: 'person',
             personId: p.id,
-            name: `${p.givenName ?? ''} ${p.familyName ?? ''}`.trim(),
+            name: `${p.givenName ?? 'Unknown'}`,
+            surname: `${p.familyName ?? ''} ${p.maidenName ? `(${p.maidenName})` : ''}`.trim(),
             photoUrl: p.photoUrl,
             birth: p.birth?.date,
             death: p.death?.date,

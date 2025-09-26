@@ -8,8 +8,6 @@ export const mockPersons: Person[] = [
         familyName: 'Davidenko',
         gender: 'male',
         birth: { date: '1990-08-21' },
-        parentInFamilies: [],
-        spouseInFamilies: [],
         photoUrl: big1,
     },
     {
@@ -18,8 +16,6 @@ export const mockPersons: Person[] = [
         familyName: 'Ivanova',
         gender: 'female',
         birth: { date: '1990-08-21' },
-        parentInFamilies: [],
-        spouseInFamilies: [],
         photoUrl: big1,
     },
     {
@@ -27,8 +23,6 @@ export const mockPersons: Person[] = [
         givenName: 'Vasya',
         familyName: 'Davidenko',
         gender: 'male',
-        parentInFamilies: [],
-        spouseInFamilies: [],
         photoUrl: big1,
     },
     {
@@ -37,8 +31,6 @@ export const mockPersons: Person[] = [
         familyName: 'Davidenko',
         maidenName: 'Ivanova',
         gender: 'female',
-        parentInFamilies: [],
-        spouseInFamilies: [],
         photoUrl: big1,
     },
     {
@@ -46,8 +38,6 @@ export const mockPersons: Person[] = [
         givenName: 'Child Oleg',
         familyName: 'Davidenko',
         gender: 'male',
-        parentInFamilies: [],
-        spouseInFamilies: [],
         photoUrl: big1,
     },
     {
@@ -55,8 +45,37 @@ export const mockPersons: Person[] = [
         givenName: 'Child Luba',
         familyName: 'Davidenko',
         gender: 'female',
-        parentInFamilies: [],
-        spouseInFamilies: [],
+        photoUrl: big1,
+    },
+
+    {
+        id: 'p7',
+        givenName: 'Child Kira',
+        familyName: 'Davidenko',
+        gender: 'female',
+        photoUrl: big1,
+    },
+    {
+        id: 'p8',
+        givenName: 'Child Nick',
+        familyName: 'Davidenko',
+        gender: 'male',
+        photoUrl: big1,
+    },
+    {
+        id: 'p9',
+        givenName: 'Olga',
+        familyName: 'Volkova',
+        maidenName: 'Ivanova',
+        gender: 'female',
+        photoUrl: big1,
+    },
+
+    {
+        id: 'p10',
+        givenName: 'Child Olga',
+        familyName: 'Volkova',
+        gender: 'female',
         photoUrl: big1,
     },
 ];
@@ -64,6 +83,7 @@ export const mockPersons: Person[] = [
 export const mockFamilies: Family[] = [
     { id: 'f1', spouses: [], children: [] }, // p3 + p4 → ребёнок p1
     { id: 'f2', spouses: [], children: [] }, // p1 + p2 → дети p5, p6
+    { id: 'f3', spouses: [], children: [] },
 ];
 
 export const mockRootPersonId: Id = 'p1';

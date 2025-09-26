@@ -11,8 +11,7 @@
 
 .edit:hover .editButton::before,
 .edit:focus .editButton::before {
-    filter: brightness(0) saturate(100%) invert(10%) sepia(88%) saturate(6662%) hue-rotate(347deg) brightness(65%)
-        contrast(121%);
+    filter: brightness(0) saturate(100%) invert(10%) sepia(88%) saturate(6662%) hue-rotate(347deg) brightness(65%) contrast(121%);
 }
 
 .editList {
@@ -38,29 +37,7 @@
     position: absolute;
     top: 8px;
     right: 8px;
-    width: 24px;
-    height: 24px;
-    border-radius: 4px;
-    padding: 0;
-    background-color: white;
-    border: none;
-    background-position: center;
-    box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.14);
-    cursor: pointer;
-}
-
-.editButton::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%223%22%20height%3D%2215%22%20viewBox%3D%220%200%203%2015%22%20fill%3D%22none%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Ccircle%20cx%3D%221.5%22%20cy%3D%221.5%22%20r%3D%221.5%22%20fill%3D%22%231E1E1B%22/%3E%3Ccircle%20cx%3D%221.5%22%20cy%3D%227.5%22%20r%3D%221.5%22%20fill%3D%22%231E1E1B%22/%3E%3Ccircle%20cx%3D%221.5%22%20cy%3D%2213.5%22%20r%3D%221.5%22%20fill%3D%22%231E1E1B%22/%3E%3C/svg%3E');
-    background-repeat: no-repeat;
-    background-size: 3px;
-    background-position: center;
-    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.14);
 }
 
 .photoModal {

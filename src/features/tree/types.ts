@@ -20,9 +20,6 @@ export interface Person {
 
     birth?: LifeEvent;
     death?: LifeEvent;
-
-    parentInFamilies: Id[];
-    spouseInFamilies: Id[];
 }
 
 export interface Family {
