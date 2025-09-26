@@ -1,10 +1,11 @@
 import Modal from '../../common/Modal/Modal';
 import MenuEdit from '../../common/MenuEdit/MenuEdit';
 import { useDispatch } from 'react-redux';
-import { deletePhoto } from '../../../features/gallery/gallerySlice';
+import { deletePhoto } from '@/features/gallery/gallerySlice';
 import { useState } from 'react';
 import EditModal from '../EditModal/EditModal';
-import type { PhotoItem } from '../../../features/gallery/types';
+import MenuButton from '@/components/common/MenuButton/MenuButton';
+import type { PhotoItem } from '@/features/gallery/types';
 import styles from './PhotoModal.module.css';
 
 interface PhotoModalProps {
@@ -58,7 +59,7 @@ const PhotoModal = ({ photo, onClose }: PhotoModalProps) => {
                 <Modal onClose={onClose}>
                     <div className={styles.photoModal}>
                         <div className={styles.edit}>
-                            <button className={styles.editButton}></button>
+                            <MenuButton className={styles.editButton}/>
                             <MenuEdit list={menuList} className={styles.editList} />
                         </div>
 

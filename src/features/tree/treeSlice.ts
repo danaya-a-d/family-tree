@@ -1,4 +1,5 @@
 import { createSlice, createEntityAdapter, type PayloadAction, type EntityState } from '@reduxjs/toolkit';
+import { makeFamilyId, makePersonId } from './id';
 import { Person, Family, Id } from './types';
 
 export const personsAdapter = createEntityAdapter<Person>({});
@@ -36,8 +37,19 @@ const treeSlice = createSlice({
     reducers: {
 
         //Person
-        addPerson: (state, action: PayloadAction<Person>) => {
-            personsAdapter.addOne(state.persons, action.payload);
+        addPerson: {
+            reducer(state, action: PayloadAction<Person>) {
+                personsAdapter.addOne(state.persons, action.payload);
+            },
+            prepare(input: Partial<Omit<Person, 'id'>> & { id?: Id }) {
+                const payload = {
+                    id: input.id ?? makePersonId(),
+                    ...input,
+                    gender: input.gender ?? 'unknown',
+                } satisfies Person;
+
+                return { payload };
+            },
         },
 
         updatePerson: (state, action: PayloadAction<{ id: Id; changes: Partial<Person> }>) => {
@@ -67,8 +79,14 @@ const treeSlice = createSlice({
         },
 
         //Family
-        addFamily: (state, action: PayloadAction<Family>) => {
-            familiesAdapter.addOne(state.families, action.payload);
+        addFamily: {
+            reducer(state, action: PayloadAction<Family>) {
+                familiesAdapter.addOne(state.families, action.payload);
+            },
+            prepare(family: Omit<Family, 'id'> & { id?: Id }) {
+                const id = family.id ?? makeFamilyId();
+                return { payload: { ...family, id } as Family };
+            },
         },
 
         updateFamily: (state, action: PayloadAction<{ id: Id; changes: Partial<Family> }>) => {
@@ -80,12 +98,12 @@ const treeSlice = createSlice({
 
             for (const sid of fam.spouses) {
                 const p = state.persons.entities[sid];
-                if (p) removeFrom(p.spouseInFamilies, fam.id);
+                // if (p) removeFrom(p.spouseInFamilies, fam.id);
             }
 
             for (const cid of fam.children) {
                 const c = state.persons.entities[cid];
-                if (c) removeFrom(c.parentInFamilies, fam.id);
+                // if (c) removeFrom(c.parentInFamilies, fam.id);
             }
 
             familiesAdapter.removeOne(state.families, action.payload);
@@ -105,7 +123,7 @@ const treeSlice = createSlice({
 
             for (const oldSpouseId of fam.spouses) {
                 const p = state.persons.entities[oldSpouseId];
-                if (p) removeFrom(p.spouseInFamilies, familyId);
+                // if (p) removeFrom(p.spouseInFamilies, familyId);
             }
 
             const nextSpouses = [...new Set(spouseIds)].filter(
@@ -116,7 +134,7 @@ const treeSlice = createSlice({
 
             for (const sid of nextSpouses) {
                 const p = state.persons.entities[sid];
-                if (p) addUnique(p.spouseInFamilies, familyId);
+                // if (p) addUnique(p.spouseInFamilies, familyId);
             }
         },
 
@@ -130,7 +148,7 @@ const treeSlice = createSlice({
             if (!fam || !child) return;
 
             addUnique(fam.children, childId);
-            addUnique(child.parentInFamilies, familyId);
+            // addUnique(child.parentInFamilies, familyId);
         },
 
         unlinkChild: (state,
@@ -143,7 +161,7 @@ const treeSlice = createSlice({
             if (!fam || !child) return;
 
             removeFrom(fam.children, childId);
-            removeFrom(child.parentInFamilies, familyId);
+            // removeFrom(child.parentInFamilies, familyId);
         },
     },
 });

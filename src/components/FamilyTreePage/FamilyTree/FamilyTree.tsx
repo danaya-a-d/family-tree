@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ReactFlow, useReactFlow, Background, Controls, type Node, type Edge, ReactFlowInstance } from '@xyflow/react';
+import { ReactFlow, Controls, type Node, type Edge, ReactFlowInstance } from '@xyflow/react';
 import { useSelector } from 'react-redux';
 import { buildGraph } from '@/features/tree/graph';
 import { layoutWithELK } from '@/features/tree/layout/elk';
@@ -21,7 +21,7 @@ const FamilyTree = () => {
     const applyLayout = async () => {
         const posMap = await layoutWithELK(graph.nodes, edges);
 
-// Хелпер: размеры узла
+        // Хелпер: размеры узла
         const getSize = (id: string) => {
             const n = graph.nodes.find(nn => nn.id === id);
             if (!n) return { w: PERSON_SIZE.width, h: PERSON_SIZE.height };
@@ -97,7 +97,7 @@ const FamilyTree = () => {
 
                 return {
                     ...e,
-                    type: 'chamfer',               // наш кастомный edge
+                    type: 'chamfer',               // кастомный edge
                     sourceHandle: personIsLeftOfFamily ? 'right' : 'left',
                     targetHandle: 'top',   // в соответствующий бок family
                 };
@@ -125,7 +125,11 @@ const FamilyTree = () => {
     }, [rf, graph.nodes.length, graph.edges.length]);
 
     const nodeTypes = useMemo(
-        () => ({ person: PersonNode, family: FamilyNode }), [],
+        () => ({
+            person: PersonNode,
+            family: FamilyNode,
+        }),
+        [],
     );
 
     const edgeTypes = { chamfer: ChamferEdge };
