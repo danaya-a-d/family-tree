@@ -151,7 +151,7 @@ const PersonModal = ({ person, onClose }: PersonModalProps) => {
         <Modal onClose={onClose} btnClose={true}>
             <div className={styles.editModal}>
                 <Title level={'h2'} size={'small'}>
-                    {isEdit ? 'Edit Photo' : 'Add Photo'}
+                    {isEdit ? 'Edit person' : 'Add person'}
                 </Title>
                 <Form
                     className={styles.form}
