@@ -4,7 +4,7 @@ import Photos from '../../common/Photos/Photos';
 import { useState } from 'react';
 import PhotoModal from '../PhotoModal/PhotoModal';
 import EditModal from '../EditModal/EditModal';
-import type { PhotoItem, Tag } from '../../../features/gallery/types';
+import type { PhotoItem, Tag } from '@/features/gallery/types';
 import style from './Album.module.css';
 
 interface AlbumProps {

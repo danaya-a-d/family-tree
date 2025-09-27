@@ -8,6 +8,7 @@ import { PERSON_SIZE } from '@/features/tree/constants';
 import styles from './PersonNode.module.css';
 import MenuButton from '@/components/common/MenuButton/MenuButton';
 import MenuEdit from '@/components/common/MenuEdit/MenuEdit';
+import PersonModal from '@/components/FamilyTreePage/PersonModal/PersonModal';
 
 type PersonData = {
     personId: string;
@@ -21,7 +22,7 @@ type PersonData = {
 type RFPersonNode = Node<PersonData>;
 
 const PersonNode = ({ id, data, selected }: NodeProps<RFPersonNode>) => {
-    const [isAddOpen, setIsAddOpen] = useState(false);
+    const [isAddPersonOpen, setIsAddPersonOpen] = useState(false);
     const dispatch = useDispatch();
     const rf = useReactFlow();
 
@@ -46,16 +47,24 @@ const PersonNode = ({ id, data, selected }: NodeProps<RFPersonNode>) => {
         rf.setCenter(cx, cy, { zoom: 1.1, duration: 300 });
     };
 
+    const openAddPersonModal = () => {
+        setIsAddPersonOpen(true);
+    };
+
+    const closeAddPersonModal = () => {
+        setIsAddPersonOpen(false);
+    };
+
     const menuList = [
         {
             id: 1,
             name: 'Edit person',
-            href: '#',
+            onClick: openAddPersonModal,
         },
         {
             id: 2,
             name: 'Add relative',
-            href: '#',
+            onClick: openAddPersonModal,
         },
         {
             id: 3,
@@ -88,6 +97,8 @@ const PersonNode = ({ id, data, selected }: NodeProps<RFPersonNode>) => {
             <Handle id='left' type='source' position={Position.Left} />
             <Handle id='right' type='source' position={Position.Right} />
             <Handle id='top' type='target' position={Position.Top} />
+
+            {isAddPersonOpen && <PersonModal onClose={closeAddPersonModal} person={person}/>}
         </div>
     );
 };
