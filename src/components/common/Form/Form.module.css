@@ -15,6 +15,32 @@
     grid-area: photo;
 }
 
+.input-personPhoto {
+    grid-area: personPhoto;
+}
+
+.input-firstName {
+    grid-area: firstName;
+}
+.input-lastName {
+    grid-area: lastName;
+}
+.input-maidenName {
+    grid-area: maidenName;
+}
+.input-dateOfBirth {
+    grid-area: dateOfBirth;
+}
+.input-placeOfBirth {
+    grid-area: placeOfBirth;
+}
+.input-dateOfDeath {
+    grid-area: dateOfDeath;
+}
+.input-placeOfDeath {
+    grid-area: placeOfDeath;
+}
+
 .buttons {
     display: flex;
     gap: 16px;

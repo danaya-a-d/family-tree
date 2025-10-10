@@ -1,31 +1,55 @@
-import type { PropsWithChildren, MouseEvent } from 'react';
+import { PropsWithChildren, MouseEvent, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import styles from './Modal.module.css';
 
 type ModalProps = PropsWithChildren<{
     onClose: () => void;
     btnClose?: boolean;
+    inline?: boolean;
+    target?: HTMLElement | null;
 }>;
 
-const Modal = ({ children, onClose: externalOnClose, btnClose = false }: ModalProps) => {
-    const close = () => {
-        if (externalOnClose) externalOnClose(); // Если передана внешняя функция, вызываем её
-    };
+const getDefaultTarget = () => {
+    if (typeof document === 'undefined') return null;
+    let el = document.getElementById('modal-root') as HTMLElement | null;
+    if (!el) {
+        el = document.createElement('div');
+        el.id = 'modal-root';
+        document.body.appendChild(el);
+    }
+    return el;
+};
+
+const Modal = ({
+                   children,
+                   onClose,
+                   btnClose = false,
+                   inline = false,
+                   target,
+               }: ModalProps) => {
+
+    const portalTarget = target ?? getDefaultTarget();
+
+    useEffect(() => {
+        const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
+        window.addEventListener('keydown', onKey);
+        const prev = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        return () => {
+            window.removeEventListener('keydown', onKey);
+            document.body.style.overflow = prev;
+        };
+    }, [onClose]);
 
     const handleOverlayClick = (e: MouseEvent<HTMLDivElement>): void => {
-        if (e.target === e.currentTarget) close(); // Закрытие при клике на оверлей
+        if (e.target === e.currentTarget) onClose(); // Закрытие при клике на оверлей
     };
 
-    // const handleKeyDown = (e) => {
-    //     if (e.key === "Escape") {
-    //         close(); // Закрываем модалку при Escape
-    //     }
-    // };
-
-    return (
+    const content = (
         <div className={styles.overlay} onClick={handleOverlayClick}>
-            <div className={styles.modal}>
+            <div className={styles.modal} role="dialog" aria-modal="true">
                 {btnClose && (
-                    <button className={styles.modalClose} onClick={close}>
+                    <button className={styles.modalClose} onClick={onClose} aria-label="Close">
                         Close
                     </button>
                 )}
@@ -34,6 +58,9 @@ const Modal = ({ children, onClose: externalOnClose, btnClose = false }: ModalPr
             </div>
         </div>
     );
+
+    if (inline || !portalTarget) return content;
+    return createPortal(content, portalTarget);
 };
 
 export default Modal;
