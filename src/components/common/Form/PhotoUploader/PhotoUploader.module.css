@@ -1,7 +1,8 @@
 .uploader {
     position: relative;
     width: 100%;
-    height: 325px;
+    height: 100%;
+    /*height: 325px;*/
     z-index: 1;
     border-radius: 8px;
     overflow: hidden;

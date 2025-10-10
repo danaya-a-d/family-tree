@@ -1,13 +1,13 @@
 import type { JSX } from 'react';
 import { useMemo, useState } from 'react';
-import { useForm } from '../../../hooks/useForm';
+import { useForm } from '@/hooks/useForm';
 import { ButtonConfig } from '../ui.types';
 import Input from './Input/Input';
 import Textarea from './Textarea/Textarea';
 import TagsInput from './TagsInput/TagsInput';
 import PhotoUploader from './PhotoUploader/PhotoUploader';
 // import Checkbox from './Checkbox/Checkbox';
-// import Radiobutton from './Radiobutton/Radiobutton';
+import RadioGroup from './RadioGroup/RadioGroup';
 import Button from '../Button/Button';
 import Errors from './Errors/Errors';
 import type { FormField, FormValues, ErrorsMap } from '../ui.types';
@@ -75,6 +75,17 @@ const Form = ({
                         value={(values[field.name] as string[]) ?? []}
                         setCustomValue={setCustomValue}
                         onError={(msg: string) => setLocalErrors((prev) => ({ ...prev, [field.name]: [msg] }))}
+                    />
+                );
+            }
+
+            case 'radio': {
+                return (
+                    <RadioGroup
+                        {...commonProps}
+                        options={field.options}
+                        value={(values[field.name] as string) ?? ''}
+                        onChange={(v) => setCustomValue(field.name, v)}
                     />
                 );
             }

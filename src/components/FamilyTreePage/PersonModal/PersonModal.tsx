@@ -50,28 +50,36 @@ const PersonModal = ({ person, onClose }: PersonModalProps) => {
             maidenName: values.maidenName,
             gender: values.gender,
             photoUrl: values.photo,
-            birth: makeLifeEvent(values.dateOfBirth,  values.placeOfBirth),
-            death: makeLifeEvent(values.dateOfDeath,  values.placeOfDeath),
+            birth: makeLifeEvent(values.dateOfBirth, values.placeOfBirth),
+            death: makeLifeEvent(values.dateOfDeath, values.placeOfDeath),
         };
 
         if (person) {
             dispatch(
-                updatePerson({ id: person.id, changes: basePerson,
-                })
+                updatePerson({
+                    id: person.id, changes: basePerson,
+                }),
             );
         } else {
             dispatch(
                 addPerson({
                     ...basePerson,
-                })
+                }),
             );
         }
 
         onClose();
     };
 
+    const GENDER_OPTIONS = [
+        { value: 'female', label: 'Female' },
+        { value: 'male', label: 'Male' },
+        { value: 'unknown', label: 'Unknown' },
+    ] as const;
+
     const fields = [
-        { name: 'photo', placeholder: 'Photo', type: 'file' },
+        { name: 'personPhoto', placeholder: 'Photo', type: 'file' },
+        { name: 'gender', options: GENDER_OPTIONS, type: 'radio' },
 
         { name: 'firstName', placeholder: 'First name', type: 'text' },
         { name: 'lastName', placeholder: 'Last name', type: 'text' },
@@ -110,29 +118,29 @@ const PersonModal = ({ person, onClose }: PersonModalProps) => {
 
     const buttons = isEdit ? [...baseButtons, deleteButton] : baseButtons;
 
-    const formLayout = `"photo"
+    const formLayout = `"personPhoto ."
                         "firstName dateOfBirth"
                         "lastName placeOfBirth"
-                        "maidenName"
-                        
-                        "dateOfDeath placeOfDeath"`;
+                        "maidenName ."
+                        "dateOfDeath placeOfDeath"
+                        "buttons buttons"`;
 
-    const formColumns = '350px auto';
-    const formRows = '40px 1fr auto';
+    const formColumns = '1fr 1fr';
+    const formRows = '160px 40px 40px 40px 40px';
 
     const initialValues: PersonFormValues = person
         ? {
-            firstName: person.givenName,
-            lastName: person.familyName,
-            maidenName: person.maidenName,
-            gender: person.gender,
-            photo: person.photoUrl,
+            firstName: person.givenName ?? '',
+            lastName: person.familyName ?? '',
+            maidenName: person.maidenName ?? '',
+            gender: person.gender ?? 'unknown',
+            photo: person.photoUrl ?? null,
 
-            dateOfBirth: person.birth['date'],
-            placeOfBirth: person.birth['place'],
+            dateOfBirth: person.birth?.date ?? '',
+            placeOfBirth: person.birth?.place ?? '',
 
-            dateOfDeath: person.death['date'],
-            placeOfDeath: person.death['place'],
+            dateOfDeath: person.death?.date ?? '',
+            placeOfDeath: person.death?.place ?? '',
         }
         : {
             firstName: '',

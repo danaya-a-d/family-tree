@@ -84,8 +84,8 @@ const EditModal = ({ photo, onClose }: EditModalProps) => {
                         "photo tags"
                         "buttons buttons"`;
 
-    const formColumns = '350px auto';
-    const formRows = '40px 1fr auto';
+    const formColumns = '325px auto';
+    const formRows = '40px 265px auto';
 
     const initialValues: EditFormValues = photo
         ? {
