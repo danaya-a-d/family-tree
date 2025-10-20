@@ -17,28 +17,43 @@
 
 .input-personPhoto {
     grid-area: personPhoto;
+    width: 132px;
 }
 
 .input-firstName {
     grid-area: firstName;
 }
+
 .input-lastName {
     grid-area: lastName;
 }
+
 .input-maidenName {
     grid-area: maidenName;
 }
+
 .input-dateOfBirth {
     grid-area: dateOfBirth;
 }
+
 .input-placeOfBirth {
     grid-area: placeOfBirth;
 }
+
 .input-dateOfDeath {
     grid-area: dateOfDeath;
 }
+
 .input-placeOfDeath {
     grid-area: placeOfDeath;
+}
+
+.input-gender {
+    grid-area: gender;
+}
+
+.input-lifeState {
+    grid-area: living;
 }
 
 .buttons {

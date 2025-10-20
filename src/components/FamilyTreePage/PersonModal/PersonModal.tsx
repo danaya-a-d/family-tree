@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { addPerson, removePerson, updatePerson } from '@/features/tree/treeSlice';
 import Title from '../../common/Title/Title';
 import type { ButtonConfig, FormField } from '../../common/ui.types';
-import { Gender, LifeEvent, Person } from '@/features/tree/types';
+import { Gender, LifeEvent, LifeState, Person } from '@/features/tree/types';
 import styles from './PersonModal.module.css';
 
 interface PersonModalProps {
@@ -22,6 +22,7 @@ type PersonFormValues = {
     dateOfBirth: LifeEvent['date'];
     placeOfBirth: LifeEvent['place'];
 
+    lifeState: LifeState;
     dateOfDeath: LifeEvent['date'];
     placeOfDeath: LifeEvent['place'];
 };
@@ -36,6 +37,13 @@ const PersonModal = ({ person, onClose }: PersonModalProps) => {
         }
         onClose();
     };
+
+    function getLifeState(p?: Person): LifeState {
+        if (!p) return 'unknown';
+        if (p.death === null) return 'living';
+        if (p.death) return 'deceased';
+        return 'unknown';
+    }
 
     const makeLifeEvent = (date?: string, place?: string): LifeEvent | undefined => {
         const d = date?.trim() || undefined;
@@ -77,19 +85,28 @@ const PersonModal = ({ person, onClose }: PersonModalProps) => {
         { value: 'unknown', label: 'Unknown' },
     ] as const;
 
+    const LIVING_OPTIONS = [
+        { value: 'living', label: 'Living' },
+        { value: 'deceased', label: 'Deceased' },
+        { value: 'unknown', label: 'Unknown' },
+    ] as const;
+
     const fields = [
         { name: 'personPhoto', placeholder: 'Photo', type: 'file' },
         { name: 'gender', options: GENDER_OPTIONS, type: 'radio' },
 
         { name: 'firstName', placeholder: 'First name', type: 'text' },
         { name: 'lastName', placeholder: 'Last name', type: 'text' },
-        { name: 'maidenName', placeholder: 'Maiden name', type: 'text' },
+        { name: 'maidenName', placeholder: 'Maiden name', type: 'text', visible: (v) => v.gender === 'female' },
 
         { name: 'dateOfBirth', placeholder: 'Date of Birth', type: 'text' },
         { name: 'placeOfBirth', placeholder: 'Place of Birth', type: 'text' },
 
-        { name: 'dateOfDeath', placeholder: 'Date of Death', type: 'text' },
-        { name: 'placeOfDeath', placeholder: 'Place of Death', type: 'text' },
+        { name: 'lifeState', options: LIVING_OPTIONS, type: 'radio' },
+        { name: 'dateOfDeath', placeholder: 'Date of Death', type: 'text',
+            visible: (v) => v.lifeState === 'deceased' },
+        { name: 'placeOfDeath', placeholder: 'Place of Death', type: 'text',
+            visible: (v) => v.lifeState === 'deceased' },
     ] satisfies ReadonlyArray<FormField>;
 
     const baseButtons = [
@@ -119,14 +136,16 @@ const PersonModal = ({ person, onClose }: PersonModalProps) => {
     const buttons = isEdit ? [...baseButtons, deleteButton] : baseButtons;
 
     const formLayout = `"personPhoto ."
+                        "gender ."
                         "firstName dateOfBirth"
                         "lastName placeOfBirth"
                         "maidenName ."
+                        "living ."
                         "dateOfDeath placeOfDeath"
                         "buttons buttons"`;
 
     const formColumns = '1fr 1fr';
-    const formRows = '160px 40px 40px 40px 40px';
+    const formRows = '160px';
 
     const initialValues: PersonFormValues = person
         ? {
@@ -139,6 +158,7 @@ const PersonModal = ({ person, onClose }: PersonModalProps) => {
             dateOfBirth: person.birth?.date ?? '',
             placeOfBirth: person.birth?.place ?? '',
 
+            lifeState: getLifeState(person),
             dateOfDeath: person.death?.date ?? '',
             placeOfDeath: person.death?.place ?? '',
         }
@@ -149,8 +169,11 @@ const PersonModal = ({ person, onClose }: PersonModalProps) => {
             gender: 'unknown',
             photo: null,
 
+
+            lifeState: 'unknown',
             dateOfBirth: '',
             placeOfBirth: '',
+
             dateOfDeath: '',
             placeOfDeath: '',
         };
