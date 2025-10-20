@@ -2,6 +2,8 @@ export type Id = string;
 
 export type Gender = 'female' | 'male' | 'unknown';
 
+export type LifeState = 'living' | 'deceased' | 'unknown';
+
 export interface LifeEvent {
     date?: string;
     place?: string;
@@ -19,7 +21,7 @@ export interface Person {
     photoUrl?: string;
 
     birth?: LifeEvent;
-    death?: LifeEvent;
+    death?: LifeEvent | null;
 }
 
 export interface Family {

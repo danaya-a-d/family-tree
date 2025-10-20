@@ -51,6 +51,13 @@ const Form = ({
     );
 
     const renderField = (field: FormField): JSX.Element => {
+        const isVisible =
+            typeof field.visible === 'function'
+                ? field.visible(values)         // вычисляем по текущим значениям формы
+                : field.visible !== false;      // undefined → true, false → скрыть
+
+        if (!isVisible) return null;
+
         const commonProps = {
             name: field.name,
             placeholder: field.placeholder ?? '',
@@ -110,6 +117,7 @@ const Form = ({
     return (
         <form onSubmit={handleSubmit} className={`${styles.form} ${className ?? ''}`.trim()} style={layoutStyle}>
             {fields.map((field) => {
+
                 return (
                     <div key={field.name} className={styles[`input-${field.name}`]}>
                         {renderField(field)}

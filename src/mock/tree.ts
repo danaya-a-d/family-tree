@@ -8,6 +8,7 @@ export const mockPersons: Person[] = [
         familyName: 'Davidenko',
         gender: 'male',
         birth: { date: '1990-08-21' },
+        death: {},
         photoUrl: big1,
     },
     {
@@ -16,6 +17,7 @@ export const mockPersons: Person[] = [
         familyName: 'Ivanova',
         gender: 'female',
         birth: { date: '1990-08-21' },
+        death: { date: '2020-01-11' },
         photoUrl: big1,
     },
     {
@@ -23,6 +25,7 @@ export const mockPersons: Person[] = [
         givenName: 'Vasya',
         familyName: 'Davidenko',
         gender: 'male',
+        death: null,
         photoUrl: big1,
     },
     {
@@ -31,6 +34,7 @@ export const mockPersons: Person[] = [
         familyName: 'Davidenko',
         maidenName: 'Ivanova',
         gender: 'female',
+        death: null,
         photoUrl: big1,
     },
     {
@@ -38,6 +42,7 @@ export const mockPersons: Person[] = [
         givenName: 'Child Oleg',
         familyName: 'Davidenko',
         gender: 'male',
+        death: null,
         photoUrl: big1,
     },
     {
@@ -45,6 +50,7 @@ export const mockPersons: Person[] = [
         givenName: 'Child Luba',
         familyName: 'Davidenko',
         gender: 'female',
+        death: null,
         photoUrl: big1,
     },
 
@@ -53,6 +59,7 @@ export const mockPersons: Person[] = [
         givenName: 'Child Kira',
         familyName: 'Davidenko',
         gender: 'female',
+        death: null,
         photoUrl: big1,
     },
     {
@@ -60,6 +67,7 @@ export const mockPersons: Person[] = [
         givenName: 'Child Nick',
         familyName: 'Davidenko',
         gender: 'male',
+        death: null,
         photoUrl: big1,
     },
     {
@@ -68,6 +76,7 @@ export const mockPersons: Person[] = [
         familyName: 'Volkova',
         maidenName: 'Ivanova',
         gender: 'female',
+        death: null,
         photoUrl: big1,
     },
 
@@ -76,6 +85,7 @@ export const mockPersons: Person[] = [
         givenName: 'Child Olga',
         familyName: 'Volkova',
         gender: 'female',
+        death: null,
         photoUrl: big1,
     },
 ];

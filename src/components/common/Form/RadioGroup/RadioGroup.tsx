@@ -12,16 +12,15 @@ type RadioGroupProps = {
     value: string;
     onChange: (nextValue: string) => void;
     options: ReadonlyArray<RadioOption>;
-    className?: string;
     disabled?: boolean;
 };
 
 const RadioGroup = ({
                         name, value, onChange, options,
-                        className, disabled = false,
+                        disabled = false,
                     }: RadioGroupProps) => {
     return (
-        <div role='radiogroup' className={`${styles.growp} ${className ?? ''}`}>
+        <div role='radiogroup' className={styles.group}>
             {options.map(opt => {
                 const id = `${name}-${String(opt.value)}`;
                 const isDisabled = disabled || !!opt.disabled;
