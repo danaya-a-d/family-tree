@@ -1,0 +1,66 @@
+.relativeModal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 594px;
+}
+
+.rootPerson {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    width: 380px;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.14);
+    box-sizing: border-box;
+}
+
+.personPhoto {
+    width: 112px;
+    height: 112px;
+}
+
+.personPhoto img {
+    width: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.personName {
+    display: flex;
+    flex-direction: column;
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.relatives {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    margin-top: 32px;
+}
+
+.relativeList {
+    display: flex;
+    align-items: start;
+    flex-direction: column;
+    gap: 16px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.relativeButton {
+    margin: 0;
+    width: 193px;
+    height: 55px;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: white;
+    border: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.14);
+    box-sizing: border-box;
+    cursor: pointer;
+}

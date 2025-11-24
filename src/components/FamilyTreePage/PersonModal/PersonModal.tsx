@@ -1,14 +1,15 @@
 import Modal from '../../common/Modal/Modal';
 import Form from '../../common/Form/Form';
 import { useDispatch } from 'react-redux';
-import { addPerson, removePerson, updatePerson } from '@/features/tree/treeSlice';
+import { addPerson, addPersonWithRelation, removePerson, updatePerson } from '@/features/tree/treeSlice';
 import Title from '../../common/Title/Title';
 import type { ButtonConfig, FormField } from '../../common/ui.types';
-import { Gender, LifeEvent, LifeState, Person } from '@/features/tree/types';
+import { AddRelativeContext, Gender, LifeEvent, LifeState, Person } from '@/features/tree/types';
 import styles from './PersonModal.module.css';
 
 interface PersonModalProps {
     person?: Person;
+    addContext?: AddRelativeContext;
     onClose: () => void;
 }
 
@@ -17,7 +18,7 @@ type PersonFormValues = {
     lastName: string;
     maidenName: string;
     gender: Gender;
-    photo: string | null;
+    portrait: string | null;
 
     dateOfBirth: LifeEvent['date'];
     placeOfBirth: LifeEvent['place'];
@@ -27,9 +28,11 @@ type PersonFormValues = {
     placeOfDeath: LifeEvent['place'];
 };
 
-const PersonModal = ({ person, onClose }: PersonModalProps) => {
+const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
     const dispatch = useDispatch();
+
     const isEdit = !!person;
+    const isAddRelative = !!addContext;
 
     const handleDelete = () => {
         if (person) {
@@ -57,15 +60,21 @@ const PersonModal = ({ person, onClose }: PersonModalProps) => {
             familyName: values.lastName,
             maidenName: values.maidenName,
             gender: values.gender,
-            photoUrl: values.photo,
+            portrait: values.portrait,
             birth: makeLifeEvent(values.dateOfBirth, values.placeOfBirth),
             death: makeLifeEvent(values.dateOfDeath, values.placeOfDeath),
         };
 
-        if (person) {
+        if (isEdit) {
             dispatch(
                 updatePerson({
                     id: person.id, changes: basePerson,
+                }),
+            );
+        } else if (isAddRelative) {
+            dispatch(
+                addPersonWithRelation({
+                    person: basePerson, ctx: addContext,
                 }),
             );
         } else {
@@ -92,7 +101,7 @@ const PersonModal = ({ person, onClose }: PersonModalProps) => {
     ] as const;
 
     const fields = [
-        { name: 'personPhoto', placeholder: 'Photo', type: 'file' },
+        { name: 'portrait', placeholder: 'Photo', type: 'file' },
         { name: 'gender', options: GENDER_OPTIONS, type: 'radio' },
 
         { name: 'firstName', placeholder: 'First name', type: 'text' },
@@ -103,10 +112,14 @@ const PersonModal = ({ person, onClose }: PersonModalProps) => {
         { name: 'placeOfBirth', placeholder: 'Place of Birth', type: 'text' },
 
         { name: 'lifeState', options: LIVING_OPTIONS, type: 'radio' },
-        { name: 'dateOfDeath', placeholder: 'Date of Death', type: 'text',
-            visible: (v) => v.lifeState === 'deceased' },
-        { name: 'placeOfDeath', placeholder: 'Place of Death', type: 'text',
-            visible: (v) => v.lifeState === 'deceased' },
+        {
+            name: 'dateOfDeath', placeholder: 'Date of Death', type: 'text',
+            visible: (v) => v.lifeState === 'deceased',
+        },
+        {
+            name: 'placeOfDeath', placeholder: 'Place of Death', type: 'text',
+            visible: (v) => v.lifeState === 'deceased',
+        },
     ] satisfies ReadonlyArray<FormField>;
 
     const baseButtons = [
@@ -153,7 +166,7 @@ const PersonModal = ({ person, onClose }: PersonModalProps) => {
             lastName: person.familyName ?? '',
             maidenName: person.maidenName ?? '',
             gender: person.gender ?? 'unknown',
-            photo: person.photoUrl ?? null,
+            portrait: person.portrait ?? null,
 
             dateOfBirth: person.birth?.date ?? '',
             placeOfBirth: person.birth?.place ?? '',
@@ -167,7 +180,7 @@ const PersonModal = ({ person, onClose }: PersonModalProps) => {
             lastName: '',
             maidenName: '',
             gender: 'unknown',
-            photo: null,
+            portrait: null,
 
 
             lifeState: 'unknown',
@@ -179,7 +192,7 @@ const PersonModal = ({ person, onClose }: PersonModalProps) => {
         };
 
     return (
-        <Modal onClose={onClose} btnClose={true}>
+        <Modal onClose={onClose} btnClose>
             <div className={styles.editModal}>
                 <Title level={'h2'} size={'small'}>
                     {isEdit ? 'Edit person' : 'Add person'}

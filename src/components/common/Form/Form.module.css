@@ -15,7 +15,7 @@
     grid-area: photo;
 }
 
-.input-personPhoto {
+.input-portrait {
     grid-area: personPhoto;
     width: 132px;
 }

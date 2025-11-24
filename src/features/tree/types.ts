@@ -4,6 +4,20 @@ export type Gender = 'female' | 'male' | 'unknown';
 
 export type LifeState = 'living' | 'deceased' | 'unknown';
 
+export type RelativeKind =
+    | 'mother' | 'father'
+    | 'spouse'
+    | 'son' | 'daughter'
+    | 'brother' | 'sister';
+
+export type AddRelativeContext = {
+    anchorPersonId: Id;
+    kind: RelativeKind;
+
+    familyId?: Id;
+    partnerId?: Id;
+};
+
 export interface LifeEvent {
     date?: string;
     place?: string;
@@ -18,7 +32,7 @@ export interface Person {
 
     gender: Gender;
 
-    photoUrl?: string;
+    portrait?: string;
 
     birth?: LifeEvent;
     death?: LifeEvent | null;

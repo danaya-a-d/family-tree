@@ -1,5 +1,5 @@
 import type { Id, Person, Family } from '@/features/tree/types';
-import big1 from '../assets/img/album-photo-1.jpg';
+import big1 from '../assets/img/album-preview-photo-2.jpg';
 
 export const mockPersons: Person[] = [
     {
@@ -9,7 +9,7 @@ export const mockPersons: Person[] = [
         gender: 'male',
         birth: { date: '1990-08-21' },
         death: {},
-        photoUrl: big1,
+        portrait: big1,
     },
     {
         id: 'p2',
@@ -18,7 +18,7 @@ export const mockPersons: Person[] = [
         gender: 'female',
         birth: { date: '1990-08-21' },
         death: { date: '2020-01-11' },
-        photoUrl: big1,
+        portrait: big1,
     },
     {
         id: 'p3',
@@ -26,7 +26,7 @@ export const mockPersons: Person[] = [
         familyName: 'Davidenko',
         gender: 'male',
         death: null,
-        photoUrl: big1,
+        portrait: big1,
     },
     {
         id: 'p4',
@@ -35,7 +35,7 @@ export const mockPersons: Person[] = [
         maidenName: 'Ivanova',
         gender: 'female',
         death: null,
-        photoUrl: big1,
+        portrait: big1,
     },
     {
         id: 'p5',
@@ -43,7 +43,7 @@ export const mockPersons: Person[] = [
         familyName: 'Davidenko',
         gender: 'male',
         death: null,
-        photoUrl: big1,
+        portrait: big1,
     },
     {
         id: 'p6',
@@ -51,7 +51,7 @@ export const mockPersons: Person[] = [
         familyName: 'Davidenko',
         gender: 'female',
         death: null,
-        photoUrl: big1,
+        portrait: big1,
     },
 
     {
@@ -60,7 +60,7 @@ export const mockPersons: Person[] = [
         familyName: 'Davidenko',
         gender: 'female',
         death: null,
-        photoUrl: big1,
+        portrait: big1,
     },
     {
         id: 'p8',
@@ -68,7 +68,7 @@ export const mockPersons: Person[] = [
         familyName: 'Davidenko',
         gender: 'male',
         death: null,
-        photoUrl: big1,
+        portrait: big1,
     },
     {
         id: 'p9',
@@ -77,7 +77,7 @@ export const mockPersons: Person[] = [
         maidenName: 'Ivanova',
         gender: 'female',
         death: null,
-        photoUrl: big1,
+        portrait: big1,
     },
 
     {
@@ -86,7 +86,7 @@ export const mockPersons: Person[] = [
         familyName: 'Volkova',
         gender: 'female',
         death: null,
-        photoUrl: big1,
+        portrait: big1,
     },
 ];
 

@@ -6,7 +6,7 @@
 export type { ButtonProps, ButtonConfig } from './Button/Button.types';
 
 // Field
-export type { FormFieldType, FormField, FormValues, ErrorsMap } from './Form/Form.types';
+export type { FormFieldType, FormField, FormValues, ErrorsMap, Validate } from './Form/Form.types';
 
 // Toast
 export type { ToastData, ToastProps } from './Toast/Toast.types';

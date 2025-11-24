@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { deletePhoto, updatePhoto } from '@/features/gallery/gallerySlice';
 import { addPhoto } from '@/features/gallery/gallerySlice';
 import Title from '../../common/Title/Title';
-import type { ButtonConfig, FormField } from '../../common/ui.types';
+import type { ButtonConfig, ErrorsMap, FormField, FormValues } from '../../common/ui.types';
 import type { PhotoItem } from '@/features/gallery/types';
 import styles from './EditModal.module.css';
 
@@ -99,8 +99,33 @@ const EditModal = ({ photo, onClose }: EditModalProps) => {
               photo: null,
           };
 
+    // Валидатор
+    const validate = (values: FormValues) => {
+        const errors: ErrorsMap = {};
+
+        // Title
+        const titleErrors: string[] = [];
+        if (!values.title?.toString().trim()) {
+            titleErrors.push('Don\'t forget to add a title');
+        }
+        if (titleErrors.length) {
+            errors.title = titleErrors;
+        }
+
+        // Photo
+        const photoErrors: string[] = [];
+        if (!values.photo?.toString().trim()) {
+            photoErrors.push('You\'ll need to upload a photo first');
+        }
+        if (photoErrors.length) {
+            errors.photo = photoErrors;
+        }
+
+        return errors;
+    };
+
     return (
-        <Modal onClose={onClose} btnClose={true}>
+        <Modal onClose={onClose} btnClose>
             <div className={styles.editModal}>
                 <Title level={'h2'} size={'small'}>
                     {isEdit ? 'Edit Photo' : 'Add Photo'}
@@ -114,6 +139,7 @@ const EditModal = ({ photo, onClose }: EditModalProps) => {
                     formColumns={formColumns}
                     formRows={formRows}
                     onSubmit={handleSubmit}
+                    validate={validate}
                 />
             </div>
         </Modal>

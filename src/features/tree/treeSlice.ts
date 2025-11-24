@@ -1,6 +1,6 @@
-import { createSlice, createEntityAdapter, type PayloadAction, type EntityState } from '@reduxjs/toolkit';
+import { createSlice, createEntityAdapter, type PayloadAction, type EntityState, nanoid } from '@reduxjs/toolkit';
 import { makeFamilyId, makePersonId } from './id';
-import { Person, Family, Id } from './types';
+import { Person, Family, Id, AddRelativeContext } from './types';
 
 export const personsAdapter = createEntityAdapter<Person>({});
 export const familiesAdapter = createEntityAdapter<Family>({});
@@ -9,13 +9,20 @@ export interface TreeState {
     persons: EntityState<Person, Id>;
     families: EntityState<Family, Id>;
     rootPersonId?: Id;
+    layoutTick: number,
 }
 
 const initialState: TreeState = {
     persons: personsAdapter.getInitialState(),
     families: familiesAdapter.getInitialState(),
     rootPersonId: undefined,
+    layoutTick: 0,
 };
+
+type AddPersonWithRelationPayload = {
+    person: Partial<Person>;
+    ctx: AddRelativeContext;
+}
 
 const addUnique = (arr: Id[], id: Id) => {
     if (!arr.includes(id)) arr.push(id);
@@ -40,6 +47,7 @@ const treeSlice = createSlice({
         addPerson: {
             reducer(state, action: PayloadAction<Person>) {
                 personsAdapter.addOne(state.persons, action.payload);
+                state.layoutTick++;
             },
             prepare(input: Partial<Omit<Person, 'id'>> & { id?: Id }) {
                 const payload = {
@@ -52,8 +60,90 @@ const treeSlice = createSlice({
             },
         },
 
+        addPersonWithRelation: {
+            reducer(state,
+                    action: PayloadAction<{ person: Person; ctx: AddRelativeContext }>) {
+                const { person, ctx } = action.payload;
+                personsAdapter.addOne(state.persons, person);
+
+                //for search & create families
+                const families = state.families;
+                const findFamilyBySpouse = (id: Id) =>
+                    Object.values(families.entities).find(f => f?.spouses.includes(id));
+                const findFamilyByChild = (id: Id) =>
+                    Object.values(families.entities).find(f => f?.children.includes(id));
+
+                const ensureSpouseFamily = (s: Id) => {
+                    let fam = findFamilyBySpouse(s);
+                    if (!fam) {
+                        fam = { id: nanoid(), spouses: [s], children: [] };
+                        familiesAdapter.addOne(families, fam);
+                    }
+                    return fam!;
+                };
+
+                const ensureParentsFamilyForChild = (c: Id) => {
+                    let fam = findFamilyByChild(c);
+                    if (!fam) {
+                        fam = { id: nanoid(), spouses: [], children: [c] };
+                        familiesAdapter.addOne(families, fam);
+                    } else if (!fam.children.includes(c)) {
+                        fam.children.push(c);
+                    }
+                    return fam!;
+                };
+
+                const a = ctx.anchorPersonId;
+                const b = person.id;
+
+                switch (ctx.kind) {
+                    case 'spouse': {
+                        const fam = ensureSpouseFamily(a);
+                        if (!fam.spouses.includes(b)) fam.spouses.push(b);
+                        break;
+                    }
+                    case 'son':
+                    case 'daughter': {
+                        const fam = ensureSpouseFamily(a);         // якорь — родитель
+                        if (!fam.children.includes(b)) fam.children.push(b);
+                        break;
+                    }
+                    case 'mother':
+                    case 'father': {
+                        const fam = ensureParentsFamilyForChild(a); // якорь — ребёнок
+                        if (!fam.spouses.includes(b)) fam.spouses.push(b);
+                        break;
+                    }
+                    case 'brother':
+                    case 'sister': {
+                        const fam = ensureParentsFamilyForChild(a);
+                        if (!fam.children.includes(b)) fam.children.push(b);
+                        break;
+                    }
+                }
+
+                state.layoutTick++;
+            },
+            prepare({ person, ctx }: AddPersonWithRelationPayload) {
+                const normalized: Person = {
+                    id: makePersonId(),
+                    gender: person.gender ?? 'unknown',
+                    givenName: person.givenName,
+                    familyName: person.familyName,
+                    maidenName: person.maidenName,
+                    portrait: person.portrait,
+                    birth: person.birth,
+                    death: person.death,
+                };
+
+                return { payload: { ctx, person: normalized } };
+            },
+        },
+
         updatePerson: (state, action: PayloadAction<{ id: Id; changes: Partial<Person> }>) => {
             personsAdapter.updateOne(state.persons, action.payload);
+
+            state.layoutTick++;
         },
 
         removePerson: (state, action: PayloadAction<Id>) => {
@@ -76,6 +166,8 @@ const treeSlice = createSlice({
 
             personsAdapter.removeOne(state.persons, action.payload);
             if (state.rootPersonId === action.payload) state.rootPersonId = undefined;
+
+            state.layoutTick++;
         },
 
         //Family
@@ -168,6 +260,7 @@ const treeSlice = createSlice({
 
 export const {
     addPerson,
+    addPersonWithRelation,
     updatePerson,
     removePerson,
     addFamily,

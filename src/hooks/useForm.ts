@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
-import type { FormValues, ErrorsMap } from '../components/common/ui.types';
+import type { FormValues, ErrorsMap, Validate } from '../components/common/ui.types';
 
 type UseFormReturn = {
     values: FormValues;
@@ -12,13 +12,17 @@ type UseFormReturn = {
     setCustomValue: (name: string, value: FormValues[string]) => void;
 };
 
-export const useForm = ({
-    initialValues,
-    onSubmit,
-}: {
+type UseFormArgs = {
     initialValues: FormValues;
     onSubmit: (values: FormValues) => void;
-}): UseFormReturn => {
+    validate?: Validate;
+};
+
+export const useForm = ({
+                            initialValues,
+                            onSubmit,
+                            validate,
+                        }: UseFormArgs): UseFormReturn => {
     const [values, setValues] = useState<FormValues>(initialValues);
     const [submitCount, setSubmitCount] = useState<number>(0);
     const [globalErrors, setGlobalErrors] = useState<ErrorsMap>({});
@@ -51,31 +55,6 @@ export const useForm = ({
 
     const setCustomValue = (name: string, value: FormValues[string]) => {
         setValues((prev) => ({ ...prev, [name]: value }));
-    };
-
-    // Валидатор
-    const validate = (values: FormValues) => {
-        const errors: ErrorsMap = {};
-
-        // Title
-        const titleErrors: string[] = [];
-        if (!values.title?.toString().trim()) {
-            titleErrors.push("Don't forget to add a title");
-        }
-        if (titleErrors.length) {
-            errors.title = titleErrors;
-        }
-
-        // Photo
-        const photoErrors: string[] = [];
-        if (!values.photo?.toString().trim()) {
-            photoErrors.push("You'll need to upload a photo first");
-        }
-        if (photoErrors.length) {
-            errors.photo = photoErrors;
-        }
-
-        return errors;
     };
 
     return { values, globalErrors, submitCount, handleChange, handleSubmit, setCustomValue };
