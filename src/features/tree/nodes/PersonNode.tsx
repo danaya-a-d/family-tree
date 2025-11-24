@@ -5,10 +5,12 @@ import { setRootPerson } from '@/features/tree/treeSlice';
 import { selectPersonById } from '@/features/tree/selectors';
 import type { RootState } from '@/app/store';
 import { PERSON_SIZE } from '@/features/tree/constants';
+import { RelativeKind, AddRelativeContext } from '@/features/tree/types';
 import styles from './PersonNode.module.css';
 import MenuButton from '@/components/common/MenuButton/MenuButton';
 import MenuEdit from '@/components/common/MenuEdit/MenuEdit';
 import PersonModal from '@/components/FamilyTreePage/PersonModal/PersonModal';
+import RelativeModal from '@/components/FamilyTreePage/RelativeModal/RelativeModal';
 
 type PersonData = {
     personId: string;
@@ -23,6 +25,9 @@ type RFPersonNode = Node<PersonData>;
 
 const PersonNode = ({ id, data, selected }: NodeProps<RFPersonNode>) => {
     const [isAddPersonOpen, setIsAddPersonOpen] = useState(false);
+    const [isEditPersonOpen, setIsEditPersonOpen] = useState(false);
+    const [addCtx, setAddCtx] = useState<AddRelativeContext | null>(null);
+
     const dispatch = useDispatch();
     const rf = useReactFlow();
 
@@ -32,6 +37,9 @@ const PersonNode = ({ id, data, selected }: NodeProps<RFPersonNode>) => {
 
     const birth = person?.birth?.date ?? data.birth;
     const death = person?.death?.date ?? data.death;
+    const name = person?.givenName ?? data.name;
+    const surname = person?.familyName ?? data.surname;
+    const photo = person?.portrait ?? data.photoUrl;
 
     const onClick = () => {
         dispatch(setRootPerson(data.personId));
@@ -47,24 +55,16 @@ const PersonNode = ({ id, data, selected }: NodeProps<RFPersonNode>) => {
         rf.setCenter(cx, cy, { zoom: 1.1, duration: 300 });
     };
 
-    const openAddPersonModal = () => {
-        setIsAddPersonOpen(true);
-    };
-
-    const closeAddPersonModal = () => {
-        setIsAddPersonOpen(false);
-    };
-
     const menuList = [
         {
             id: 1,
             name: 'Edit person',
-            onClick: openAddPersonModal,
+            onClick: () => setIsEditPersonOpen(true),
         },
         {
             id: 2,
             name: 'Add relative',
-            onClick: openAddPersonModal,
+            onClick: () => setIsAddPersonOpen(true),
         },
         {
             id: 3,
@@ -73,21 +73,24 @@ const PersonNode = ({ id, data, selected }: NodeProps<RFPersonNode>) => {
         },
     ];
 
+    const handlePickRelative = (kind: RelativeKind) => {
+        setIsAddPersonOpen(true);
+        setAddCtx({ anchorPersonId: person.id, kind });
+    };
+
     return (
         <div className={`${styles.card} ${selected ? styles.selected : ''}`} onClick={onClick}>
             <div className={styles.info}>
                 <div className={styles.photo}>
-                    {data.photoUrl && <img src={data.photoUrl} alt={data.name} />}
+                    {photo && <img src={photo} alt={name} />}
                 </div>
-
                 <div className={styles.about}>
                     <div className={styles.name}>
-                        <span>{data.name}</span>
-                        <span>{data.surname}</span>
+                        <span>{name}</span>
+                        <span>{surname}</span>
                     </div>
                     <div className={styles.dates}>{birth}{death ? ` – ${death}` : ''}</div>
                 </div>
-
                 <div className={styles.edit}>
                     <MenuButton className={styles.editButton} />
                     <MenuEdit list={menuList} className={styles.editList} />
@@ -98,7 +101,25 @@ const PersonNode = ({ id, data, selected }: NodeProps<RFPersonNode>) => {
             <Handle id='right' type='source' position={Position.Right} />
             <Handle id='top' type='target' position={Position.Top} />
 
-            {isAddPersonOpen && <PersonModal onClose={closeAddPersonModal} person={person}/>}
+            {isAddPersonOpen &&
+                <RelativeModal
+                    onClose={() => setIsAddPersonOpen(false)}
+                    anchor={person}
+                    onPick={handlePickRelative}
+                />}
+
+            {isEditPersonOpen &&
+                <PersonModal
+                    onClose={() => setIsEditPersonOpen(false)}
+                    person={person}
+                />}
+
+            {addCtx && (
+                <PersonModal
+                    addContext={addCtx}
+                    onClose={() => setAddCtx(null)}
+                />
+            )}
         </div>
     );
 };

@@ -1,7 +1,7 @@
 import type { JSX } from 'react';
 import { useMemo, useState } from 'react';
 import { useForm } from '@/hooks/useForm';
-import { ButtonConfig } from '../ui.types';
+import { ButtonConfig, Validate } from '../ui.types';
 import Input from './Input/Input';
 import Textarea from './Textarea/Textarea';
 import TagsInput from './TagsInput/TagsInput';
@@ -22,21 +22,24 @@ interface FormProps {
     formColumns?: string;
     formRows?: string;
     className?: string;
+    validate?: Validate;
 }
 
 const Form = ({
-    initialValues,
-    fields,
-    buttons,
-    onSubmit,
-    formLayout,
-    formColumns,
-    formRows,
-    className,
-}: FormProps) => {
+                  initialValues,
+                  fields,
+                  buttons,
+                  onSubmit,
+                  formLayout,
+                  formColumns,
+                  formRows,
+                  className,
+                  validate,
+              }: FormProps) => {
     const { values, globalErrors, submitCount, handleChange, handleSubmit, setCustomValue } = useForm({
         initialValues,
         onSubmit,
+        validate,
     });
 
     const [localErrors, setLocalErrors] = useState<ErrorsMap>({});

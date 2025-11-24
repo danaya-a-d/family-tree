@@ -15,3 +15,5 @@ export interface FormField {
 export type FormValues = Record<string, string | string[] | null>;
 
 export type ErrorsMap = Record<string, string[]>;
+
+export type Validate = (values: FormValues) => ErrorsMap;
