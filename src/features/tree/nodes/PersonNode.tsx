@@ -7,6 +7,9 @@ import type { RootState } from '@/app/store';
 import { PERSON_SIZE } from '@/features/tree/constants';
 import { RelativeKind, AddRelativeContext } from '@/features/tree/types';
 import styles from './PersonNode.module.css';
+import femalePlaceholder from '@/assets/img/pl-female.jpg';
+import malePlaceholder from '@/assets/img/pl-male.jpg';
+import unknownPlaceholder from '@/assets/img/pl-unknown.jpg';
 import MenuButton from '@/components/common/MenuButton/MenuButton';
 import MenuEdit from '@/components/common/MenuEdit/MenuEdit';
 import PersonModal from '@/components/FamilyTreePage/PersonModal/PersonModal';
@@ -35,11 +38,14 @@ const PersonNode = ({ id, data, selected }: NodeProps<RFPersonNode>) => {
         selectPersonById(s, data.personId),
     );
 
+    const getDefaultPortrait = (gender?: 'male' | 'female' | 'unknown') =>
+        gender === 'male' ? malePlaceholder : gender === 'female' ? femalePlaceholder : unknownPlaceholder;
+
     const birth = person?.birth?.date ?? data.birth;
     const death = person?.death?.date ?? data.death;
-    const name = person?.givenName ?? data.name;
-    const surname = person?.familyName ?? data.surname;
-    const photo = person?.portrait ?? data.photoUrl;
+    const name = person?.givenName || data.name || 'Unknown';
+    const surname = `${person.familyName ?? ''} ${person.maidenName ? `(${person.maidenName})` : ''}`.trim() ?? data.surname;
+    const photo = person?.portrait ?? data.photoUrl ?? getDefaultPortrait(person.gender);
 
     const onClick = () => {
         dispatch(setRootPerson(data.personId));

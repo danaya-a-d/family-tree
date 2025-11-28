@@ -35,7 +35,6 @@ const PersonModal = ({ anchor, onPick, onClose }: RelativeModalProps) => {
         setIsAddPersonOpen(false);
     };
 
-
     return (
         <Modal onClose={onClose} btnClose>
             <div className={styles.relativeModal}>

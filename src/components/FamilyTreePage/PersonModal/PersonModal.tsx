@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { addPerson, addPersonWithRelation, removePerson, updatePerson } from '@/features/tree/treeSlice';
 import Title from '../../common/Title/Title';
 import type { ButtonConfig, FormField } from '../../common/ui.types';
-import { AddRelativeContext, Gender, LifeEvent, LifeState, Person } from '@/features/tree/types';
+import { AddRelativeContext, Gender, LifeEvent, LifeState, Person, RelativeKind } from '@/features/tree/types';
 import styles from './PersonModal.module.css';
 
 interface PersonModalProps {
@@ -160,6 +160,16 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
     const formColumns = '1fr 1fr';
     const formRows = '160px';
 
+    const GENDER_BY_KIND: Record<RelativeKind, Gender | undefined> = {
+        father: 'male',
+        son: 'male',
+        brother: 'male',
+        mother: 'female',
+        daughter: 'female',
+        sister: 'female',
+        spouse: 'unknown',
+    };
+
     const initialValues: PersonFormValues = person
         ? {
             firstName: person.givenName ?? '',
@@ -179,7 +189,7 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
             firstName: '',
             lastName: '',
             maidenName: '',
-            gender: 'unknown',
+            gender: GENDER_BY_KIND[addContext.kind] ?? 'unknown',
             portrait: null,
 
 
