@@ -9,14 +9,12 @@ export interface TreeState {
     persons: EntityState<Person, Id>;
     families: EntityState<Family, Id>;
     rootPersonId?: Id;
-    layoutTick: number,
 }
 
 const initialState: TreeState = {
     persons: personsAdapter.getInitialState(),
     families: familiesAdapter.getInitialState(),
     rootPersonId: undefined,
-    layoutTick: 0,
 };
 
 type AddPersonWithRelationPayload = {
@@ -47,7 +45,6 @@ const treeSlice = createSlice({
         addPerson: {
             reducer(state, action: PayloadAction<Person>) {
                 personsAdapter.addOne(state.persons, action.payload);
-                state.layoutTick++;
             },
             prepare(input: Partial<Omit<Person, 'id'>> & { id?: Id }) {
                 const payload = {
@@ -121,8 +118,6 @@ const treeSlice = createSlice({
                         break;
                     }
                 }
-
-                state.layoutTick++;
             },
             prepare({ person, ctx }: AddPersonWithRelationPayload) {
                 const normalized: Person = {
@@ -142,8 +137,6 @@ const treeSlice = createSlice({
 
         updatePerson: (state, action: PayloadAction<{ id: Id; changes: Partial<Person> }>) => {
             personsAdapter.updateOne(state.persons, action.payload);
-
-            state.layoutTick++;
         },
 
         removePerson: (state, action: PayloadAction<Id>) => {
@@ -166,8 +159,6 @@ const treeSlice = createSlice({
 
             personsAdapter.removeOne(state.persons, action.payload);
             if (state.rootPersonId === action.payload) state.rootPersonId = undefined;
-
-            state.layoutTick++;
         },
 
         //Family

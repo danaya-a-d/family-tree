@@ -14,13 +14,13 @@ import styles from './FamilyTree.module.css';
 
 const FamilyTree = () => {
     const graph = useSelector((s: RootState) => buildGraph(s));
-    const layoutTick = useSelector((s: RootState) => s.tree.layoutTick);
     const [nodes, setNodes] = useState<Node[]>(graph.nodes);
     const [edges, setEdges] = useState<Edge[]>(graph.edges);
     const [rf, setRf] = useState<ReactFlowInstance | null>(null);
+    const edgeTypes = { chamfer: ChamferEdge };
 
     const applyLayout = async () => {
-        const posMap = await layoutWithELK(graph.nodes, edges);
+        const posMap = await layoutWithELK(graph.nodes, graph.edges);
 
         // Хелпер: размеры узла
         const getSize = (id: string) => {
@@ -133,20 +133,13 @@ const FamilyTree = () => {
         [],
     );
 
-    const edgeTypes = { chamfer: ChamferEdge };
-    //
-    // useEffect(() => {
-    //     if (!rf || !graph.nodes.length) return;
-    //     void applyLayout();
-    // }, [layoutTick]);
-
     return (
         <div className={styles.container}>
             <div className={styles.wrapper}>
                 <Title level={'h1'} size={'medium'} showDecoration={false} highlightFirstLetter={false}>
                     {'Family tree'}
                 </Title>
-                <button onClick={applyLayout}>Auto layout</button>
+                {/*<button onClick={applyLayout}>Auto layout</button>*/}
             </div>
 
             <div className={styles.familyTree}>
