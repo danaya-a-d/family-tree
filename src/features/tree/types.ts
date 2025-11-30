@@ -10,6 +10,8 @@ export type RelativeKind =
     | 'son' | 'daughter'
     | 'brother' | 'sister';
 
+type DateModifier = 'exact' | 'abt' | 'bef' | 'aft' | 'between';
+
 export type AddRelativeContext = {
     anchorPersonId: Id;
     kind: RelativeKind;
