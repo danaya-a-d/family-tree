@@ -1,4 +1,4 @@
-export type FormFieldType = 'text' | 'textarea' | 'tagsinput' | 'file' | 'radio';
+export type FormFieldType = 'text' | 'textarea' | 'tagsinput' | 'file' | 'radio' | 'date';
 
 export type RadioOption = { value: string; label: string; disabled?: boolean };
 

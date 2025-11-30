@@ -12,6 +12,7 @@ import Button from '../Button/Button';
 import Errors from './Errors/Errors';
 import type { FormField, FormValues, ErrorsMap } from '../ui.types';
 import styles from './Form.module.css';
+import DateInput from '@/components/common/Form/DateInput/DateInput';
 
 interface FormProps {
     initialValues: FormValues;
@@ -75,6 +76,14 @@ const Form = ({
             case 'textarea': {
                 return (
                     <Textarea {...commonProps} value={(values[field.name] as string) ?? ''} onChange={handleChange} />
+                );
+            }
+
+            case 'date': {
+                return (
+                    <DateInput {...commonProps}
+                               value={(values[field.name] as string) ?? ''}
+                               setValue={setCustomValue} />
                 );
             }
 

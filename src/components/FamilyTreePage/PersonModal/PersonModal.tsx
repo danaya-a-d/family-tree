@@ -108,12 +108,12 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
         { name: 'lastName', placeholder: 'Last name', type: 'text' },
         { name: 'maidenName', placeholder: 'Maiden name', type: 'text', visible: (v) => v.gender === 'female' },
 
-        { name: 'dateOfBirth', placeholder: 'Date of Birth', type: 'text' },
+        { name: 'dateOfBirth', placeholder: 'Date of Birth', type: 'date' },
         { name: 'placeOfBirth', placeholder: 'Place of Birth', type: 'text' },
 
         { name: 'lifeState', options: LIVING_OPTIONS, type: 'radio' },
         {
-            name: 'dateOfDeath', placeholder: 'Date of Death', type: 'text',
+            name: 'dateOfDeath', placeholder: 'Date of Death', type: 'date',
             visible: (v) => v.lifeState === 'deceased',
         },
         {
