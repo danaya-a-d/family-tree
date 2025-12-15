@@ -17,7 +17,7 @@
 
 .input-portrait {
     grid-area: personPhoto;
-    width: 132px;
+    width: 160px;
 }
 
 .input-firstName {
@@ -54,6 +54,7 @@
 
 .input-lifeState {
     grid-area: living;
+    margin-bottom: 40px;
 }
 
 .buttons {

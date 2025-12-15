@@ -1,10 +1,9 @@
 import Modal from '../../common/Modal/Modal';
-import MenuEdit from '../../common/MenuEdit/MenuEdit';
+import MenuEdit from '@/components/common/MenuEdit/MenuEdit';
 import { useDispatch } from 'react-redux';
 import { deletePhoto } from '@/features/gallery/gallerySlice';
 import { useState } from 'react';
 import EditModal from '../EditModal/EditModal';
-import MenuButton from '@/components/common/MenuButton/MenuButton';
 import type { PhotoItem } from '@/features/gallery/types';
 import styles from './PhotoModal.module.css';
 
@@ -58,12 +57,13 @@ const PhotoModal = ({ photo, onClose }: PhotoModalProps) => {
             {isOpen && (
                 <Modal onClose={onClose}>
                     <div className={styles.photoModal}>
-                        <div className={styles.edit}>
-                            <MenuButton className={styles.editButton}/>
-                            <MenuEdit list={menuList} className={styles.editList} />
-                        </div>
+                        <MenuEdit menuList={menuList}
+                                  listPosition='bottom'
+                                  buttonStyle='shadow'
+                                  className={styles.editList}
+                        />
 
-                        <img className={styles.photo} src={photo.bigPath} alt="" />
+                        <img className={styles.photo} src={photo.bigPath} alt='' />
 
                         <div className={styles.about}>
                             <h4 className={styles.title}>{photo.title}</h4>

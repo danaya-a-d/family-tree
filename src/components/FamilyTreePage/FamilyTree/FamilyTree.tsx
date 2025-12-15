@@ -8,7 +8,7 @@ import Title from '@/components/common/Title/Title';
 import PersonNode from '@/features/tree/nodes/PersonNode';
 import FamilyNode from '@/features/tree/nodes/FamilyNode';
 import ChamferEdge from '@/features/tree/edges/ChamferEdge';
-import { PERSON_SIZE, FAMILY_SIZE } from '@/features/tree/constants';
+import { PERSON_SIZE, FAMILY_SIZE } from '@/components/common/constants';
 import '@xyflow/react/dist/style.css';
 import styles from './FamilyTree.module.css';
 

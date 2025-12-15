@@ -7,15 +7,23 @@ interface TagsInputProps {
     value?: string[];
     placeholder?: string;
     className?: string;
+    setValue?: (name: string, value: string[]) => void;
     onError?: (msg: string) => void;
-    setCustomValue?: (name: string, value: string[]) => void;
 }
 
-const TagsInput = ({ name, value, placeholder, className, onError, setCustomValue }: TagsInputProps) => {
+const TagsInput = ({
+                       name,
+                       value,
+                       setValue,
+                       placeholder,
+                       className,
+                       onError,
+                   }: TagsInputProps) => {
     const [input, setInput] = useState<string>('');
     const [inputWidth, setInputWidth] = useState<number>(1);
     const spanRef = useRef<HTMLSpanElement | null>(null);
     const tags = value ?? [];
+
     const MAX_TAG_LENGTH = 20;
 
     useEffect(() => {
@@ -43,13 +51,13 @@ const TagsInput = ({ name, value, placeholder, className, onError, setCustomValu
             return;
         }
 
-        setCustomValue(name, [...tags, trimmed]);
+        setValue(name, [...tags, trimmed]);
         setInput('');
     };
 
     const removeTag = (index: number): void => {
         const newTags = tags.filter((_, i) => i !== index);
-        setCustomValue(name, newTags);
+        setValue(name, newTags);
     };
 
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>): void => {
@@ -80,7 +88,7 @@ const TagsInput = ({ name, value, placeholder, className, onError, setCustomValu
                                     {tag}
                                 </div>
 
-                                <button type="button" className={styles.close} onClick={() => removeTag(i)}>
+                                <button type='button' className={styles.close} onClick={() => removeTag(i)}>
                                     ×
                                 </button>
                             </div>
