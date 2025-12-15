@@ -1,39 +1,95 @@
 .menu {
-    width: max-content;
-    padding: 8px;
-    border-radius: 8px;
-    background-color: white;
-    box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.14);
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: all 0.3s ease;
+    z-index: 5;
 }
 
 .list {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.item {
-    font-size: 14px;
-}
-
-.item button, .item a {
-    font-family: inherit;
-}
-
-.item:hover,
-.item:focus {
-    color: #9f0004;
-}
-
-.link {
-    padding: 0;
-    color: inherit;
-    background-color: transparent;
+    position: absolute;
     transition: all 0.3s ease;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
+    pointer-events: none;
+    opacity: 0;
+}
+
+.list::before {
+    content: '';
+    position: absolute;
+    display: block;
+}
+
+.list.bottom {
+    top: 39px;
+    right: -60px;
+}
+
+.list.bottom::before {
+    width: 100%;
+    height: 9px;
+    top: -9px;
+    left: 0;
+}
+
+.list.top {
+    right: 0;
+    top: -100px;
+}
+
+.list.top::before {
+    width: 100%;
+    height: 18px;
+    left: 0;
+    bottom: -18px;
+}
+
+.list.right {
+    top: 0;
+    left: 5px;
+}
+
+.list.right::before {
+    height: 100%;
+    width: 12px;
+    left: -12px;
+    top: 0;
+}
+
+.menu:hover .list,
+.menu:focus .list {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.list {
+    position: absolute;
+    right: 0;
+    top: -100px;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.14);
+}
+
+.list::before {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 18px;
+    left: 0;
+    bottom: -18px;
+}
+
+.button {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+}
+
+.button.shadow {
+    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.14);
+}
+
+.button.trans {
+    background: transparent;
 }

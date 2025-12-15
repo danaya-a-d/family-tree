@@ -1,7 +1,7 @@
 import type { RootState } from '@/app/store';
 import type { Node, Edge } from '@xyflow/react';
 import { personsSel, familiesSel } from './selectors';
-import { PERSON_SIZE, FAMILY_SIZE } from './constants';
+import { PERSON_SIZE, FAMILY_SIZE } from '../../components/common/constants';
 
 const pid = (id: string) => `p:${id}`;
 const fid = (id: string) => `f:${id}`;
@@ -13,15 +13,15 @@ export function buildGraph(state: RootState): { nodes: Node[]; edges: Edge[] } {
     const personNodes: Node[] = persons.map((p) => ({
         id: pid(p.id),
         type: 'person',
-        position: { x: 0, y: 0 }, // временно; ELK проставит координаты
+        position: { x: 0, y: 0 }, // ELK проставит координаты
         data: {
             kind: 'person',
             personId: p.id,
             name: `${p.givenName ?? 'Unknown'}`,
             surname: `${p.familyName ?? ''} ${p.maidenName ? `(${p.maidenName})` : ''}`.trim(),
-            photoUrl: p.portrait,
-            birth: p.birth?.date,
-            death: p.death?.date,
+            photoUrl: p.portrait || null,
+            birth: p.birth?.date?.from,
+            death: p.death?.date?.from,
         },
         width: PERSON_SIZE.width,
         height: PERSON_SIZE.height,

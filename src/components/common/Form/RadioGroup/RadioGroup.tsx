@@ -12,15 +12,20 @@ type RadioGroupProps = {
     value: string;
     onChange: (nextValue: string) => void;
     options: ReadonlyArray<RadioOption>;
+    size?: 'big' | 'small';
     disabled?: boolean;
 };
 
 const RadioGroup = ({
                         name, value, onChange, options,
-                        disabled = false,
+                        size = 'big', disabled = false,
                     }: RadioGroupProps) => {
     return (
-        <div role='radiogroup' className={styles.group}>
+        <div role='radiogroup'
+             className={
+                 size !== 'small' ? styles.group : styles.groupSmall
+             }
+        >
             {options.map(opt => {
                 const id = `${name}-${String(opt.value)}`;
                 const isDisabled = disabled || !!opt.disabled;
@@ -31,7 +36,7 @@ const RadioGroup = ({
                         key={id}
                         htmlFor={id}
                         className={[
-                            styles.option,
+                            size !== 'small' ? styles.option : styles.optionSmall,
                             checked ? styles.checked : '',
                             isDisabled ? styles.disabled : '',
                         ].join(' ')}
@@ -46,8 +51,17 @@ const RadioGroup = ({
                             disabled={isDisabled}
                             className={styles.input}
                         />
-                        <span className={styles.control} aria-hidden='true' />
-                        <span className={styles.text}>{opt.label}</span>
+                        <span
+                            className={
+                                size !== 'small' ? styles.control : styles.controlSmall
+                            } aria-hidden='true'
+                        />
+
+                        <span
+                            className={
+                                size !== 'small' ? styles.text : styles.textSmall
+                            }>{opt.label}
+                        </span>
                     </label>
                 );
             })}

@@ -1,0 +1,14 @@
+.title {
+    margin-top: -9px;
+    margin-bottom: 8px;
+}
+
+.inputs {
+    display: flex;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.input {
+    flex: 1 1 auto;
+}

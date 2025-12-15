@@ -1,11 +1,33 @@
-.relativeModal {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 594px;
+.wrapper {
+    position: relative;
+    margin-top: 40px;
+    width: 754px;
+    height: 470px;
+    border-radius: 40px;
+    background-color: rgba(159, 0, 4, 0.15);
+    box-sizing: border-box;
+    z-index: 1;
+}
+
+
+.wrapper::after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 470px;
+    width: 100%;
+    background-image: url('/src/assets/img/background-figure-tree.png');
+    background-repeat: repeat-x;
+    z-index: -1;
 }
 
 .rootPerson {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     display: flex;
     gap: 18px;
     align-items: center;
@@ -15,52 +37,189 @@
     background-color: white;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.14);
     box-sizing: border-box;
+    z-index: 2;
 }
 
-.personPhoto {
+.about {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12px;
+}
+
+.photo {
+    flex-shrink: 0;
     width: 112px;
     height: 112px;
-}
-
-.personPhoto img {
-    width: 100%;
-    object-fit: cover;
     border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(180, 120, 130, 0.25);
+    overflow: hidden;
 }
 
-.personName {
+.photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.name {
     display: flex;
     flex-direction: column;
-    font-size: 24px;
+    font-size: 20px;
+    line-height: 1.2;
     font-weight: 500;
 }
 
-.relatives {
+.dates {
     display: flex;
-    flex-direction: column;
-    gap: 32px;
-    margin-top: 32px;
+    font-size: 16px;
+    font-weight: 300;
+}
+
+.date {
+    display: flex;
+    align-items: center;
+}
+
+.lifeIcon {
+    filter: brightness(0) saturate(100%) invert(16%) sepia(34%) saturate(5392%) hue-rotate(341deg) brightness(95%) contrast(127%);
+    opacity: .5;
+    object-fit: contain;
+    width: 12px;
+    height: 12px;
+    margin-right: 2px;
+    margin-bottom: -2px;
+}
+
+.relatives {
+    position: absolute;
+    right: 0;
+    left: 0;
+    top: 0;
+    bottom: 0;
 }
 
 .relativeList {
+    position: absolute;
     display: flex;
     align-items: start;
-    flex-direction: column;
-    gap: 16px;
+    gap: 66px;
     list-style: none;
     margin: 0;
     padding: 0;
+    z-index: 1;
+}
+
+.relativeList::before, .relativeList::after {
+    content: "";
+    display: block;
+    position: absolute;
+}
+
+.relativeList::before {
+    width: 1px;
+    height: 130px;
+    background-color: black;
+}
+
+.relativeList::after {
+    width: 66px;
+    height: 16px;
+    background-image: url("data:image/svg+xml;utf8,<svg width='67' height='17' viewBox='0 0 67 17' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M33.5239 15.7455L20.6675 5.68831L6.79493e-06 5.68831' stroke='currentColor'/><path d='M32.7065 15.7455L45.563 5.68831L66.2305 5.68831' stroke='currentColor'/></svg>");
+    background-position: top center;
+    background-repeat: no-repeat;
+}
+
+.relativeList:nth-child(1) {
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.relativeList:nth-child(1)::before {
+    top: 41px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.relativeList:nth-child(1)::after {
+    top: 26px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: -1;
+}
+
+.relativeList:nth-child(2) {
+    right: 70px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.relativeList:nth-child(2)::before {
+    display: none;
+}
+
+.relativeList:nth-child(2)::after {
+    top: 26px;
+    right: 30px;
+    transform: translateX(-50%);
+    z-index: -1;
+}
+
+.relativeList:nth-child(3) {
+    bottom: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.relativeList:nth-child(3)::before {
+    bottom: 41px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.relativeList:nth-child(3)::after {
+    top: 26px;
+    left: 50%;
+    transform: translateX(-50%) scaleY(-1);
+    z-index: -1;
+}
+
+.relativeList:nth-child(4) {
+    flex-direction: column;
+    left: 70px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.relativeList:nth-child(4)::before {
+    top: 50%;
+    right: -34px;
+    transform: translateY(-50%) rotate(90deg) scaleY(-1);
+}
+
+.relativeList:nth-child(4)::after {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(90deg) scaleY(-1);
+    z-index: -1;
 }
 
 .relativeButton {
     margin: 0;
-    width: 193px;
-    height: 55px;
-    padding: 15px;
+    width: 77px;
+    height: 67px;
+    padding: 12px;
     border-radius: 8px;
     background-color: white;
     border: none;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.14);
     box-sizing: border-box;
     cursor: pointer;
+}
+
+.relativeButton:disabled {
+    opacity: .5;
+    cursor: auto;
 }

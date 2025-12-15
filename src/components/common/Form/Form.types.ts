@@ -1,4 +1,13 @@
-export type FormFieldType = 'text' | 'textarea' | 'tagsinput' | 'file' | 'radio' | 'date';
+import { Gender, LifeEvent, LifeEventDate, PartialDate } from '@/features/tree/types';
+
+export type FormFieldType =
+    | 'text'
+    | 'textarea'
+    | 'tags'
+    | 'file'
+    | 'radio'
+    | 'date'
+    | 'event';
 
 export type RadioOption = { value: string; label: string; disabled?: boolean };
 
@@ -12,7 +21,14 @@ export interface FormField {
     visible?: boolean | VisibilityPredicate;
 }
 
-export type FormValues = Record<string, string | string[] | null>;
+export type FormValue =
+    | string
+    | string[]
+    | PartialDate
+    | LifeEventDate
+    | undefined;
+
+export type FormValues = Record<string, FormValue>;
 
 export type ErrorsMap = Record<string, string[]>;
 

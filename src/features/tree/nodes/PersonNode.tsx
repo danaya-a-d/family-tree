@@ -4,13 +4,17 @@ import { Handle, Position, useReactFlow, type NodeProps, type Node } from '@xyfl
 import { setRootPerson } from '@/features/tree/treeSlice';
 import { selectPersonById } from '@/features/tree/selectors';
 import type { RootState } from '@/app/store';
-import { PERSON_SIZE } from '@/features/tree/constants';
-import { RelativeKind, AddRelativeContext } from '@/features/tree/types';
+import { PERSON_SIZE } from '@/components/common/constants';
+import { RelativeKind, AddRelativeContext, PartialDate, AnchorPerson } from '@/features/tree/types';
 import styles from './PersonNode.module.css';
+
 import femalePlaceholder from '@/assets/img/pl-female.jpg';
 import malePlaceholder from '@/assets/img/pl-male.jpg';
 import unknownPlaceholder from '@/assets/img/pl-unknown.jpg';
-import MenuButton from '@/components/common/MenuButton/MenuButton';
+
+import deathIcon from '@/assets/img/death-icon.svg';
+import bornIcon from '@/assets/img/born-icon.svg';
+
 import MenuEdit from '@/components/common/MenuEdit/MenuEdit';
 import PersonModal from '@/components/FamilyTreePage/PersonModal/PersonModal';
 import RelativeModal from '@/components/FamilyTreePage/RelativeModal/RelativeModal';
@@ -20,14 +24,14 @@ type PersonData = {
     name: string;
     surname: string;
     photoUrl?: string;
-    birth?: string;
-    death?: string;
+    birth?: PartialDate;
+    death?: PartialDate;
 };
 
 type RFPersonNode = Node<PersonData>;
 
 const PersonNode = ({ id, data, selected }: NodeProps<RFPersonNode>) => {
-    const [isAddPersonOpen, setIsAddPersonOpen] = useState(false);
+    const [isAddRelativeOpen, setIsAddRelativeOpen] = useState(false);
     const [isEditPersonOpen, setIsEditPersonOpen] = useState(false);
     const [addCtx, setAddCtx] = useState<AddRelativeContext | null>(null);
 
@@ -38,14 +42,31 @@ const PersonNode = ({ id, data, selected }: NodeProps<RFPersonNode>) => {
         selectPersonById(s, data.personId),
     );
 
+    const formatPartialDate = (date?: PartialDate) => {
+        if (!date) return '';
+
+        const y = date.y?.toString() ?? '';
+        const m = date.m?.toString().padStart(2, '0') ?? '';
+        const d = date.d?.toString().padStart(2, '0') ?? '';
+
+        if (y && m && d) return `${d}.${m}.${y}`;
+        if (y && m) return `${m}.${y}`;
+        return y;
+    };
+
     const getDefaultPortrait = (gender?: 'male' | 'female' | 'unknown') =>
         gender === 'male' ? malePlaceholder : gender === 'female' ? femalePlaceholder : unknownPlaceholder;
 
-    const birth = person?.birth?.date ?? data.birth;
-    const death = person?.death?.date ?? data.death;
+    const personSurname = person ? `${person?.familyName ?? ''} ${person?.maidenName ? `(${person?.maidenName})` : ''}`.trim() : '';
+
+    const personId = person?.id || data.personId;
+    const birth = formatPartialDate(person?.birth?.date?.from ?? data.birth);
+    const death = formatPartialDate(person?.death?.date?.from ?? data.death);
     const name = person?.givenName || data.name || 'Unknown';
-    const surname = `${person.familyName ?? ''} ${person.maidenName ? `(${person.maidenName})` : ''}`.trim() ?? data.surname;
-    const photo = person?.portrait ?? data.photoUrl ?? getDefaultPortrait(person.gender);
+    const surname = personSurname || data.surname || '';
+    const photo = (person ? person?.portrait : data.photoUrl) || getDefaultPortrait(person?.gender);
+
+    const anchor: AnchorPerson = { id: personId, photo, name, surname, birth, death };
 
     const onClick = () => {
         dispatch(setRootPerson(data.personId));
@@ -70,7 +91,7 @@ const PersonNode = ({ id, data, selected }: NodeProps<RFPersonNode>) => {
         {
             id: 2,
             name: 'Add relative',
-            onClick: () => setIsAddPersonOpen(true),
+            onClick: () => setIsAddRelativeOpen(true),
         },
         {
             id: 3,
@@ -80,8 +101,8 @@ const PersonNode = ({ id, data, selected }: NodeProps<RFPersonNode>) => {
     ];
 
     const handlePickRelative = (kind: RelativeKind) => {
-        setIsAddPersonOpen(true);
-        setAddCtx({ anchorPersonId: person.id, kind });
+        setIsAddRelativeOpen(false);
+        setAddCtx({ anchorPersonId: personId, kind });
     };
 
     return (
@@ -95,22 +116,38 @@ const PersonNode = ({ id, data, selected }: NodeProps<RFPersonNode>) => {
                         <span>{name}</span>
                         <span>{surname}</span>
                     </div>
-                    <div className={styles.dates}>{birth}{death ? ` – ${death}` : ''}</div>
+                    <div className={styles.dates}>
+                        {birth && (
+                            <div className={styles.date}>
+                                <img className={styles.lifeIcon} src={bornIcon} alt='Born' />
+                                {birth}
+                            </div>
+                        )}
+
+                        {(death && birth) && (
+                            <span>{'\u00A0-\u00A0'}</span>
+                        )}
+
+                        {death && (
+                            <div className={styles.date}>
+                                <img className={styles.lifeIcon} src={deathIcon} alt='Death' />
+                                {death}
+                            </div>
+                        )}
+                    </div>
                 </div>
-                <div className={styles.edit}>
-                    <MenuButton className={styles.editButton} />
-                    <MenuEdit list={menuList} className={styles.editList} />
-                </div>
+
+                <MenuEdit menuList={menuList} listPosition='top' className={styles.editList} />
             </div>
 
             <Handle id='left' type='source' position={Position.Left} />
             <Handle id='right' type='source' position={Position.Right} />
             <Handle id='top' type='target' position={Position.Top} />
 
-            {isAddPersonOpen &&
+            {isAddRelativeOpen &&
                 <RelativeModal
-                    onClose={() => setIsAddPersonOpen(false)}
-                    anchor={person}
+                    anchor={anchor}
+                    onClose={() => setIsAddRelativeOpen(false)}
                     onPick={handlePickRelative}
                 />}
 

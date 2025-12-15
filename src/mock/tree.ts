@@ -7,8 +7,18 @@ export const mockPersons: Person[] = [
         givenName: 'Alexandr',
         familyName: 'Davidenko',
         gender: 'male',
-        birth: { date: '1990-08-21' },
-        death: {},
+        birth: {
+            date: {
+                mod: 'exact',
+                from: { y: 1990, m: 8, d: 21 },
+            }
+        },
+        death: {
+            date: {
+                mod: 'exact',
+                from: { y: 2020, m: 1, d: 11 },
+            },
+        },
         portrait: big1,
     },
     {
@@ -16,8 +26,17 @@ export const mockPersons: Person[] = [
         givenName: 'Anna',
         familyName: 'Ivanova',
         gender: 'female',
-        birth: { date: '1990-08-21' },
-        death: { date: '2020-01-11' },
+        birth: {
+            date: {
+                mod: 'abt',
+                from: { y: 1880 } }
+        },
+        death: {
+            date: {
+                mod: 'exact',
+                from: { y: 1955, m: 1, d: 11 },
+            },
+        },
         portrait: big1,
     },
     {
@@ -25,6 +44,13 @@ export const mockPersons: Person[] = [
         givenName: 'Vasya',
         familyName: 'Davidenko',
         gender: 'male',
+        birth: {
+            date: {
+                mod: 'between',
+                from: { y: 1890 },
+                to:   { y: 1900 },
+            }
+        },
         death: null,
         portrait: big1,
     },

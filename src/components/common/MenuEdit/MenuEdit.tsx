@@ -1,42 +1,33 @@
+import MenuButton from '@/components/common/MenuEdit/MenuButton/MenuButton';
+import MenuList from '@/components/common/MenuEdit/MenuList/MenuList';
+import { MenuItem } from '@/components/common/MenuEdit/MenuEdit.types';
 import styles from './MenuEdit.module.css';
 
-interface MenuItemLink {
-    id: number;
-    name: string;
-    href: string;
-}
-
-interface MenuItemAction {
-    id: number;
-    name: string;
-    onClick: () => void;
-}
-
-type MenuItem = MenuItemLink | MenuItemAction;
+type ListPosition = 'right' | 'bottom' | 'top';
+type ButtonStyle = 'trans' | 'shadow';
 
 interface MenuEditProps {
-    list: MenuItem[];
-    className?: string;
+    menuList: MenuItem[];
+    buttonStyle?: ButtonStyle;
+    listPosition?: ListPosition;
+    className: string;
 }
 
-const MenuEdit = ({ list, className }: MenuEditProps) => {
+const MenuEdit = ({
+                      menuList,
+                      buttonStyle,
+                      listPosition = 'right',
+                      className,
+                  }: MenuEditProps) => {
     return (
         <div className={`${styles.menu} ${className}`}>
-            <ul className={styles.list}>
-                {list.map((item, index) => (
-                    <li className={styles.item} key={index}>
-                        {'href' in item ? (
-                            <a href={item.href} target="_blank" rel="noopener noreferrer" className={styles.link}>
-                                {item.name}
-                            </a>
-                        ) : (
-                            <button onClick={item.onClick} className={styles.link}>
-                                {item.name}
-                            </button>
-                        )}
-                    </li>
-                ))}
-            </ul>
+            <MenuButton className={`
+                        ${styles.button} 
+                        ${buttonStyle ? styles[buttonStyle] : ''}`.trim()} />
+            <MenuList className={`
+                            ${styles.list} 
+                            ${styles[listPosition]}`}
+                      list={menuList} />
         </div>
     );
 };

@@ -13,6 +13,8 @@ import Errors from './Errors/Errors';
 import type { FormField, FormValues, ErrorsMap } from '../ui.types';
 import styles from './Form.module.css';
 import DateInput from '@/components/common/Form/DateInput/DateInput';
+import LifeEventDateField from '@/components/common/Form/LifeEventDateField/LifeEventDateField';
+import { LifeEventDate, PartialDate } from '@/features/tree/types';
 
 interface FormProps {
     initialValues: FormValues;
@@ -57,8 +59,8 @@ const Form = ({
     const renderField = (field: FormField): JSX.Element => {
         const isVisible =
             typeof field.visible === 'function'
-                ? field.visible(values)         // вычисляем по текущим значениям формы
-                : field.visible !== false;      // undefined → true, false → скрыть
+                ? field.visible(values)
+                : field.visible !== false;
 
         if (!isVisible) return null;
 
@@ -82,18 +84,30 @@ const Form = ({
             case 'date': {
                 return (
                     <DateInput {...commonProps}
-                               value={(values[field.name] as string) ?? ''}
-                               setValue={setCustomValue} />
+                               value={(values[field.name] as PartialDate | undefined)}
+                               setValue={setCustomValue}
+                               onError={(msg: string) => (setLocalErrors(() => ({  [field.name]: [msg] })))}
+                    />
                 );
             }
 
-            case 'tagsinput': {
+            case 'event': {
+                return (
+                    <LifeEventDateField {...commonProps}
+                                        value={values[field.name] as LifeEventDate | undefined}
+                                        onChange={(next) => setCustomValue(field.name, next)}
+                                        onError={(msg: string) => setLocalErrors(() => ({[field.name]: [msg] }))}
+                    />
+                );
+            }
+
+            case 'tags': {
                 return (
                     <TagsInput
                         {...commonProps}
                         value={(values[field.name] as string[]) ?? []}
-                        setCustomValue={setCustomValue}
-                        onError={(msg: string) => setLocalErrors((prev) => ({ ...prev, [field.name]: [msg] }))}
+                        setValue={setCustomValue}
+                        onError={(msg: string) => setLocalErrors(() => ({ [field.name]: [msg] }))}
                     />
                 );
             }
@@ -113,7 +127,7 @@ const Form = ({
                 return (
                     <PhotoUploader
                         {...commonProps}
-                        value={(values[field.name] as string) ?? ''}
+                        value={(values[field.name] as string) || null}
                         onChange={(base64: string) => setCustomValue(field.name, base64)}
                     />
                 );

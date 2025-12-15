@@ -1,66 +1,144 @@
-import { ChangeEventHandler, FocusEventHandler } from 'react';
+import { ChangeEventHandler, FocusEventHandler, useState } from 'react';
 import styles from './DateInput.module.css';
+import { PartialDate } from '@/features/tree/types';
+import { DAY_MAX, DAY_MIN, MONTH_MAX, MONTH_MIN, YEAR_MAX, YEAR_MIN } from '@/components/common/constants';
 
 interface DateInputProps {
     name: string;
-    value?: string;
-    placeholder?: string;
     className?: string;
-    setValue: (name: string, value: string) => void;
+    value?: PartialDate;
+    setValue?: (name: string, value: PartialDate) => void;
+    onError?: (msg: string) => void;
 }
 
-const onlyDigits = (date: string) => date.replace(/\D+/g, '');
+type FieldKey = 'y' | 'm' | 'd';
+
+interface BlurConfig {
+    maxLength: number;
+    min: number;
+    max: number;
+    padding: boolean;
+    errorMsg: string;
+}
+
+const onlyDigits = (n: string) => n.replace(/\D+/g, '');
+
+const formatTwoDigits = (n?: number): string =>
+    n == null ? '' : String(n).padStart(2, '0');
+
 const addPadding = (n: string) => (n && n.length === 1 ? n.padStart(2, '0') : n);
 
-const splitYMD = (date: string): { y: string; m: string; d: string } => {
-    if (!date) return { y: '', m: '', d: '' };
-    const [y = '', m = '', d = ''] = date.split('-');
-    return { y, m, d };
-};
+const DateInput = ({
+                       name,
+                       value,
+                       setValue,
+                       className,
+                       onError,
+                   }: DateInputProps) => {
+    const current: PartialDate = value ?? {};
 
-const joinYMD = (y: string, m: string, d: string) => {
-    return `${y}-${m}-${d}`;
-};
+    const [year, setYear] = useState(current.y?.toString() ?? '');
+    const [month, setMonth] = useState(() => formatTwoDigits(current.m));
+    const [day, setDay] = useState(() => formatTwoDigits(current.d));
 
-const DateInput = ({ placeholder, name, value, className, setValue }: DateInputProps) => {
+    const update = (patch: Partial<PartialDate>) => {
+        setValue(name, { ...current, ...patch });
+    };
 
-    const { y, m, d } = splitYMD(value);
+    const blurHandler = (
+        field: FieldKey,
+        config: BlurConfig,
+        setText: (v: string) => void,
+    ): FocusEventHandler<HTMLInputElement> => {
+        return (e) => {
+            const { maxLength, min, max, padding, errorMsg } = config;
+            const raw = onlyDigits(e.currentTarget.value).slice(0, maxLength);
+
+            if (!raw) {
+                setText('');
+                const patch = { [field]: undefined } as Partial<PartialDate>;
+                update(patch);
+                return;
+            }
+
+            const text = padding ? addPadding(raw) : raw;
+            const num = Number(text);
+
+            if (!Number.isInteger(num) || num < min || num > max) {
+                setText('');
+                onError?.(errorMsg);
+                const patch = { [field]: undefined } as Partial<PartialDate>;
+                update(patch);
+                return;
+            }
+
+            setText(text);
+            const patch = { [field]: num } as Partial<PartialDate>;
+            update(patch);
+        };
+    };
 
     const onYear: ChangeEventHandler<HTMLInputElement> = (e) => {
         const next = onlyDigits(e.target.value).slice(0, 4);
-        setValue(name, joinYMD(next, m, d));
+        setYear(next);
     };
     const onMonth: ChangeEventHandler<HTMLInputElement> = (e) => {
         const next = onlyDigits(e.target.value).slice(0, 2);
-        setValue(name, joinYMD(y, next, d));
+        setMonth(next);
     };
     const onDay: ChangeEventHandler<HTMLInputElement> = (e) => {
         const next = onlyDigits(e.target.value).slice(0, 2);
-        setValue(name, joinYMD(y, m, next));
+        setDay(next);
     };
 
-    const onDayBlur: FocusEventHandler<HTMLInputElement> = (e) => {
-        const next = addPadding(onlyDigits(e.currentTarget.value).slice(0, 2));
-        setValue(name, joinYMD(y, m, next));
-    };
-    const onMonthBlur: FocusEventHandler<HTMLInputElement> = (e) => {
-        const next = addPadding(onlyDigits(e.currentTarget.value).slice(0, 2));
-        setValue(name, joinYMD(y, next, d));
-    };
+    const onYearBlur = blurHandler(
+        'y',
+        {
+            maxLength: 4,
+            min: YEAR_MIN,
+            max: YEAR_MAX,
+            padding: false,
+            errorMsg: `Year must be between ${YEAR_MIN} and ${YEAR_MAX}`,
+        },
+        setYear,
+    );
 
+    const onMonthBlur = blurHandler(
+        'm',
+        {
+            maxLength: 2,
+            min: MONTH_MIN,
+            max: MONTH_MAX,
+            padding: true,
+            errorMsg: `Month must be between ${MONTH_MIN} and ${MONTH_MAX}`,
+        },
+        setMonth,
+    );
+
+    const onDayBlur = blurHandler(
+        'd',
+        {
+            maxLength: 2,
+            min: DAY_MIN,
+            max: DAY_MAX,
+            padding: true,
+            errorMsg: `Day must be between ${DAY_MIN} and ${DAY_MAX}`,
+        },
+        setDay,
+    );
 
     return (
-        <div className={styles.inputContainer}>
-            <p className={styles.placeholder}>{placeholder}</p>
+        <div className={`${styles.inputContainer} ${className ?? ''}`}>
             <div className={styles.inputWrapper}>
                 <label className={styles.label}>
                     <input
+                        type='text'
                         inputMode='numeric'
                         pattern='\d*'
                         name={`${name}Day`}
                         placeholder='dd'
-                        value={d}
-                        className={`${styles.field} ${className ?? ''}`}
+                        value={day}
+                        className={styles.field}
                         onChange={onDay}
                         onBlur={onDayBlur}
                     />
@@ -68,12 +146,13 @@ const DateInput = ({ placeholder, name, value, className, setValue }: DateInputP
 
                 <label className={styles.label}>
                     <input
+                        type='text'
                         inputMode='numeric'
                         pattern='\d*'
                         name={`${name}Month`}
                         placeholder='mm'
-                        value={m}
-                        className={`${styles.field} ${className ?? ''}`}
+                        value={month}
+                        className={styles.field}
                         onChange={onMonth}
                         onBlur={onMonthBlur}
                     />
@@ -81,13 +160,15 @@ const DateInput = ({ placeholder, name, value, className, setValue }: DateInputP
 
                 <label className={styles.labelYear}>
                     <input
+                        type='text'
                         inputMode='numeric'
                         pattern='\d*'
                         name={`${name}Year`}
                         placeholder='yyyy'
-                        value={y}
-                        className={`${styles.field} ${className ?? ''}`}
+                        value={year}
+                        className={styles.field}
                         onChange={onYear}
+                        onBlur={onYearBlur}
                     />
                 </label>
             </div>

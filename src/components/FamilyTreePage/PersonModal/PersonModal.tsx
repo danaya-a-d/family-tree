@@ -3,9 +3,19 @@ import Form from '../../common/Form/Form';
 import { useDispatch } from 'react-redux';
 import { addPerson, addPersonWithRelation, removePerson, updatePerson } from '@/features/tree/treeSlice';
 import Title from '../../common/Title/Title';
-import type { ButtonConfig, FormField } from '../../common/ui.types';
-import { AddRelativeContext, Gender, LifeEvent, LifeState, Person, RelativeKind } from '@/features/tree/types';
+import type { ButtonConfig, ErrorsMap, FormField, FormValues } from '../../common/ui.types';
+import {
+    AddRelativeContext,
+    Gender,
+    LifeEvent,
+    LifeEventDate,
+    LifeState,
+    Person,
+    RelativeKind,
+} from '@/features/tree/types';
 import styles from './PersonModal.module.css';
+import { RadioOption } from '@/components/common/Form/Form.types';
+import { validateLifeEventDate } from '@/components/common/validation';
 
 interface PersonModalProps {
     person?: Person;
@@ -20,11 +30,11 @@ type PersonFormValues = {
     gender: Gender;
     portrait: string | null;
 
-    dateOfBirth: LifeEvent['date'];
+    dateOfBirth: LifeEventDate;
     placeOfBirth: LifeEvent['place'];
 
     lifeState: LifeState;
-    dateOfDeath: LifeEvent['date'];
+    dateOfDeath: LifeEventDate;
     placeOfDeath: LifeEvent['place'];
 };
 
@@ -48,8 +58,8 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
         return 'unknown';
     }
 
-    const makeLifeEvent = (date?: string, place?: string): LifeEvent | undefined => {
-        const d = date?.trim() || undefined;
+    const makeLifeEvent = (date?: LifeEventDate, place?: string): LifeEvent | undefined => {
+        const d = date || undefined;
         const p = place?.trim() || undefined;
         return d || p ? { date: d, place: p } : undefined;
     };
@@ -88,13 +98,13 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
         onClose();
     };
 
-    const GENDER_OPTIONS = [
+    const GENDER_OPTIONS: RadioOption[] = [
         { value: 'female', label: 'Female' },
         { value: 'male', label: 'Male' },
         { value: 'unknown', label: 'Unknown' },
     ] as const;
 
-    const LIVING_OPTIONS = [
+    const LIVING_OPTIONS: RadioOption[] = [
         { value: 'living', label: 'Living' },
         { value: 'deceased', label: 'Deceased' },
         { value: 'unknown', label: 'Unknown' },
@@ -108,12 +118,12 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
         { name: 'lastName', placeholder: 'Last name', type: 'text' },
         { name: 'maidenName', placeholder: 'Maiden name', type: 'text', visible: (v) => v.gender === 'female' },
 
-        { name: 'dateOfBirth', placeholder: 'Date of Birth', type: 'date' },
+        { name: 'dateOfBirth', placeholder: 'Date of Birth', type: 'event' },
         { name: 'placeOfBirth', placeholder: 'Place of Birth', type: 'text' },
 
         { name: 'lifeState', options: LIVING_OPTIONS, type: 'radio' },
         {
-            name: 'dateOfDeath', placeholder: 'Date of Death', type: 'date',
+            name: 'dateOfDeath', placeholder: 'Date of Death', type: 'event',
             visible: (v) => v.lifeState === 'deceased',
         },
         {
@@ -151,9 +161,10 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
     const formLayout = `"personPhoto ."
                         "gender ."
                         "firstName dateOfBirth"
-                        "lastName placeOfBirth"
-                        "maidenName ."
+                        "lastName dateOfBirth"
+                        "maidenName placeOfBirth"
                         "living ."
+                        "dateOfDeath ."
                         "dateOfDeath placeOfDeath"
                         "buttons buttons"`;
 
@@ -178,11 +189,11 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
             gender: person.gender ?? 'unknown',
             portrait: person.portrait ?? null,
 
-            dateOfBirth: person.birth?.date ?? '',
+            dateOfBirth: person.birth?.date ?? undefined,
             placeOfBirth: person.birth?.place ?? '',
 
             lifeState: getLifeState(person),
-            dateOfDeath: person.death?.date ?? '',
+            dateOfDeath: person.death?.date ?? undefined,
             placeOfDeath: person.death?.place ?? '',
         }
         : {
@@ -194,19 +205,44 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
 
 
             lifeState: 'unknown',
-            dateOfBirth: '',
+            dateOfBirth: undefined,
             placeOfBirth: '',
 
-            dateOfDeath: '',
+            dateOfDeath: undefined,
             placeOfDeath: '',
         };
+
+    const validate = (values: PersonFormValues): ErrorsMap => {
+        const errors: ErrorsMap = {};
+
+        // Birth
+        const birthError = validateLifeEventDate(values.dateOfBirth);
+        if (birthError) {
+            errors.dateOfBirth = [birthError];
+        }
+
+        // Death
+        const deathError = validateLifeEventDate(values.dateOfDeath);
+        if (deathError) {
+            errors.dateOfDeath = [deathError];
+        }
+
+        return errors;
+    };
 
     return (
         <Modal onClose={onClose} btnClose>
             <div className={styles.editModal}>
-                <Title level={'h2'} size={'small'}>
-                    {isEdit ? 'Edit person' : 'Add person'}
-                </Title>
+                <div className={styles.header}>
+                    <Title level={'h2'} size={'small'}>
+                        {isEdit ? 'Edit person' : 'Add person'}
+                    </Title>
+
+                    <Title level={'h3'} size={'extraSmall'}>
+                        General Information
+                    </Title>
+                </div>
+
                 <Form
                     className={styles.form}
                     buttons={buttons}
@@ -216,6 +252,7 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
                     formColumns={formColumns}
                     formRows={formRows}
                     onSubmit={handleSubmit}
+                    validate={validate}
                 />
             </div>
         </Modal>

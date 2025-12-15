@@ -26,6 +26,10 @@
     font-size: 48px;
 }
 
+.title.extraSmall {
+    font-size: 20px;
+}
+
 .decoration {
     display: block;
     width: 60px;

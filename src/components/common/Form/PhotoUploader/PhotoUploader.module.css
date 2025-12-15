@@ -2,11 +2,17 @@
     position: relative;
     width: 100%;
     height: 100%;
-    /*height: 325px;*/
     z-index: 1;
     border-radius: 8px;
     overflow: hidden;
     cursor: pointer;
+}
+
+.wrapper {
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: 100%;
 }
 
 .overlay {
@@ -28,9 +34,6 @@
 .uploader.dragging .overlay,
 .uploader.noPreview .overlay {
     opacity: 1;
-}
-
-.icon {
 }
 
 .image {

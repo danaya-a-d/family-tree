@@ -50,7 +50,7 @@ const EditModal = ({ photo, onClose }: EditModalProps) => {
 
     const fields = [
         { name: 'title', placeholder: 'Title', type: 'text' },
-        { name: 'tags', placeholder: 'tag...', type: 'tagsinput' },
+        { name: 'tags', placeholder: 'tag...', type: 'tags' },
         { name: 'photo', placeholder: 'Photo', type: 'file' },
     ] satisfies ReadonlyArray<FormField>;
 
@@ -89,18 +89,18 @@ const EditModal = ({ photo, onClose }: EditModalProps) => {
 
     const initialValues: EditFormValues = photo
         ? {
-              title: photo.title || '',
-              tags: photo.tags || [],
-              photo: photo.bigPath || null,
-          }
+            title: photo.title || '',
+            tags: photo.tags || [],
+            photo: photo.bigPath || null,
+        }
         : {
-              title: '',
-              tags: [],
-              photo: null,
-          };
+            title: '',
+            tags: [],
+            photo: null,
+        };
 
     // Валидатор
-    const validate = (values: FormValues) => {
+    const validate = (values: FormValues): ErrorsMap => {
         const errors: ErrorsMap = {};
 
         // Title
