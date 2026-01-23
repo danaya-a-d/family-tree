@@ -1,4 +1,4 @@
-import { ChangeEventHandler, FocusEventHandler, useState } from 'react';
+import { ChangeEventHandler, FocusEventHandler, useEffect, useState } from 'react';
 import styles from './DateInput.module.css';
 import { PartialDate } from '@/features/tree/types';
 import { DAY_MAX, DAY_MIN, MONTH_MAX, MONTH_MIN, YEAR_MAX, YEAR_MIN } from '@/components/common/constants';
@@ -37,9 +37,16 @@ const DateInput = ({
                    }: DateInputProps) => {
     const current: PartialDate = value ?? {};
 
-    const [year, setYear] = useState(current.y?.toString() ?? '');
-    const [month, setMonth] = useState(() => formatTwoDigits(current.m));
-    const [day, setDay] = useState(() => formatTwoDigits(current.d));
+    const [year, setYear] = useState('');
+    const [month, setMonth] = useState('');
+    const [day, setDay] = useState('');
+
+    useEffect(() => {
+        const v = value ?? {};
+        setYear(v.y != null ? v.y.toString() : '');
+        setMonth(formatTwoDigits(v.m));
+        setDay(formatTwoDigits(v.d));
+    }, [value?.y, value?.m, value?.d]);
 
     const update = (patch: Partial<PartialDate>) => {
         setValue(name, { ...current, ...patch });
@@ -58,6 +65,7 @@ const DateInput = ({
                 setText('');
                 const patch = { [field]: undefined } as Partial<PartialDate>;
                 update(patch);
+                onError?.('');
                 return;
             }
 
@@ -75,6 +83,7 @@ const DateInput = ({
             setText(text);
             const patch = { [field]: num } as Partial<PartialDate>;
             update(patch);
+            onError?.('');
         };
     };
 

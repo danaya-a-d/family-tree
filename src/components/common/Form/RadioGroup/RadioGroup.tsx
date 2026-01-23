@@ -1,11 +1,5 @@
-import { ReactNode } from 'react';
 import styles from './RadioGroup.module.css';
-
-export type RadioOption = {
-    value: string;
-    label: ReactNode;
-    disabled?: boolean;
-};
+import { RadioOption } from '@/components/common/Form/Form.types';
 
 type RadioGroupProps = {
     name: string;

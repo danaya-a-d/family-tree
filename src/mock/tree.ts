@@ -11,7 +11,7 @@ export const mockPersons: Person[] = [
             date: {
                 mod: 'exact',
                 from: { y: 1990, m: 8, d: 21 },
-            }
+            },
         },
         death: {
             date: {
@@ -29,7 +29,8 @@ export const mockPersons: Person[] = [
         birth: {
             date: {
                 mod: 'abt',
-                from: { y: 1880 } }
+                from: { y: 1880 },
+            },
         },
         death: {
             date: {
@@ -48,8 +49,8 @@ export const mockPersons: Person[] = [
             date: {
                 mod: 'between',
                 from: { y: 1890 },
-                to:   { y: 1900 },
-            }
+                to: { y: 1900 },
+            },
         },
         death: null,
         portrait: big1,
@@ -114,12 +115,34 @@ export const mockPersons: Person[] = [
         death: null,
         portrait: big1,
     },
+
+    {
+        id: 'p11',
+        givenName: 'Nickokay',
+        familyName: 'Popov',
+        gender: 'male',
+        death: null,
+        portrait: big1,
+    },
 ];
 
 export const mockFamilies: Family[] = [
-    { id: 'f1', spouses: [], children: [] }, // p3 + p4 → ребёнок p1
-    { id: 'f2', spouses: [], children: [] }, // p1 + p2 → дети p5, p6
+    {
+        id: 'f1',
+        spouses: [],
+        children: [],
+        relationshipStatus: 'married',
+        marriage: {
+            date: {
+                mod: 'exact',
+                from: { y: 1955, m: 1, d: 11 },
+            },
+        },
+    },
+
+    { id: 'f2', spouses: [], children: [] },
     { id: 'f3', spouses: [], children: [] },
+    { id: 'f4', spouses: [], children: [] },
 ];
 
 export const mockRootPersonId: Id = 'p1';

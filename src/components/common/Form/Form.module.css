@@ -53,8 +53,40 @@
 }
 
 .input-lifeState {
+    display: flex;
     grid-area: living;
-    margin-bottom: 40px;
+}
+
+.input-relationshipStatus {
+    grid-area: relationshipStatus;
+}
+
+.input-dateOfMarriage {
+    grid-area: dateOfMarriage;
+}
+
+.input-placeOfMarriage {
+    grid-area: placeOfMarriage;
+}
+
+.input-dateOfDivorce {
+    grid-area: dateOfDivorce;
+}
+
+.input-placeOfDivorce {
+    grid-area: placeOfDivorce;
+}
+
+.input-parentFamilyId {
+    grid-area: parentFamilyId;
+}
+
+.input-spouseFamilyId {
+    grid-area: spouseFamilyId;
+}
+
+.input-unionWith {
+    grid-area: unionWith;
 }
 
 .buttons {

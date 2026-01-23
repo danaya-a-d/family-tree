@@ -27,18 +27,30 @@ export function buildGraph(state: RootState): { nodes: Node[]; edges: Edge[] } {
         height: PERSON_SIZE.height,
     }));
 
-    const familyNodes: Node[] = families.map((f) => ({
-        id: fid(f.id),
-        type: 'family',
-        position: { x: 0, y: 0 },
-        data: { kind: 'family', familyId: f.id },
-        width: FAMILY_SIZE.width,
-        height: FAMILY_SIZE.height,
-    }));
-
+    const familyNodes: Node[] = [];
     const edges: Edge[] = [];
 
     for (const fam of families) {
+        const hasSpouses  = fam.spouses.length > 0;
+        const childrenCnt = fam.children.length;
+
+        if (!hasSpouses && childrenCnt === 0) {
+            continue;
+        }
+
+        if (!hasSpouses && childrenCnt === 1) {
+            continue;
+        }
+
+        familyNodes.push({
+            id: fid(fam.id),
+            type: 'family',
+            position: { x: 0, y: 0 },
+            data: { kind: 'family', familyId: fam.id },
+            width: FAMILY_SIZE.width,
+            height: FAMILY_SIZE.height,
+        });
+
         for (const sId of fam.spouses) {
             edges.push({
                 id: `e:${sId}->${fam.id}`,

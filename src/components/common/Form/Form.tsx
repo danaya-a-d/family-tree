@@ -1,6 +1,7 @@
-import type { JSX } from 'react';
-import { useMemo, useState } from 'react';
+import * as React from 'react';
+import { JSX, useMemo, useState } from 'react';
 import { useForm } from '@/hooks/useForm';
+import type { ErrorsMap, FormField, FormValues } from '../ui.types';
 import { ButtonConfig, Validate } from '../ui.types';
 import Input from './Input/Input';
 import Textarea from './Textarea/Textarea';
@@ -10,21 +11,23 @@ import PhotoUploader from './PhotoUploader/PhotoUploader';
 import RadioGroup from './RadioGroup/RadioGroup';
 import Button from '../Button/Button';
 import Errors from './Errors/Errors';
-import type { FormField, FormValues, ErrorsMap } from '../ui.types';
 import styles from './Form.module.css';
 import DateInput from '@/components/common/Form/DateInput/DateInput';
 import LifeEventDateField from '@/components/common/Form/LifeEventDateField/LifeEventDateField';
 import { LifeEventDate, PartialDate } from '@/features/tree/types';
+import Select from '@/components/common/Form/Select/Select';
+import SelectPerson from '@/components/common/Form/SelectPerson/SelectPerson';
 
 interface FormProps {
     initialValues: FormValues;
     fields: ReadonlyArray<FormField>;
     buttons?: ReadonlyArray<ButtonConfig>;
     onSubmit: (values: FormValues) => void;
-    formLayout?: string;
+    formLayout?: string | ((values: FormValues) => string);
     formColumns?: string;
     formRows?: string;
     className?: string;
+    externalLocalErrors?: ErrorsMap;
     validate?: Validate;
 }
 
@@ -37,6 +40,7 @@ const Form = ({
                   formColumns,
                   formRows,
                   className,
+                  externalLocalErrors,
                   validate,
               }: FormProps) => {
     const { values, globalErrors, submitCount, handleChange, handleSubmit, setCustomValue } = useForm({
@@ -47,22 +51,21 @@ const Form = ({
 
     const [localErrors, setLocalErrors] = useState<ErrorsMap>({});
 
+    const resLayout = typeof formLayout === 'function' ? formLayout(values) : formLayout;
+
     const layoutStyle = useMemo(
         () => ({
-            gridTemplateAreas: formLayout,
+            gridTemplateAreas: resLayout,
             gridTemplateColumns: formColumns,
             gridTemplateRows: formRows,
         }),
-        [formLayout, formColumns, formRows],
+        [resLayout, formColumns, formRows],
     );
 
     const renderField = (field: FormField): JSX.Element => {
-        const isVisible =
-            typeof field.visible === 'function'
-                ? field.visible(values)
-                : field.visible !== false;
-
-        if (!isVisible) return null;
+        if (field.type === 'custom') {
+            return <>{field.render({ values })}</>;
+        }
 
         const commonProps = {
             name: field.name,
@@ -70,14 +73,42 @@ const Form = ({
             className: styles[`input-${field.name}`],
         };
 
+        const assertNever = (x: never): never => {
+            throw new Error('Unknown field type');
+        };
+
         switch (field.type) {
             case 'text': {
-                return <Input {...commonProps} value={(values[field.name] as string) ?? ''} onChange={handleChange} />;
+                const handleTextChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+                    setCustomValue(field.name, e.target.value);
+                    field.onValueChange?.({
+                        name: field.name,
+                        value: e.target.value,
+                        values: { ...values, [field.name]: e.target.value },
+                        setValue: setCustomValue,
+                    });
+                };
+
+                return <Input {...commonProps} value={(values[field.name] as string) ?? ''}
+                              onChange={handleTextChange}
+                />;
             }
 
             case 'textarea': {
+                const handleTextareaChange: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
+                    setCustomValue(field.name, e.target.value);
+                    field.onValueChange?.({
+                        name: field.name,
+                        value: e.target.value,
+                        values: { ...values, [field.name]: e.target.value },
+                        setValue: setCustomValue,
+                    });
+                };
+
                 return (
-                    <Textarea {...commonProps} value={(values[field.name] as string) ?? ''} onChange={handleChange} />
+                    <Textarea {...commonProps} value={(values[field.name] as string) ?? ''}
+                              onChange={handleTextareaChange}
+                    />
                 );
             }
 
@@ -86,7 +117,7 @@ const Form = ({
                     <DateInput {...commonProps}
                                value={(values[field.name] as PartialDate | undefined)}
                                setValue={setCustomValue}
-                               onError={(msg: string) => (setLocalErrors(() => ({  [field.name]: [msg] })))}
+                               onError={(msg: string) => (setLocalErrors(() => ({ [field.name]: [msg] })))}
                     />
                 );
             }
@@ -95,8 +126,16 @@ const Form = ({
                 return (
                     <LifeEventDateField {...commonProps}
                                         value={values[field.name] as LifeEventDate | undefined}
-                                        onChange={(next) => setCustomValue(field.name, next)}
-                                        onError={(msg: string) => setLocalErrors(() => ({[field.name]: [msg] }))}
+                                        onError={(msg: string) => setLocalErrors(() => ({ [field.name]: [msg] }))}
+                                        onChange={(v) => {
+                                            setCustomValue(field.name, v);
+                                            field.onValueChange?.({
+                                                name: field.name,
+                                                value: v,
+                                                values: { ...values, [field.name]: v },
+                                                setValue: setCustomValue,
+                                            });
+                                        }}
                     />
                 );
             }
@@ -118,7 +157,53 @@ const Form = ({
                         {...commonProps}
                         options={field.options}
                         value={(values[field.name] as string) ?? ''}
-                        onChange={(v) => setCustomValue(field.name, v)}
+                        onChange={(v) => {
+                            setCustomValue(field.name, v);
+                            field.onValueChange?.({
+                                name: field.name,
+                                value: v,
+                                values: { ...values, [field.name]: v },
+                                setValue: setCustomValue,
+                            });
+                        }}
+                    />
+                );
+            }
+
+            case 'select': {
+                return (
+                    <Select
+                        {...commonProps}
+                        selectors={field.selectors}
+                        value={(values[field.name] as string) ?? ''}
+                        onChange={(v) => {
+                            setCustomValue(field.name, v);
+                            field.onValueChange?.({
+                                name: field.name,
+                                value: v,
+                                values: { ...values, [field.name]: v },
+                                setValue: setCustomValue,
+                            });
+                        }}
+                    />
+                );
+            }
+
+            case 'personsel': {
+                return (
+                    <SelectPerson
+                        {...commonProps}
+                        selectors={field.selectors}
+                        value={(values[field.name] as string) ?? ''}
+                        onChange={(v) => {
+                            setCustomValue(field.name, v);
+                            field.onValueChange?.({
+                                name: field.name,
+                                value: v,
+                                values: { ...values, [field.name]: v },
+                                setValue: setCustomValue,
+                            });
+                        }}
                     />
                 );
             }
@@ -133,16 +218,21 @@ const Form = ({
                 );
             }
 
-            default: {
-                const _exhaustiveCheck: never = field.type;
-                throw new Error(`Unknown field type: ${_exhaustiveCheck}`);
-            }
+            default:
+                return assertNever(field);
         }
     };
+
+    const isFieldVisible = (field: FormField) =>
+        typeof field.visible === 'function'
+            ? field.visible(values)
+            : field.visible !== false;
+
 
     return (
         <form onSubmit={handleSubmit} className={`${styles.form} ${className ?? ''}`.trim()} style={layoutStyle}>
             {fields.map((field) => {
+                if (!isFieldVisible(field)) return null;
 
                 return (
                     <div key={field.name} className={styles[`input-${field.name}`]}>
@@ -167,7 +257,10 @@ const Form = ({
                 </div>
             )}
 
-            <Errors submitCount={submitCount} globalErrors={globalErrors} localErrors={localErrors} />
+            <Errors submitCount={submitCount}
+                    globalErrors={globalErrors}
+                    localErrors={localErrors}
+                    externalLocalErrors={externalLocalErrors} />
         </form>
     );
 };
