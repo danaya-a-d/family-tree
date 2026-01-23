@@ -12,7 +12,11 @@ const Toasts = ({ errors }: ToastsProps) => {
     const [toasts, setToasts] = useState<ToastData[]>([]);
 
     useEffect(() => {
-        const flat = Object.values(errors ?? {}).flat();
+        const flat = Object
+            .values(errors ?? {})
+            .flat()
+            .filter((msg): msg is string => Boolean(msg && msg.trim()));
+
         const structured: ToastData[] = flat.map((msg, index) => ({
             id: `${Date.now()}-${index}`,
             message: msg,

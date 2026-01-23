@@ -13,7 +13,6 @@ export type RelativeKind =
 export type AddRelativeContext = {
     anchorPersonId: Id;
     kind: RelativeKind;
-
     familyId?: Id;
     partnerId?: Id;
 };
@@ -26,9 +25,30 @@ export type LifeEventDate =
     | { mod: 'exact' | 'abt' | 'bef' | 'aft'; from: PartialDate }
     | { mod: 'between'; from: PartialDate; to: PartialDate };
 
+export type RelationshipStatus =
+    | 'married'
+    | 'divorced'
+    | 'separated'
+    | 'endedByDeath'
+    | 'engaged'
+    | 'dating'
+    | 'annulled'
+    | 'unknown'
+    | 'other';
+
 export interface LifeEvent {
     date?: LifeEventDate;
     place?: string;
+}
+
+export interface Family {
+    id: Id;
+    spouses: Id[];
+    children: Id[];
+
+    relationshipStatus?: RelationshipStatus;
+    marriage?: LifeEvent;
+    divorce?: LifeEvent;
 }
 
 export interface Person {
@@ -43,6 +63,8 @@ export interface Person {
 
     birth?: LifeEvent;
     death?: LifeEvent | null;
+
+    parentFamilyId?: Id;
 }
 
 export type AnchorPerson = {
@@ -54,8 +76,12 @@ export type AnchorPerson = {
     death: string;
 };
 
-export interface Family {
-    id: Id;
-    spouses: Id[];
-    children: Id[];
+export type SpousesForPerson = {
+    familyId: Id;
+    spouseId: Id | null;
+    spouseLabel: string;
+    spousePortrait?: string;
+    relationshipStatus: RelationshipStatus;
+    marriage?: LifeEvent;
+    divorce?: LifeEvent;
 }

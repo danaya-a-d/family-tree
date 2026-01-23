@@ -1,4 +1,5 @@
-import { Gender, LifeEvent, LifeEventDate, PartialDate } from '@/features/tree/types';
+import { LifeEventDate, PartialDate } from '@/features/tree/types';
+import { ReactNode } from 'react';
 
 export type FormFieldType =
     | 'text'
@@ -6,20 +7,41 @@ export type FormFieldType =
     | 'tags'
     | 'file'
     | 'radio'
+    | 'select'
     | 'date'
-    | 'event';
+    | 'event'
+    | 'personsel'
+    | 'custom';
 
 export type RadioOption = { value: string; label: string; disabled?: boolean };
+export type SelectOption = { value: string; label: string; };
+export type SelectPersonOption = { value: string; label: string; photo?: string; };
 
-export type VisibilityPredicate = (values: FormValues) => boolean;
-
-export interface FormField {
+type BaseField = {
     name: string;
-    type: FormFieldType;
+    visible?: boolean | ((values: FormValues) => boolean);
+};
+
+export type StandardFormField = BaseField & {
+    type: Exclude<FormFieldType, 'custom'>;
     placeholder?: string;
     options?: ReadonlyArray<RadioOption>;
-    visible?: boolean | VisibilityPredicate;
+    selectors?: ReadonlyArray<SelectOption>;
+
+    onValueChange?: (args: {
+        name: string;
+        value: unknown;
+        values: FormValues;
+        setValue: (name: string, value: unknown) => void;
+    }) => void;
 }
+
+export type CustomFormField = BaseField & {
+    type: 'custom';
+    render: (args: { values: FormValues }) => ReactNode;
+}
+
+export type FormField = StandardFormField | CustomFormField;
 
 export type FormValue =
     | string

@@ -14,7 +14,7 @@ interface RelativeModalProps {
     onClose: () => void;
 }
 
-const PersonModal = ({ anchor, onPick, onClose }: RelativeModalProps) => {
+const RelativeModal = ({ anchor, onPick, onClose }: RelativeModalProps) => {
 
     const { count, hasMother, hasFather } = useSelector((s: RootState) =>
         selectParentInfo(s, anchor.id),
@@ -104,4 +104,4 @@ const PersonModal = ({ anchor, onPick, onClose }: RelativeModalProps) => {
     );
 };
 
-export default PersonModal;
+export default RelativeModal;

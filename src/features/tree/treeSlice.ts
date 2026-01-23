@@ -19,6 +19,7 @@ const initialState: TreeState = {
 
 type AddPersonWithRelationPayload = {
     person: Partial<Person>;
+    family?: Partial<Family>;
     ctx: AddRelativeContext;
 }
 
@@ -59,34 +60,44 @@ const treeSlice = createSlice({
 
         addPersonWithRelation: {
             reducer(state,
-                    action: PayloadAction<{ person: Person; ctx: AddRelativeContext }>) {
-                const { person, ctx } = action.payload;
+                    action: PayloadAction<{ person: Person; family?: Partial<Family>, ctx: AddRelativeContext }>) {
+                const { person, family, ctx } = action.payload;
                 personsAdapter.addOne(state.persons, person);
 
-                //for search & create families
                 const families = state.families;
-                const findFamilyBySpouse = (id: Id) =>
-                    Object.values(families.entities).find(f => f?.spouses.includes(id));
+
                 const findFamilyByChild = (id: Id) =>
                     Object.values(families.entities).find(f => f?.children.includes(id));
 
-                const ensureSpouseFamily = (s: Id) => {
-                    let fam = findFamilyBySpouse(s);
+                const findSingleParentFamily = (parentId: Id) =>
+                    Object.values(families.entities).find(
+                        f => f && f.spouses.length === 1 && f.spouses[0] === parentId
+                    );
+
+                const ensureSingleParentFamily = (parentId: Id) => {
+                    let fam = findSingleParentFamily(parentId);
                     if (!fam) {
-                        fam = { id: nanoid(), spouses: [s], children: [] };
+                        fam = { id: nanoid(), spouses: [parentId], children: [] };
                         familiesAdapter.addOne(families, fam);
                     }
                     return fam!;
                 };
 
                 const ensureParentsFamilyForChild = (c: Id) => {
-                    let fam = findFamilyByChild(c);
+                    const child = state.persons.entities[c];
+
+                    let fam =
+                        (child?.parentFamilyId ? families.entities[child.parentFamilyId] : undefined)
+                        ?? findFamilyByChild(c);
+
                     if (!fam) {
                         fam = { id: nanoid(), spouses: [], children: [c] };
                         familiesAdapter.addOne(families, fam);
-                    } else if (!fam.children.includes(c)) {
-                        fam.children.push(c);
+                    } else {
+                        addUnique(fam.children, c);
                     }
+
+                    if (child && !child.parentFamilyId) child.parentFamilyId = fam.id;
                     return fam!;
                 };
 
@@ -95,19 +106,37 @@ const treeSlice = createSlice({
 
                 switch (ctx.kind) {
                     case 'spouse': {
-                        const fam = ensureSpouseFamily(a);
-                        if (!fam.spouses.includes(b)) fam.spouses.push(b);
+                        const fam: Family = {
+                            id: nanoid(),
+                            spouses: [a, b],
+                            children: [],
+                            relationshipStatus: family?.relationshipStatus,
+                            marriage: family?.marriage,
+                            divorce: family?.divorce,
+                        };
+
+                        familiesAdapter.addOne(families, fam);
                         break;
                     }
                     case 'son':
                     case 'daughter': {
-                        const fam = ensureSpouseFamily(a);         // якорь — родитель
-                        if (!fam.children.includes(b)) fam.children.push(b);
+                        let fam = ctx.familyId
+                            ? families.entities[ctx.familyId]
+                            : undefined;
+
+                        if (!fam) {
+                            fam = ensureSingleParentFamily(a);
+                        }
+
+                        addUnique(fam.children, b);
+
+                        const child = state.persons.entities[b];
+                        if (child) child.parentFamilyId = fam.id;
                         break;
                     }
                     case 'mother':
                     case 'father': {
-                        const fam = ensureParentsFamilyForChild(a); // якорь — ребёнок
+                        const fam = ensureParentsFamilyForChild(a);
                         if (!fam.spouses.includes(b)) fam.spouses.push(b);
                         break;
                     }
@@ -119,7 +148,7 @@ const treeSlice = createSlice({
                     }
                 }
             },
-            prepare({ person, ctx }: AddPersonWithRelationPayload) {
+            prepare({ person, family, ctx }: AddPersonWithRelationPayload) {
                 const normalized: Person = {
                     id: makePersonId(),
                     gender: person.gender ?? 'unknown',
@@ -131,7 +160,7 @@ const treeSlice = createSlice({
                     death: person.death,
                 };
 
-                return { payload: { ctx, person: normalized } };
+                return { payload: { person: normalized, family, ctx } };
             },
         },
 
@@ -145,14 +174,18 @@ const treeSlice = createSlice({
             for (const fam of Object.values(state.families.entities)) {
                 if (!fam) continue;
 
+                const wasSpouse = fam.spouses.includes(personId);
+                const wasChild = fam.children.includes(personId);
+
+                if (!wasSpouse && !wasChild) continue;
+
                 removeFrom(fam.spouses, personId);
                 removeFrom(fam.children, personId);
-            }
 
-            for (const fam of Object.values(state.families.entities)) {
-                if (!fam) continue;
+                const hasChildren = fam.children.length > 0;
+                const spousesCount = fam.spouses.length;
 
-                if (fam.spouses.length === 0 && fam.children.length === 0) {
+                if (!hasChildren && spousesCount <= 1) {
                     familiesAdapter.removeOne(state.families, fam.id);
                 }
             }
@@ -177,18 +210,6 @@ const treeSlice = createSlice({
         },
 
         removeFamily: (state, action: PayloadAction<Id>) => {
-            const fam = state.families.entities[action.payload];
-
-            for (const sid of fam.spouses) {
-                const p = state.persons.entities[sid];
-                // if (p) removeFrom(p.spouseInFamilies, fam.id);
-            }
-
-            for (const cid of fam.children) {
-                const c = state.persons.entities[cid];
-                // if (c) removeFrom(c.parentInFamilies, fam.id);
-            }
-
             familiesAdapter.removeOne(state.families, action.payload);
         },
 
