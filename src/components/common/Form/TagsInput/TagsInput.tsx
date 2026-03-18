@@ -1,6 +1,6 @@
+import { useEffect, useRef, useState } from 'react';
 import type { ChangeEvent, KeyboardEvent } from 'react';
 import styles from './TagsInput.module.css';
-import { useEffect, useRef, useState } from 'react';
 
 interface TagsInputProps {
     name: string;

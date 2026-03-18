@@ -1,16 +1,12 @@
 import { memo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Handle, Position, useReactFlow, type NodeProps, type Node } from '@xyflow/react';
-import { setRootPerson } from '@/features/tree/treeSlice';
-import { selectPersonById } from '@/features/tree/selectors';
+import { setActiveSpouseFamily, setRootPerson } from '@/features/tree/treeSlice';
+import { selectPersonById, selectSpousesOfPerson } from '@/features/tree/selectors';
 import type { RootState } from '@/app/store';
 import { PERSON_SIZE } from '@/components/common/constants';
-import { RelativeKind, AddRelativeContext, PartialDate, AnchorPerson } from '@/features/tree/types';
+import { RelativeKind, AddRelativeContext, AnchorPerson } from '@/features/tree/types';
 import styles from './PersonNode.module.css';
-
-import femalePlaceholder from '@/assets/img/pl-female.jpg';
-import malePlaceholder from '@/assets/img/pl-male.jpg';
-import unknownPlaceholder from '@/assets/img/pl-unknown.jpg';
 
 import deathIcon from '@/assets/img/death-icon.svg';
 import bornIcon from '@/assets/img/born-icon.svg';
@@ -18,14 +14,13 @@ import bornIcon from '@/assets/img/born-icon.svg';
 import MenuEdit from '@/components/common/MenuEdit/MenuEdit';
 import PersonModal from '@/components/FamilyTreePage/PersonModal/PersonModal';
 import RelativeModal from '@/components/FamilyTreePage/RelativeModal/RelativeModal';
+import SpouseModal from '@/components/FamilyTreePage/SpouseModal/SpouseModal';
+import { formatPartialDate } from '@/features/tree/lib/formatPartialDate';
+import { getDefaultPortrait } from '@/features/tree/lib/getDefaultPortrait';
 
 type PersonData = {
     personId: string;
-    name: string;
-    surname: string;
-    photoUrl?: string;
-    birth?: PartialDate;
-    death?: PartialDate;
+    shownSpouseFamilyId?: string | null;
 };
 
 type RFPersonNode = Node<PersonData>;
@@ -33,6 +28,7 @@ type RFPersonNode = Node<PersonData>;
 const PersonNode = ({ id, data, selected }: NodeProps<RFPersonNode>) => {
     const [isAddRelativeOpen, setIsAddRelativeOpen] = useState(false);
     const [isEditPersonOpen, setIsEditPersonOpen] = useState(false);
+    const [isSelectSpouseOpen, setIsSelectSpouseOpen] = useState(false);
     const [addCtx, setAddCtx] = useState<AddRelativeContext | null>(null);
 
     const dispatch = useDispatch();
@@ -42,34 +38,36 @@ const PersonNode = ({ id, data, selected }: NodeProps<RFPersonNode>) => {
         selectPersonById(s, data.personId),
     );
 
-    const formatPartialDate = (date?: PartialDate) => {
-        if (!date) return '';
+    const rootPersonId = useSelector((s: RootState) => s.tree.rootPersonId);
 
-        const y = date.y?.toString() ?? '';
-        const m = date.m?.toString().padStart(2, '0') ?? '';
-        const d = date.d?.toString().padStart(2, '0') ?? '';
+    const personId = data.personId;
 
-        if (y && m && d) return `${d}.${m}.${y}`;
-        if (y && m) return `${m}.${y}`;
-        return y;
-    };
+    const name = person?.givenName?.trim() || 'Unknown';
+    const surname = person
+        ? `${person.familyName ?? ''} ${person.maidenName ? `(${person.maidenName})` : ''}`.trim()
+        : '';
 
-    const getDefaultPortrait = (gender?: 'male' | 'female' | 'unknown') =>
-        gender === 'male' ? malePlaceholder : gender === 'female' ? femalePlaceholder : unknownPlaceholder;
+    const birth = formatPartialDate(person?.birth?.date?.from);
+    const death = formatPartialDate(person?.death?.date?.from);
+    const lifeStatus = person?.lifeStatus;
 
-    const personSurname = person ? `${person?.familyName ?? ''} ${person?.maidenName ? `(${person?.maidenName})` : ''}`.trim() : '';
+    const photo = person?.portrait || getDefaultPortrait(person?.gender);
 
-    const personId = person?.id || data.personId;
-    const birth = formatPartialDate(person?.birth?.date?.from ?? data.birth);
-    const death = formatPartialDate(person?.death?.date?.from ?? data.death);
-    const name = person?.givenName || data.name || 'Unknown';
-    const surname = personSurname || data.surname || '';
-    const photo = (person ? person?.portrait : data.photoUrl) || getDefaultPortrait(person?.gender);
+    const anchor: AnchorPerson = { id: personId, photo, name, surname, lifeStatus, birth, death };
 
-    const anchor: AnchorPerson = { id: personId, photo, name, surname, birth, death };
+    const spouseCount = useSelector((s: RootState) =>
+        selectSpousesOfPerson(s, personId).length,
+    );
 
     const onClick = () => {
-        dispatch(setRootPerson(data.personId));
+        if (rootPersonId !== personId) {
+            const famId = data.shownSpouseFamilyId ?? null;
+            if (famId) {
+                dispatch(setActiveSpouseFamily({ personId, familyId: famId }));
+            }
+            dispatch(setRootPerson(personId));
+            return;
+        }
 
         const n = rf.getNode(id) as RFPersonNode | undefined;
         if (!n) return;
@@ -124,11 +122,11 @@ const PersonNode = ({ id, data, selected }: NodeProps<RFPersonNode>) => {
                             </div>
                         )}
 
-                        {(death && birth) && (
+                        {(lifeStatus === 'deceased' && birth) && (
                             <span>{'\u00A0-\u00A0'}</span>
                         )}
 
-                        {death && (
+                        {lifeStatus === 'deceased' && (
                             <div className={styles.date}>
                                 <img className={styles.lifeIcon} src={deathIcon} alt='Death' />
                                 {death}
@@ -137,12 +135,28 @@ const PersonNode = ({ id, data, selected }: NodeProps<RFPersonNode>) => {
                     </div>
                 </div>
 
+                {spouseCount > 1 && (
+                    <button
+                        type='button'
+                        className={styles.sousesBtn}
+                        onClick={() => setIsSelectSpouseOpen(true)}
+                    >
+                        +{spouseCount - 1} families
+                    </button>
+                )}
+
                 <MenuEdit menuList={menuList} listPosition='top' className={styles.editList} />
             </div>
 
             <Handle id='left' type='source' position={Position.Left} />
             <Handle id='right' type='source' position={Position.Right} />
             <Handle id='top' type='target' position={Position.Top} />
+
+            {isSelectSpouseOpen &&
+                <SpouseModal
+                    onClose={() => setIsSelectSpouseOpen(false)}
+                    anchor={anchor}
+                />}
 
             {isAddRelativeOpen &&
                 <RelativeModal

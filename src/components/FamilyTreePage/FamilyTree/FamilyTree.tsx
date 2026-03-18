@@ -1,28 +1,57 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ReactFlow, Controls, type Node, type Edge, ReactFlowInstance } from '@xyflow/react';
-import { useSelector } from 'react-redux';
-import { buildGraph } from '@/features/tree/graph';
+import { useDispatch, useSelector, useStore } from 'react-redux';
 import { layoutWithELK } from '@/features/tree/layout/elk';
+import { selectGraph, selectSpouseFamilyIdsOfPerson } from '@/features/tree/selectors';
 import type { RootState } from '@/app/store';
-import Title from '@/components/common/Title/Title';
+import { PERSON_SIZE, FAMILY_SIZE } from '@/components/common/constants';
+import '@xyflow/react/dist/style.css';
+import { setActiveSpouseFamily, setRootPerson } from '@/features/tree/treeSlice';
 import PersonNode from '@/features/tree/nodes/PersonNode';
 import FamilyNode from '@/features/tree/nodes/FamilyNode';
 import ChamferEdge from '@/features/tree/edges/ChamferEdge';
-import { PERSON_SIZE, FAMILY_SIZE } from '@/components/common/constants';
-import '@xyflow/react/dist/style.css';
+import Title from '@/components/common/Title/Title';
+import PersonSearchBar from '@/components/common/PersonSearchBar/PersonSearchBar';
+import ExportModal from '@/components/FamilyTreePage/ExportModal/ExportModal';
 import styles from './FamilyTree.module.css';
 
 const FamilyTree = () => {
-    const graph = useSelector((s: RootState) => buildGraph(s));
+    const graph = useSelector(selectGraph);
+
+    const dispatch = useDispatch();
+    const store = useStore<RootState>();
+
     const [nodes, setNodes] = useState<Node[]>(graph.nodes);
     const [edges, setEdges] = useState<Edge[]>(graph.edges);
     const [rf, setRf] = useState<ReactFlowInstance | null>(null);
-    const edgeTypes = { chamfer: ChamferEdge };
+    const edgeTypes = useMemo(
+        () => ({ chamfer: ChamferEdge }), [],
+    );
+
+    const rootPersonId = useSelector((s: RootState) => s.tree.rootPersonId);
+
+    const [isExportOpen, setIsExportOpen] = useState(false);
+
+    const centerPerson = (personId: string) => {
+        if (!rf) return;
+
+        const nodeId = `p:${personId}`;
+        const n = rf.getNode(nodeId);
+        if (!n) return;
+
+        const w = n.width ?? PERSON_SIZE.width;
+        const h = n.height ?? PERSON_SIZE.height;
+
+        rf.setCenter(n.position.x + w / 2, n.position.y + h / 2, {
+            zoom: 1.1,
+            duration: 300,
+        });
+    };
 
     const applyLayout = async () => {
         const posMap = await layoutWithELK(graph.nodes, graph.edges);
 
-        // Хелпер: размеры узла
+        // Node size
         const getSize = (id: string) => {
             const n = graph.nodes.find(nn => nn.id === id);
             if (!n) return { w: PERSON_SIZE.width, h: PERSON_SIZE.height };
@@ -31,7 +60,7 @@ const FamilyTree = () => {
             return { w: n.width ?? PERSON_SIZE.width, h: n.height ?? PERSON_SIZE.height };
         };
 
-        // 1) Центруем каждый family между супругами по X и Y (по центрам карточек)
+        // Center each family between spouses on the X and Y axes (using card centers)
         for (const family of graph.nodes.filter(n => n.type === 'family')) {
             const spouseEdges = graph.edges.filter(
                 (e) => e.target === family.id && (e.data as any)?.role === 'spouse',
@@ -45,24 +74,21 @@ const FamilyTree = () => {
                     const s2 = getSize(e2.source);
                     const f = getSize(family.id);
 
-                    // центры супругов
                     const c1x = p1.x + s1.w / 2;
                     const c1y = p1.y + s1.h / 2;
                     const c2x = p2.x + s2.w / 2;
                     const c2y = p2.y + s2.h / 2;
 
-                    // средняя точка между центрами супругов
                     const midX = (c1x + c2x) / 2;
                     const midY = (c1y + c2y) / 2;
 
-                    // позиция family — это ЛВ-угол, чтобы его центр попал в midX/midY
                     posMap[family.id].x = midX - f.w / 2;
                     posMap[family.id].y = midY - f.h / 2;
                 }
             }
         }
 
-        // запас по краям — отступ 80px
+        // 80px padding on the edges
         const xs = Object.values(posMap).map(p => p.x);
         const ys = Object.values(posMap).map(p => p.y);
         const offX = 80 - Math.min(...xs);
@@ -79,7 +105,7 @@ const FamilyTree = () => {
             })),
         );
 
-        // Назначаем хэндлы у рёбер, чтобы линия выходила из нужного бока карточки
+        // Edge handles to make the line start from the correct side of the card
         const enhancedEdges: Edge[] = graph.edges.map((e) => {
 
             const role = (e.data as any)?.role as 'spouse' | 'child' | undefined;
@@ -98,17 +124,17 @@ const FamilyTree = () => {
 
                 return {
                     ...e,
-                    type: 'chamfer',               // кастомный edge
+                    type: 'chamfer',
                     sourceHandle: personIsLeftOfFamily ? 'right' : 'left',
-                    targetHandle: 'top',   // в соответствующий бок family
+                    targetHandle: 'top',
                 };
             }
             if (role === 'child') {
                 return {
                     ...e,
                     type: 'chamfer',
-                    sourceHandle: 'bottom',        // от ствола вниз
-                    targetHandle: 'top',           // в верх ребёнка
+                    sourceHandle: 'bottom',
+                    targetHandle: 'top',
                 };
             }
             return e;
@@ -116,30 +142,97 @@ const FamilyTree = () => {
 
         setEdges(enhancedEdges);
 
-        requestAnimationFrame(() => rf?.fitView({ padding: 0.2 }));
+        const rootNodeId = rootPersonId
+            ? `p:${rootPersonId}`
+            : graph.nodes.find(n => n.type === 'person')?.id;
+
+        if (rootNodeId && posMap[rootNodeId]) {
+            const { w, h } = getSize(rootNodeId);
+            const dx = offX > 0 ? offX : 0;
+            const dy = offY > 0 ? offY : 0;
+
+            const cx = (posMap[rootNodeId].x ?? 0) + dx + w / 2;
+            const cy = (posMap[rootNodeId].y ?? 0) + dy + h / 2;
+
+            requestAnimationFrame(() => {
+                rf?.setCenter(cx, cy, { zoom: 1.1, duration: 300 });
+            });
+        } else {
+            requestAnimationFrame(() => rf?.fitView({ padding: 0.2 }));
+        }
+
     };
 
     useEffect(() => {
         if (!rf) return;
-        if (!graph.nodes.length) return;
+
+        if (!graph.nodes.length) {
+            setNodes([]);
+            setEdges([]);
+            return;
+        }
+
         void applyLayout();
-    }, [rf, graph.nodes.length, graph.edges.length]);
+    }, [rf, graph, rootPersonId]);
 
     const nodeTypes = useMemo(
         () => ({
             person: PersonNode,
             family: FamilyNode,
-        }),
-        [],
+        }), [],
     );
+
+    // Sync the active family after search
+    const syncActiveSpouseAfterSearch = (personId: string) => {
+        const state = store.getState();
+
+        const spouseFamilyIds = selectSpouseFamilyIdsOfPerson(state, personId);
+        if (spouseFamilyIds.length !== 1) return;
+
+        const familyId = spouseFamilyIds[0];
+
+        dispatch(setActiveSpouseFamily({ personId, familyId }));
+
+        const fam = state.tree.families.entities[familyId];
+        if (!fam) return;
+
+        for (const sId of fam.spouses) {
+            dispatch(setActiveSpouseFamily({ personId: sId, familyId }));
+        }
+    };
+
+    // Export modal
+    const openExportModal = () => {
+        setIsExportOpen(true);
+    };
+
+    const closeExportModal = () => {
+        setIsExportOpen(false);
+    };
 
     return (
         <div className={styles.container}>
             <div className={styles.wrapper}>
+                <button className={styles.button} onClick={openExportModal}>
+                    Export and Import
+                </button>
+
                 <Title level={'h1'} size={'medium'} showDecoration={false} highlightFirstLetter={false}>
                     {'Family tree'}
                 </Title>
-                {/*<button onClick={applyLayout}>Auto layout</button>*/}
+
+                <PersonSearchBar
+                    className={styles.search}
+                    onPickPerson={(id) => {
+                        if (id === rootPersonId) {
+                            centerPerson(id);
+                            return;
+                        }
+
+                        syncActiveSpouseAfterSearch(id);
+                        dispatch(setRootPerson(id));
+                    }}
+                />
             </div>
 
             <div className={styles.familyTree}>
@@ -149,11 +242,12 @@ const FamilyTree = () => {
                     nodeTypes={nodeTypes}
                     edgeTypes={edgeTypes}
                     onInit={setRf}
-                    fitView
                     style={{ width: '100%', height: '100%' }}>
                     <Controls />
                 </ReactFlow>
             </div>
+
+            {isExportOpen && <ExportModal onClose={closeExportModal} />}
         </div>
 
     );

@@ -12,11 +12,6 @@ const FooterNav = () => {
                 </li>
                 <li className={styles.navItem}>
                     <Link to="/" className={styles.navLink}>
-                        Research
-                    </Link>
-                </li>
-                <li className={styles.navItem}>
-                    <Link to="/" className={styles.navLink}>
                         Family tree
                     </Link>
                 </li>

@@ -1,53 +1,56 @@
 import * as React from 'react';
-import { JSX, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useForm } from '@/hooks/useForm';
-import type { ErrorsMap, FormField, FormValues } from '../ui.types';
-import { ButtonConfig, Validate } from '../ui.types';
+import type { ButtonConfig, Validate, ErrorsMap, FormField, FormValues, FormValue } from '../ui.types';
+import { LifeEventDate, PartialDate } from '@/features/tree/types';
 import Input from './Input/Input';
 import Textarea from './Textarea/Textarea';
 import TagsInput from './TagsInput/TagsInput';
 import PhotoUploader from './PhotoUploader/PhotoUploader';
-// import Checkbox from './Checkbox/Checkbox';
 import RadioGroup from './RadioGroup/RadioGroup';
 import Button from '../Button/Button';
 import Errors from './Errors/Errors';
-import styles from './Form.module.css';
 import DateInput from '@/components/common/Form/DateInput/DateInput';
 import LifeEventDateField from '@/components/common/Form/LifeEventDateField/LifeEventDateField';
-import { LifeEventDate, PartialDate } from '@/features/tree/types';
 import Select from '@/components/common/Form/Select/Select';
 import SelectPerson from '@/components/common/Form/SelectPerson/SelectPerson';
+import styles from './Form.module.css';
 
-interface FormProps {
-    initialValues: FormValues;
-    fields: ReadonlyArray<FormField>;
+interface FormProps<TValues extends FormValues = FormValues> {
+    initialValues: TValues;
+    fields: ReadonlyArray<FormField<TValues>>;
     buttons?: ReadonlyArray<ButtonConfig>;
-    onSubmit: (values: FormValues) => void;
-    formLayout?: string | ((values: FormValues) => string);
+    onSubmit: (values: TValues) => void;
+    formLayout?: string | ((values: TValues) => string);
     formColumns?: string;
     formRows?: string;
     className?: string;
     externalLocalErrors?: ErrorsMap;
-    validate?: Validate;
+    validate?: Validate<TValues>;
 }
 
-const Form = ({
-                  initialValues,
-                  fields,
-                  buttons,
-                  onSubmit,
-                  formLayout,
-                  formColumns,
-                  formRows,
-                  className,
-                  externalLocalErrors,
-                  validate,
-              }: FormProps) => {
-    const { values, globalErrors, submitCount, handleChange, handleSubmit, setCustomValue } = useForm({
+const Form = <TValues extends FormValues = FormValues>({
+                                                           initialValues,
+                                                           fields,
+                                                           buttons,
+                                                           onSubmit,
+                                                           formLayout,
+                                                           formColumns,
+                                                           formRows,
+                                                           className,
+                                                           externalLocalErrors,
+                                                           validate,
+                                                       }: FormProps<TValues>) => {
+    const { values, handleSubmit, setCustomValue, submitCount, globalErrors } = useForm({
         initialValues,
         onSubmit,
         validate,
     });
+
+    const nextValues = (name: keyof TValues & string, value: FormValue) =>
+        ({ ...values, [name]: value } as TValues);
+
+    const setValue = (name: keyof TValues & string, value: FormValue) => setCustomValue(name, value);
 
     const [localErrors, setLocalErrors] = useState<ErrorsMap>({});
 
@@ -62,7 +65,7 @@ const Form = ({
         [resLayout, formColumns, formRows],
     );
 
-    const renderField = (field: FormField): JSX.Element => {
+    const renderField = (field: FormField<TValues>): JSX.Element => {
         if (field.type === 'custom') {
             return <>{field.render({ values })}</>;
         }
@@ -84,8 +87,8 @@ const Form = ({
                     field.onValueChange?.({
                         name: field.name,
                         value: e.target.value,
-                        values: { ...values, [field.name]: e.target.value },
-                        setValue: setCustomValue,
+                        values: nextValues(field.name, e.target.value),
+                        setValue: setValue,
                     });
                 };
 
@@ -100,8 +103,8 @@ const Form = ({
                     field.onValueChange?.({
                         name: field.name,
                         value: e.target.value,
-                        values: { ...values, [field.name]: e.target.value },
-                        setValue: setCustomValue,
+                        values: nextValues(field.name, e.target.value),
+                        setValue: setValue,
                     });
                 };
 
@@ -132,8 +135,8 @@ const Form = ({
                                             field.onValueChange?.({
                                                 name: field.name,
                                                 value: v,
-                                                values: { ...values, [field.name]: v },
-                                                setValue: setCustomValue,
+                                                values: nextValues(field.name, v),
+                                                setValue: setValue,
                                             });
                                         }}
                     />
@@ -162,8 +165,8 @@ const Form = ({
                             field.onValueChange?.({
                                 name: field.name,
                                 value: v,
-                                values: { ...values, [field.name]: v },
-                                setValue: setCustomValue,
+                                values: nextValues(field.name, v),
+                                setValue: setValue,
                             });
                         }}
                     />
@@ -181,8 +184,8 @@ const Form = ({
                             field.onValueChange?.({
                                 name: field.name,
                                 value: v,
-                                values: { ...values, [field.name]: v },
-                                setValue: setCustomValue,
+                                values: nextValues(field.name, v),
+                                setValue: setValue,
                             });
                         }}
                     />
@@ -200,8 +203,8 @@ const Form = ({
                             field.onValueChange?.({
                                 name: field.name,
                                 value: v,
-                                values: { ...values, [field.name]: v },
-                                setValue: setCustomValue,
+                                values: nextValues(field.name, v),
+                                setValue: setValue,
                             });
                         }}
                     />
@@ -223,7 +226,7 @@ const Form = ({
         }
     };
 
-    const isFieldVisible = (field: FormField) =>
+    const isFieldVisible = (field: FormField<TValues>) =>
         typeof field.visible === 'function'
             ? field.visible(values)
             : field.visible !== false;

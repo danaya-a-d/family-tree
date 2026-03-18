@@ -1,9 +1,11 @@
 import Modal from '../../common/Modal/Modal';
 import Form from '../../common/Form/Form';
-import { useDispatch, useSelector } from 'react-redux';
-import { addPerson, addPersonWithRelation, removePerson, updateFamily, updatePerson } from '@/features/tree/treeSlice';
 import Title from '../../common/Title/Title';
-import type { ButtonConfig, ErrorsMap, FormField, FormValues } from '../../common/ui.types';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/app/store';
+import { useState } from 'react';
+import { addPerson, addPersonWithRelation, removePerson, updateFamily, updatePerson } from '@/features/tree/treeSlice';
+import type { ButtonConfig, ErrorsMap, FormField } from '../../common/ui.types';
 import {
     AddRelativeContext, Family,
     Gender, Id,
@@ -13,13 +15,11 @@ import {
     Person, RelationshipStatus,
     RelativeKind, SpousesForPerson,
 } from '@/features/tree/types';
-import styles from './PersonModal.module.css';
 import { RadioOption, SelectOption, SelectPersonOption } from '@/components/common/Form/Form.types';
 import { validateLifeEventDate } from '@/components/common/validation';
-import { RootState } from '@/app/store';
-import { selectPersonById, selectSpousesOfPerson } from '@/features/tree/selectors';
-import React, { useState } from 'react';
-import SelectPerson from '@/components/common/Form/SelectPerson/SelectPerson';
+import { selectPersonById, selectSpousesOfPerson, selectAttachSpouseFamilies } from '@/features/tree/selectors';
+import { getDefaultPortrait } from '@/features/tree/lib/getDefaultPortrait';
+import styles from './PersonModal.module.css';
 
 interface PersonModalProps {
     person?: Person;
@@ -43,6 +43,7 @@ type PersonFormValues = {
 
     parentFamilyId?: Id | '';
     spouseFamilyId?: Id;
+    spouseAttachFamilyId?: Id | '';
     relationshipStatus?: RelationshipStatus;
     dateOfMarriage?: LifeEventDate;
     placeOfMarriage: LifeEvent['place'];
@@ -51,6 +52,9 @@ type PersonFormValues = {
 };
 
 type SpouseDraft = Pick<Family, 'relationshipStatus' | 'marriage' | 'divorce'>
+
+const EMPTY_SPOUSES: SpousesForPerson[] = [];
+const EMPTY_FAMILIES: Family[] = [];
 
 const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
 
@@ -65,12 +69,18 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
         addContext ? selectPersonById(s, addContext.anchorPersonId) : undefined,
     );
     const [spouseErrors, setSpouseErrors] = useState<ErrorsMap>({});
-    const spouses: SpousesForPerson[] = useSelector((s: RootState) =>
-        person ? selectSpousesOfPerson(s, person.id) : [],
+    const spouses = useSelector((s: RootState) =>
+        person ? selectSpousesOfPerson(s, person.id) : EMPTY_SPOUSES,
     );
-    const parentFamilies: SpousesForPerson[] = useSelector((s: RootState) =>
-        isAddChild && addContext ? selectSpousesOfPerson(s, addContext.anchorPersonId) : [],
+    const parentFamilies = useSelector((s: RootState) =>
+        isAddChild && addContext ? selectSpousesOfPerson(s, addContext.anchorPersonId) : EMPTY_SPOUSES,
     );
+    const attachSpouseFamilies = useSelector((s: RootState) =>
+        isAddSpouse && addContext
+            ? selectAttachSpouseFamilies(s, addContext.anchorPersonId)
+            : EMPTY_FAMILIES,
+    );
+    const personsById = useSelector((s: RootState) => s.tree.persons.entities);
 
     const showSpouseSection = (spouses?.length ?? 0) > 0 || isAddSpouse;
 
@@ -103,11 +113,22 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
         return { showMarriage, showDivorce };
     };
 
+    const familiesById = useSelector((s: RootState) => s.tree.families.entities);
+
+    const isSingleParentFamily = (familyId?: Id) => {
+        if (!familyId) return false;
+        const fam = familiesById[familyId];
+        return (fam?.spouses?.length ?? 0) < 2;
+    };
+
+    const isCoupleFamilySelected = (v: PersonFormValues) =>
+        !!v.spouseFamilyId && !isSingleParentFamily(v.spouseFamilyId);
+
     const isMarriageVisible = (v: PersonFormValues) =>
-        showSpouseSection && getRelFlags(v).showMarriage;
+        showSpouseSection && isCoupleFamilySelected(v) && getRelFlags(v).showMarriage;
 
     const isDivorceVisible = (v: PersonFormValues) =>
-        showSpouseSection && getRelFlags(v).showDivorce;
+        showSpouseSection && isCoupleFamilySelected(v) && getRelFlags(v).showDivorce;
 
     const GENDER_BY_KIND: Record<RelativeKind, Gender | undefined> = {
         father: 'male',
@@ -130,12 +151,13 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
             dateOfBirth: person.birth?.date ?? undefined,
             placeOfBirth: person.birth?.place ?? '',
 
-            lifeState: getLifeState(person),
+            lifeState: person.lifeStatus ?? 'unknown',
             dateOfDeath: person.death?.date ?? undefined,
             placeOfDeath: person.death?.place ?? '',
 
             parentFamilyId: '',
             spouseFamilyId: spouses[0]?.familyId,
+            spouseAttachFamilyId: '',
             relationshipStatus: spouses[0]?.relationshipStatus ?? 'unknown',
 
             dateOfMarriage: spouses[0]?.marriage?.date ?? undefined,
@@ -158,8 +180,9 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
             dateOfDeath: undefined,
             placeOfDeath: '',
 
-            parentFamilyId: '',
+            parentFamilyId: parentFamilies[0]?.familyId ?? '',
             spouseFamilyId: undefined,
+            spouseAttachFamilyId: attachSpouseFamilies[0]?.id ?? '',
             relationshipStatus: 'unknown',
 
             dateOfMarriage: undefined,
@@ -180,17 +203,28 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
         onClose();
     };
 
-    function getLifeState(p?: Person): LifeState {
-        if (!p) return 'unknown';
-        if (p.death === null) return 'living';
-        if (p.death) return 'deceased';
-        return 'unknown';
-    }
-
     const makeLifeEvent = (date?: LifeEventDate, place?: string): LifeEvent | undefined => {
         const d = date || undefined;
         const p = place?.trim() || undefined;
         return d || p ? { date: d, place: p } : undefined;
+    };
+
+    const spouseDraftFromValues = (values: PersonFormValues): SpouseDraft | null => {
+        const familyId = values.spouseFamilyId;
+        if (!familyId) return null;
+
+        const status = values.relationshipStatus ?? 'unknown';
+        const { showMarriage, showDivorce } = getRelFlags({ relationshipStatus: status });
+
+        return {
+            relationshipStatus: status,
+            marriage: showMarriage
+                ? makeLifeEvent(values.dateOfMarriage, values.placeOfMarriage)
+                : undefined,
+            divorce: showDivorce
+                ? makeLifeEvent(values.dateOfDivorce, values.placeOfDivorce)
+                : undefined,
+        };
     };
 
     const handleSubmit = (values: PersonFormValues) => {
@@ -200,33 +234,63 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
             maidenName: values.maidenName,
             gender: values.gender,
             portrait: values.portrait,
+            lifeStatus: values.lifeState,
             birth: makeLifeEvent(values.dateOfBirth, values.placeOfBirth),
-            death: makeLifeEvent(values.dateOfDeath, values.placeOfDeath),
+            death: values.lifeState === 'deceased'
+                ? makeLifeEvent(values.dateOfDeath, values.placeOfDeath)
+                : undefined,
         };
+
+        const { showMarriage, showDivorce } = getRelFlags(values);
 
         const familyChanges: Partial<Family> = {
             relationshipStatus: values.relationshipStatus,
-            marriage: makeLifeEvent(values.dateOfMarriage, values.placeOfMarriage),
-            divorce: makeLifeEvent(values.dateOfDivorce, values.placeOfDivorce),
+            marriage: showMarriage
+                ? makeLifeEvent(values.dateOfMarriage, values.placeOfMarriage)
+                : undefined,
+            divorce: showDivorce
+                ? makeLifeEvent(values.dateOfDivorce, values.placeOfDivorce)
+                : undefined,
         };
 
-        const ctxForDispatch: AddRelativeContext = isAddChild && values.parentFamilyId ?
-            { ...addContext, familyId: values.parentFamilyId } : addContext;
-
-        const currentSpouse = spouses.find(
-            s => s.familyId === values.spouseFamilyId,
-        );
-
-        if (currentSpouse && values.relationshipStatus) {
-            dispatch(
-                updateFamily({
-                    id: currentSpouse.familyId,
-                    changes: familyChanges,
-                }),
-            );
-        }
+        const ctxForDispatch: AddRelativeContext =
+            isAddChild && values.parentFamilyId
+                ? { ...addContext, familyId: values.parentFamilyId }
+                : isAddSpouse && values.spouseAttachFamilyId
+                    ? { ...addContext, familyId: values.spouseAttachFamilyId }
+                    : addContext;
 
         if (isEdit) {
+            const draftsToSave: Record<Id, SpouseDraft> = { ...spouseDrafts };
+
+            if (values.spouseFamilyId) {
+                draftsToSave[values.spouseFamilyId] = {
+                    relationshipStatus: values.relationshipStatus,
+                    marriage: showMarriage
+                        ? makeLifeEvent(values.dateOfMarriage, values.placeOfMarriage)
+                        : undefined,
+                    divorce: showDivorce
+                        ? makeLifeEvent(values.dateOfDivorce, values.placeOfDivorce)
+                        : undefined,
+                };
+            }
+
+            for (const [familyId, draft] of Object.entries(draftsToSave)) {
+                const relationshipStatus = draft.relationshipStatus ?? 'unknown';
+                const { showMarriage, showDivorce } = getRelFlags({ relationshipStatus });
+
+                dispatch(
+                    updateFamily({
+                        id: familyId as Id,
+                        changes: {
+                            relationshipStatus,
+                            marriage: showMarriage ? draft.marriage : undefined,
+                            divorce: showDivorce ? draft.divorce : undefined,
+                        },
+                    }),
+                );
+            }
+
             dispatch(
                 updatePerson({
                     id: person.id,
@@ -281,13 +345,18 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
             : anchorPerson?.gender === 'male' ? 'No mother'
                 : 'No second parent';
 
+    const noSecondParentPhoto =
+        anchorPerson?.gender === 'female' ? getDefaultPortrait('male')
+            : anchorPerson?.gender === 'male' ? getDefaultPortrait('female')
+                : getDefaultPortrait('unknown');
+
     const PARENT_FAMILY_OPTIONS: SelectPersonOption[] = [
-        { value: '', label: noSecondParentLabel, photo: undefined },
         ...parentFamilies.map(f => ({
             value: f.familyId,
             label: f.spouseLabel,
             photo: f.spousePortrait,
         })),
+        { value: '', label: noSecondParentLabel, photo: noSecondParentPhoto },
     ];
 
     const SPOUSE_OPTIONS: SelectPersonOption[] =
@@ -297,7 +366,22 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
             photo: s.spousePortrait,
         }));
 
-    const fields = [
+    const SPOUSE_ATTACH_FAMILY_OPTIONS: SelectPersonOption[] = [
+        ...attachSpouseFamilies.map(f => {
+            const n = f.children?.length ?? 0;
+            const p = personsById[f.spouses[0]];
+
+            return {
+                value: f.id,
+                label: n > 0 ? `Existing family (${n} children)` : 'Existing family (no children)',
+                photo: p?.portrait || getDefaultPortrait(p?.gender),
+            };
+        }),
+
+        { value: '', label: 'Create new family', photo: getDefaultPortrait('unknown') },
+    ];
+
+    const fields: ReadonlyArray<FormField<PersonFormValues>> = [
         { name: 'portrait', placeholder: 'Photo', type: 'file' },
         { name: 'gender', options: GENDER_OPTIONS, type: 'radio' },
 
@@ -319,37 +403,23 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
         },
 
         {
-            name: 'unionWith',
-            type: 'custom',
-            visible: () => isAddSpouse && !!anchorPerson,
-            render: () => (
-                <div>
-                    <SelectPerson
-                        name='unionWith'
-                        placeholder='Relationship'
-                        selectors={[{
-                            value: anchorPerson!.id,
-                            label: `${anchorPerson!.givenName ?? ''} ${anchorPerson!.familyName ?? ''}`.trim() || 'Unknown',
-                            photo: anchorPerson!.portrait ?? undefined,
-                        }]}
-                        value={anchorPerson!.id}
-                        onChange={() => {
-                        }}
-                    />
-                </div>
-            ),
+            name: 'spouseAttachFamilyId',
+            placeholder: 'Attach to family',
+            selectors: SPOUSE_ATTACH_FAMILY_OPTIONS,
+            type: 'personsel',
+            visible: () => isAddSpouse && attachSpouseFamilies.length > 0,
         },
 
         {
             name: 'parentFamilyId',
-            placeholder: 'Select parent',
+            placeholder: 'Second parent',
             selectors: PARENT_FAMILY_OPTIONS,
             type: 'personsel',
             visible: () => isAddChild,
         },
 
         {
-            name: 'spouseFamilyId', placeholder: 'Relationship', selectors: SPOUSE_OPTIONS, type: 'personsel',
+            name: 'spouseFamilyId', placeholder: 'Spouse', selectors: SPOUSE_OPTIONS, type: 'personsel',
             visible: () => (spouses?.length ?? 0) > 0,
             onValueChange: ({ value, values, setValue }) => {
                 const newId = value as Id;
@@ -360,12 +430,18 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
 
                     if (Object.keys(errors).length > 0) {
                         setSpouseErrors(errors);
-
                         if (values.spouseFamilyId) {
                             setValue('spouseFamilyId', currentId);
                         }
-
                         return;
+                    }
+
+                    const snapshot = spouseDraftFromValues(values);
+                    if (snapshot) {
+                        setSpouseDrafts(prev => ({
+                            ...prev,
+                            [currentId]: snapshot,
+                        }));
                     }
                 }
 
@@ -386,10 +462,9 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
 
         {
             name: 'relationshipStatus', placeholder: 'Relationship', selectors: REL_OPTIONS, type: 'select',
-            visible: () => showSpouseSection,
+            visible: (v) => showSpouseSection && isCoupleFamilySelected(v),
             onValueChange: ({ value, values }) => {
                 const familyId = values.spouseFamilyId as Id | undefined;
-                console.log(familyId);
                 if (!familyId) return;
                 setSpouseDrafts(prev => ({
                     ...prev,
@@ -479,7 +554,7 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
             },
         },
 
-    ] satisfies ReadonlyArray<FormField>;
+    ];
 
     const baseButtons = [
         {
@@ -527,11 +602,11 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
             rows.push(`"dateOfDeath placeOfDeath"`);
         }
 
-        if (isAddSpouse && anchorPerson) rows.push(`"unionWith ."`);
+        if (isAddSpouse && attachSpouseFamilies.length > 0) rows.push(`"spouseAttachFamilyId ."`);
         if ((spouses?.length ?? 0) > 0) rows.push(`"spouseFamilyId ."`);
         if (isAddChild) rows.push(`"parentFamilyId ."`);
 
-        if (showSpouseSection) {
+        if (showSpouseSection && isCoupleFamilySelected(v)) {
             const { showMarriage, showDivorce } = getRelFlags(v);
 
             rows.push(showMarriage ? `"relationshipStatus dateOfMarriage"` : `"relationshipStatus ."`);
@@ -552,16 +627,16 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
     const PERSON_DATE_FIELDS = [
         'dateOfBirth',
         'dateOfDeath',
-    ] as const satisfies (keyof FormValues)[];
+    ] as const satisfies (keyof PersonFormValues)[];
 
     const SPOUSE_DATE_FIELDS = [
         'dateOfMarriage',
         'dateOfDivorce',
-    ] as const satisfies (keyof FormValues)[];
+    ] as const satisfies (keyof PersonFormValues)[];
 
     const validateDateFields = (
-        values: FormValues,
-        fields: readonly (keyof FormValues)[],
+        values: PersonFormValues,
+        fields: readonly (keyof PersonFormValues)[],
     ): ErrorsMap => {
         const errors: ErrorsMap = {};
 
@@ -584,7 +659,7 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
         return res;
     };
 
-    const validate = (values: FormValues) =>
+    const validate = (values: PersonFormValues) =>
         mergeErrors(
             (values.spouseFamilyId || isAddSpouse) ? validateDateFields(values, SPOUSE_DATE_FIELDS) : {},
             validateDateFields(values, PERSON_DATE_FIELDS),
@@ -603,7 +678,7 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
                     </Title>
                 </div>
 
-                <Form
+                <Form<PersonFormValues>
                     className={styles.form}
                     buttons={buttons}
                     fields={fields}

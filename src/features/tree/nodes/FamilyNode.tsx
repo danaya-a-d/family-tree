@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { Handle, Position, type Node as RFNode, type NodeProps } from '@xyflow/react';
-import { FAMILY_SIZE } from '../../../components/common/constants';
+import { FAMILY_SIZE } from '@/components/common/constants';
 import styles from './FamilyNode.module.css';
 
 type FamilyData = { familyId: string };

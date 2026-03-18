@@ -1,24 +1,19 @@
-import type { ChangeEventHandler } from 'react';
+import type { InputHTMLAttributes } from 'react';
 import styles from './Input.module.css';
 
-interface InputProps {
+type InputProps = {
     name: string;
-    value?: string;
-    placeholder?: string;
     className?: string;
-    onChange?: ChangeEventHandler<HTMLInputElement>;
-}
+} & Omit<InputHTMLAttributes<HTMLInputElement>, 'name' | 'className'>;
 
-const Input = ({ name, value, placeholder, className, onChange }: InputProps) => {
+const Input = ({ name, className, ...rest }: InputProps) => {
     return (
         <div className={styles.inputWrapper}>
             <label className={styles.label}>
                 <input
                     name={name}
-                    value={value ?? ''}
-                    placeholder={placeholder}
                     className={`${styles.field} ${className ?? ''}`}
-                    onChange={onChange}
+                    {...rest}
                 />
             </label>
         </div>

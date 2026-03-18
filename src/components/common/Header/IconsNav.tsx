@@ -1,7 +1,7 @@
-import styles from './IconsNav.module.css';
+import { Link } from 'react-router-dom';
 import mailIcon from '../../../assets/img/mail.svg';
 import globeIcon from '../../../assets/img/globe.svg';
-import { Link } from 'react-router-dom';
+import styles from './IconsNav.module.css';
 
 const IconsNav = () => {
     return (

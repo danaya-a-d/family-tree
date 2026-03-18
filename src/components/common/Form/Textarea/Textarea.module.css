@@ -29,7 +29,7 @@
 .field:active,
 .field:focus {
     outline: none;
-    border: 1px solid #c88; /* или основной акцентный */
-    box-shadow: 0 0 0 2px rgba(200, 136, 136, 0.2); /* нежное свечение */
-    border-radius: 12px; /* в тон капсулам */
+    border: 1px solid #c88;
+    box-shadow: 0 0 0 2px rgba(200, 136, 136, 0.2);
+    border-radius: 12px;
 }

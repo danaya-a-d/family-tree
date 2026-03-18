@@ -1,8 +1,8 @@
-import styles from './Socials.module.css';
+import { Link } from 'react-router-dom';
 import instagramIcon from '../../../assets/img/instagramIcon.svg';
 import facebookIcon from '../../../assets/img/facebookIcon.svg';
 import twitterIcon from '../../../assets/img/twitterIcon.svg';
-import { Link } from 'react-router-dom';
+import styles from './Socials.module.css';
 
 const Socials = () => {
     return (

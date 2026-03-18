@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from 'react';
-import TextBlock from '../TextBlock/TextBlock';
 import type { TextBlockProps } from '../TextBlock/TextBlock';
+import TextBlock from '../TextBlock/TextBlock';
 import styles from './ImageWithTextBlock.module.css';
 
 interface ImageWithTextBlockOwnProps {

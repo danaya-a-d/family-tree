@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import styles from './Toast.module.css';
 import type { ToastProps } from './Toast.types';
+import styles from './Toast.module.css';
 
 const Toast = ({ id, message, onClose }: ToastProps) => {
     const [show, setShow] = useState<boolean>(true);

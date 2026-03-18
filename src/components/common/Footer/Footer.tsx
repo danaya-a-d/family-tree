@@ -13,7 +13,7 @@ const Footer = () => {
                     <FooterMenu />
                     <Socials />
                 </div>
-                <Copyright>Copyright © 2022 All rights reserved.</Copyright>
+                <Copyright>Copyright © 2026 All rights reserved.</Copyright>
             </div>
         </footer>
     );

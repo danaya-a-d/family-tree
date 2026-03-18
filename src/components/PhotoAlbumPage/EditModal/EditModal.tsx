@@ -1,10 +1,10 @@
 import Modal from '../../common/Modal/Modal';
 import Form from '../../common/Form/Form';
+import Title from '../../common/Title/Title';
 import { useDispatch } from 'react-redux';
 import { deletePhoto, updatePhoto } from '@/features/gallery/gallerySlice';
 import { addPhoto } from '@/features/gallery/gallerySlice';
-import Title from '../../common/Title/Title';
-import type { ButtonConfig, ErrorsMap, FormField, FormValues } from '../../common/ui.types';
+import type { ButtonConfig, ErrorsMap, FormField } from '../../common/ui.types';
 import type { PhotoItem } from '@/features/gallery/types';
 import styles from './EditModal.module.css';
 
@@ -48,11 +48,11 @@ const EditModal = ({ photo, onClose }: EditModalProps) => {
         onClose();
     };
 
-    const fields = [
+    const fields: ReadonlyArray<FormField<EditFormValues>> = [
         { name: 'title', placeholder: 'Title', type: 'text' },
         { name: 'tags', placeholder: 'tag...', type: 'tags' },
         { name: 'photo', placeholder: 'Photo', type: 'file' },
-    ] satisfies ReadonlyArray<FormField>;
+    ];
 
     const baseButtons = [
         {
@@ -99,8 +99,7 @@ const EditModal = ({ photo, onClose }: EditModalProps) => {
             photo: null,
         };
 
-    // Валидатор
-    const validate = (values: FormValues): ErrorsMap => {
+    const validate = (values: EditFormValues): ErrorsMap => {
         const errors: ErrorsMap = {};
 
         // Title
@@ -130,7 +129,7 @@ const EditModal = ({ photo, onClose }: EditModalProps) => {
                 <Title level={'h2'} size={'small'}>
                     {isEdit ? 'Edit Photo' : 'Add Photo'}
                 </Title>
-                <Form
+                <Form<EditFormValues>
                     className={styles.form}
                     buttons={buttons}
                     fields={fields}

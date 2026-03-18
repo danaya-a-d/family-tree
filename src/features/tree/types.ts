@@ -36,6 +36,8 @@ export type RelationshipStatus =
     | 'unknown'
     | 'other';
 
+export type LifeStatus = 'living' | 'deceased' | 'unknown';
+
 export interface LifeEvent {
     date?: LifeEventDate;
     place?: string;
@@ -61,6 +63,7 @@ export interface Person {
     gender: Gender;
     portrait?: string;
 
+    lifeStatus?: LifeStatus;
     birth?: LifeEvent;
     death?: LifeEvent | null;
 
@@ -72,6 +75,7 @@ export type AnchorPerson = {
     photo: string;
     name: string;
     surname: string;
+    lifeStatus: LifeStatus;
     birth: string;
     death: string;
 };
@@ -85,3 +89,11 @@ export type SpousesForPerson = {
     marriage?: LifeEvent;
     divorce?: LifeEvent;
 }
+
+export type PersonSearchItem = {
+    id: Id;
+    label: string;
+    years?: string;
+    photo: string;
+    searchKey: string;
+};

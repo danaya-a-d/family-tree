@@ -9,12 +9,14 @@ export interface TreeState {
     persons: EntityState<Person, Id>;
     families: EntityState<Family, Id>;
     rootPersonId?: Id;
+    activeSpouseFamily: Record<string, string | null>;
 }
 
 const initialState: TreeState = {
     persons: personsAdapter.getInitialState(),
     families: familiesAdapter.getInitialState(),
     rootPersonId: undefined,
+    activeSpouseFamily: {},
 };
 
 type AddPersonWithRelationPayload = {
@@ -36,7 +38,6 @@ const removeFrom = (arr: Id[], id: Id) => {
     if (i >= 0) arr.splice(i, 1);
 };
 
-
 const treeSlice = createSlice({
     name: 'tree',
     initialState,
@@ -52,6 +53,7 @@ const treeSlice = createSlice({
                     id: input.id ?? makePersonId(),
                     ...input,
                     gender: input.gender ?? 'unknown',
+                    lifeStatus: input.lifeStatus ?? 'unknown',
                 } satisfies Person;
 
                 return { payload };
@@ -71,7 +73,7 @@ const treeSlice = createSlice({
 
                 const findSingleParentFamily = (parentId: Id) =>
                     Object.values(families.entities).find(
-                        f => f && f.spouses.length === 1 && f.spouses[0] === parentId
+                        f => f && f.spouses.length === 1 && f.spouses[0] === parentId,
                     );
 
                 const ensureSingleParentFamily = (parentId: Id) => {
@@ -106,6 +108,22 @@ const treeSlice = createSlice({
 
                 switch (ctx.kind) {
                     case 'spouse': {
+                        const existFamily = ctx.familyId ? families.entities[ctx.familyId] : undefined;
+
+                        if (existFamily && existFamily.spouses.includes(a)
+                            && existFamily.spouses.length === 1) {
+
+                            addUnique(existFamily.spouses, b);
+
+                            existFamily.relationshipStatus = family?.relationshipStatus ?? existFamily.relationshipStatus;
+                            existFamily.marriage = family?.marriage ?? existFamily.marriage;
+                            existFamily.divorce = family?.divorce ?? existFamily.divorce;
+
+                            state.activeSpouseFamily[a] = existFamily.id;
+                            state.activeSpouseFamily[b] = existFamily.id;
+                            break;
+                        }
+
                         const fam: Family = {
                             id: nanoid(),
                             spouses: [a, b],
@@ -116,6 +134,10 @@ const treeSlice = createSlice({
                         };
 
                         familiesAdapter.addOne(families, fam);
+
+                        state.activeSpouseFamily[a] = fam.id;
+                        state.activeSpouseFamily[b] = fam.id;
+
                         break;
                     }
                     case 'son':
@@ -156,6 +178,7 @@ const treeSlice = createSlice({
                     familyName: person.familyName,
                     maidenName: person.maidenName,
                     portrait: person.portrait,
+                    lifeStatus: person.lifeStatus ?? 'unknown',
                     birth: person.birth,
                     death: person.death,
                 };
@@ -190,6 +213,14 @@ const treeSlice = createSlice({
                 }
             }
 
+            delete state.activeSpouseFamily[personId];
+
+            for (const [pId, famId] of Object.entries(state.activeSpouseFamily)) {
+                if (famId && !state.families.entities[famId]) {
+                    state.activeSpouseFamily[pId as Id] = null;
+                }
+            }
+
             personsAdapter.removeOne(state.persons, action.payload);
             if (state.rootPersonId === action.payload) state.rootPersonId = undefined;
         },
@@ -218,27 +249,44 @@ const treeSlice = createSlice({
         },
 
         //Family and Person
-        linkSpouses: (state,
-                      action: PayloadAction<{ familyId: Id; spouseIds: Id[] }>) => {
+        setActiveSpouseFamily: (state, action: PayloadAction<{ personId: string; familyId: string | null }>) => {
+            const { personId, familyId } = action.payload;
 
+            if (!state.persons.entities[personId]) {
+                return;
+            }
+
+            if (!familyId) {
+                state.activeSpouseFamily[personId] = null;
+                return;
+            }
+
+            const fam = state.families.entities[familyId];
+            if (!fam || !fam.spouses.includes(personId)) {
+                state.activeSpouseFamily[personId] = null;
+                return;
+            }
+
+            state.activeSpouseFamily[personId] = familyId;
+        },
+
+        linkSpouses: (
+            state,
+            action: PayloadAction<{ familyId: Id; spouseIds: Id[] }>
+        ) => {
             const { familyId, spouseIds } = action.payload;
+
             const fam = state.families.entities[familyId];
             if (!fam) return;
 
-            for (const oldSpouseId of fam.spouses) {
-                const p = state.persons.entities[oldSpouseId];
-                // if (p) removeFrom(p.spouseInFamilies, familyId);
-            }
-
-            const nextSpouses = [...new Set(spouseIds)].filter(
-                id => Boolean(state.persons.entities[id]),
+            const nextSpouses: Id[] = [...new Set(spouseIds)].filter(
+                (id) => Boolean(state.persons.entities[id])
             );
 
             fam.spouses = nextSpouses;
 
-            for (const sid of nextSpouses) {
-                const p = state.persons.entities[sid];
-                // if (p) addUnique(p.spouseInFamilies, familyId);
+            for (const pid of nextSpouses) {
+                state.activeSpouseFamily[pid] = familyId;
             }
         },
 
@@ -255,17 +303,8 @@ const treeSlice = createSlice({
             // addUnique(child.parentInFamilies, familyId);
         },
 
-        unlinkChild: (state,
-                      action: PayloadAction<{ familyId: Id; childId: Id }>) => {
-
-            const { familyId, childId } = action.payload;
-
-            const fam = state.families.entities[familyId];
-            const child = state.persons.entities[childId];
-            if (!fam || !child) return;
-
-            removeFrom(fam.children, childId);
-            // removeFrom(child.parentInFamilies, familyId);
+        replaceTree: (_state, action: PayloadAction<TreeState>) => {
+            return action.payload;
         },
     },
 });
@@ -279,9 +318,10 @@ export const {
     updateFamily,
     removeFamily,
     setRootPerson,
+    setActiveSpouseFamily,
     linkSpouses,
     linkChild,
-    unlinkChild,
+    replaceTree
 } = treeSlice.actions;
 
 export default treeSlice.reducer;

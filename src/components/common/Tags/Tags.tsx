@@ -1,5 +1,5 @@
-import styles from './Tags.module.css';
 import Tag from './Tag';
+import styles from './Tags.module.css';
 
 interface TagsProps {
     tags: string[];

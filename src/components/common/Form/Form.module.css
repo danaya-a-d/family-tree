@@ -85,8 +85,8 @@
     grid-area: spouseFamilyId;
 }
 
-.input-unionWith {
-    grid-area: unionWith;
+.input-spouseAttachFamilyId {
+    grid-area: spouseAttachFamilyId;
 }
 
 .buttons {
