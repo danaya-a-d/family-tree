@@ -1,4 +1,5 @@
 export type PhotoId = number;
+
 export type Tag = string;
 
 export type PhotoItem = {

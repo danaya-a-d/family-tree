@@ -2,3 +2,16 @@
     margin-top: 118px;
     padding-top: 80px;
 }
+
+.familyTreePage::after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 387px;
+    width: 100%;
+    background-image: url('../../assets/img/background-figure.png');
+    background-repeat: repeat-x;
+    z-index: -1;
+}

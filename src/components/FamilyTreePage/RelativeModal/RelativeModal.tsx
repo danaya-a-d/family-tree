@@ -1,12 +1,12 @@
 import Modal from '../../common/Modal/Modal';
-import { AnchorPerson, RelativeKind } from '@/features/tree/types';
-import styles from './RelativeModal.module.css';
-import bornIcon from '@/assets/img/born-icon.svg';
-import deathIcon from '@/assets/img/death-icon.svg';
 import Title from '@/components/common/Title/Title';
+import { AnchorPerson, RelativeKind } from '@/features/tree/types';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store';
 import { selectParentInfo } from '@/features/tree/selectors';
+import bornIcon from '@/assets/img/born-icon.svg';
+import deathIcon from '@/assets/img/death-icon.svg';
+import styles from './RelativeModal.module.css';
 
 interface RelativeModalProps {
     anchor: AnchorPerson;
@@ -59,7 +59,7 @@ const RelativeModal = ({ anchor, onPick, onClose }: RelativeModalProps) => {
                                 <span>{anchor.surname}</span>
                             </div>
 
-                            {(anchor.birth || anchor.death) && (
+                            {(anchor.birth || anchor.death || anchor.lifeStatus === 'deceased') && (
                                 <div className={styles.dates}>
                                     {anchor.birth && (
                                         <div className={styles.date}>
@@ -68,11 +68,11 @@ const RelativeModal = ({ anchor, onPick, onClose }: RelativeModalProps) => {
                                         </div>
                                     )}
 
-                                    {(anchor.death && anchor.birth) && (
+                                    {(anchor.lifeStatus === 'deceased' && anchor.birth) && (
                                         <span>{'\u00A0-\u00A0'}</span>
                                     )}
 
-                                    {anchor.death && (
+                                    {anchor.lifeStatus === 'deceased' && (
                                         <div className={styles.date}>
                                             <img className={styles.lifeIcon} src={deathIcon} alt='Death' />
                                             {anchor.death}
@@ -85,7 +85,7 @@ const RelativeModal = ({ anchor, onPick, onClose }: RelativeModalProps) => {
 
                     <div className={styles.relatives}>
                         {GROUPS.map(g => (
-                            <ul className={styles.relativeList}>
+                            <ul key={g.title} className={styles.relativeList}>
                                 {g.kinds.map(k => (
                                     <li key={k} className={styles.relativeItem}>
                                         <button className={styles.relativeButton}

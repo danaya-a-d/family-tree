@@ -5,6 +5,7 @@
     background-image: url('../../../assets/img/background-figure-2.png');
     background-repeat: repeat-x;
     background-size: inherit;
+    overflow: hidden;
     z-index: 1;
 }
 

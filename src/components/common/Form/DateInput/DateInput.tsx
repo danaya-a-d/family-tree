@@ -11,8 +11,6 @@ interface DateInputProps {
     onError?: (msg: string) => void;
 }
 
-type FieldKey = 'y' | 'm' | 'd';
-
 interface BlurConfig {
     maxLength: number;
     min: number;
@@ -20,6 +18,8 @@ interface BlurConfig {
     padding: boolean;
     errorMsg: string;
 }
+
+type FieldKey = 'y' | 'm' | 'd';
 
 const onlyDigits = (n: string) => n.replace(/\D+/g, '');
 

@@ -1,5 +1,5 @@
-import styles from './NavMenu.module.css';
 import { Link } from 'react-router-dom';
+import styles from './NavMenu.module.css';
 
 const NavMenu = () => {
     return (
@@ -8,11 +8,6 @@ const NavMenu = () => {
                 <li className={styles.navItem}>
                     <Link to="/" className={styles.navLink}>
                         Home
-                    </Link>
-                </li>
-                <li className={styles.navItem}>
-                    <Link to="/" className={styles.navLink}>
-                        Research
                     </Link>
                 </li>
                 <li className={styles.navItem}>

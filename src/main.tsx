@@ -8,7 +8,6 @@ import App from './App';
 
 import { seedStore } from './features/tree/seed';
 
-// Vite: проверка дев-режима
 if (import.meta.env.DEV) {
     seedStore(store.dispatch);
 }

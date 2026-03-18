@@ -1,45 +1,45 @@
 import { useEffect, useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
-import type { FormValues, ErrorsMap, Validate } from '../components/common/ui.types';
+import type { FormValues, ErrorsMap, Validate, FormValue } from '../components/common/ui.types';
 
-type UseFormReturn = {
-    values: FormValues;
+type UseFormReturn<TValues extends FormValues = FormValues> = {
+    values: TValues;
     globalErrors: ErrorsMap;
     submitCount: number;
 
     handleChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     handleSubmit: (e: FormEvent<HTMLFormElement>) => void;
-    setCustomValue: (name: string, value: FormValues[string]) => void;
+    setCustomValue: (name: keyof TValues & string, value: FormValue) => void;
 };
 
-type UseFormArgs = {
-    initialValues: FormValues;
-    onSubmit: (values: FormValues) => void;
-    validate?: Validate;
+type UseFormArgs<TValues extends FormValues = FormValues> = {
+    initialValues: TValues;
+    onSubmit: (values: TValues) => void;
+    validate?: Validate<TValues>;
 };
 
-export const useForm = ({
+export const useForm = <TValues extends FormValues = FormValues>({
                             initialValues,
                             onSubmit,
                             validate,
-                        }: UseFormArgs): UseFormReturn => {
-    const [values, setValues] = useState<FormValues>(initialValues);
+                        }: UseFormArgs<TValues>): UseFormReturn<TValues> => {
+    const [values, setValues] = useState<TValues>(initialValues);
     const [submitCount, setSubmitCount] = useState<number>(0);
     const [globalErrors, setGlobalErrors] = useState<ErrorsMap>({});
 
-    // Следим за изменениями initialValues и обновляем values
+    // Watch for changes in initialValues and update values
     useEffect(() => {
         setValues(initialValues);
-    }, [JSON.stringify(initialValues)]); // Чтобы избежать бесконечных ререндеров
+    }, [JSON.stringify(initialValues)]);
 
-    // Обновление текстовых инпутов
+    // Update text inputs
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         if (!e.target) return;
         const { name, value } = e.target;
-        setValues((prev) => ({ ...prev, [name]: value }));
+        setValues((prev) => ({ ...prev, [name]: value } as TValues));
     };
 
-    // Отправка формы
+    // Form submission
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
@@ -53,8 +53,8 @@ export const useForm = ({
         onSubmit(values);
     };
 
-    const setCustomValue = (name: string, value: FormValues[string]) => {
-        setValues((prev) => ({ ...prev, [name]: value }));
+    const setCustomValue = (name: keyof TValues & string, value: FormValue) => {
+        setValues((prev) => ({ ...prev, [name]: value } as TValues));
     };
 
     return { values, globalErrors, submitCount, handleChange, handleSubmit, setCustomValue };

@@ -11,23 +11,23 @@ interface PersonalAccountProps {
 }
 
 const PersonalAccount = ({
-    textTitle,
-    textParagraph,
-    familyPhoto,
-    imagePaths,
-    reverse = false,
-}: PersonalAccountProps) => {
+                             textTitle,
+                             textParagraph,
+                             familyPhoto,
+                             imagePaths,
+                             reverse = false,
+                         }: PersonalAccountProps) => {
     return (
         <section className={styles.personalAccount}>
             <div className={styles.wrapper}>
                 <div className={styles.container}>
                     <ImageWithTextBlock
                         imageSrc={familyPhoto}
-                        imageAlt="Family photo"
+                        imageAlt='Family photo'
                         title={textTitle}
                         paragraph={textParagraph}
-                        titleLevel="h2"
-                        titleSize="medium"
+                        titleLevel='h2'
+                        titleSize='medium'
                         textRight={!reverse}
                         showDecoration={true}
                         highlightFirstLetter={false}

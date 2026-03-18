@@ -1,24 +1,19 @@
-import type { ChangeEventHandler } from 'react';
+import type { TextareaHTMLAttributes } from 'react';
 import styles from './Textarea.module.css';
 
-interface TextareaProps {
+type TextareaProps = {
     name: string;
-    value?: string;
-    placeholder?: string;
     className?: string;
-    onChange?: ChangeEventHandler<HTMLTextAreaElement>;
-}
+} & Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'name' | 'className'>;
 
-const Textarea = ({ name, value, placeholder, className, onChange }: TextareaProps) => {
+const Textarea = ({ name, className, ...rest }: TextareaProps) => {
     return (
         <div className={styles.inputWrapper}>
             <label className={styles.label}>
                 <textarea
                     name={name}
-                    value={value ?? ''}
-                    placeholder={placeholder}
                     className={`${styles.field} ${className ?? ''}`}
-                    onChange={onChange}
+                    {...rest}
                 />
             </label>
         </div>

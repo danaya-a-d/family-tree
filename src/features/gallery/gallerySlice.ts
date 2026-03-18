@@ -25,11 +25,8 @@ const gallerySlice = createSlice({
         deletePhoto: (state, action: PayloadAction<number>) => {
             state.photos = state.photos.filter((photo) => photo.id !== action.payload);
         },
-        setFilters: (state, action: PayloadAction<string[]>) => {
-            state.filters = action.payload;
-        },
     },
 });
 
-export const { setPhotos, addPhoto, updatePhoto, deletePhoto, setFilters } = gallerySlice.actions;
+export const { setPhotos, addPhoto, updatePhoto, deletePhoto } = gallerySlice.actions;
 export default gallerySlice.reducer;

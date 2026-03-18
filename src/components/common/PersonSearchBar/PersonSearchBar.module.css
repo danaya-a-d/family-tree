@@ -1,0 +1,80 @@
+.wrapper {
+    position: relative;
+    width: 362px;
+    z-index: 20;
+}
+
+.input {
+    padding-right: 40px;
+    background-image: url("data:image/svg+xml;utf8,<svg width='23' height='23' viewBox='0 0 23 23' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M9.41347 17.3445C5.04028 17.3445 1.48242 13.7866 1.48242 9.41347C1.48242 5.04028 5.04028 1.48242 9.41347 1.48242C13.7866 1.48242 17.3445 5.04028 17.3445 9.41347C17.3445 13.7866 13.7866 17.3445 9.41347 17.3445ZM9.41347 3.06861C5.91509 3.06861 3.06861 5.91509 3.06861 9.41347C3.06861 12.9118 5.91509 15.7583 9.41347 15.7583C12.9118 15.7583 15.7583 12.9118 15.7583 9.41347C15.7583 5.91509 12.9119 3.06861 9.41347 3.06861Z' fill='black'/><path d='M20.7486 21.542C20.6445 21.5421 20.5413 21.5216 20.4451 21.4817C20.3488 21.4419 20.2612 21.3834 20.1872 21.3096L15.0569 16.1793C14.9066 16.0289 14.822 15.8175 14.822 15.5974C14.822 15.3773 14.9066 15.1659 15.0569 15.0155C15.2073 14.8652 15.4187 14.7805 15.6388 14.7805C15.8589 14.7805 16.0703 14.8652 16.2207 15.0155L21.351 20.1458C21.4658 20.2608 21.5427 20.409 21.5718 20.5702C21.601 20.7314 21.5812 20.8978 21.5147 21.0482C21.4481 21.1986 21.3379 21.326 21.1978 21.4132C21.0577 21.5003 20.8941 21.5432 20.7486 21.542Z' fill='black'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 23px;
+    background-color: transparent;
+}
+
+.input:focus, .input:after {
+    background-color: white;
+}
+
+.noResult {
+    font-weight: 300;
+}
+
+.persons {
+    position: absolute;
+    top: 48px;
+    width: 100%;
+    max-height: 154px;
+    overflow: scroll;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    margin: 0;
+    gap: 10px;
+    border: 1px solid #1e1e1b;
+    border-radius: 4px;
+    background-color: white;
+    box-sizing: border-box;
+}
+
+.person {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.person:hover .name, .person:focus.name {
+    color: #9F0004;
+}
+
+.photo {
+    width: 38px;
+    height: 38px;
+    box-shadow: 0 1px 3px rgba(180, 120, 130, 0.25);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.about {
+    font-size: 12px;
+}
+
+.name {
+    font-weight: 500;
+    line-height: 1.2;
+    margin: 0;
+    transition: all 300ms ease;
+}
+
+.dates {
+    font-weight: 300;
+}

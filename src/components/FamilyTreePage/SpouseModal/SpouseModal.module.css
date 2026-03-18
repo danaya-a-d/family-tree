@@ -1,0 +1,125 @@
+.spouseModal {
+    max-width: 754px;
+}
+
+.wrapper {
+    position: relative;
+    margin-top: 40px;
+    padding: 25px;
+    border-radius: 40px;
+    background-color: rgba(159, 0, 4, 0.15);
+    box-sizing: border-box;
+    z-index: 1;
+}
+
+.wrapper::after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 470px;
+    width: 100%;
+    background-image: url('/src/assets/img/background-figure-tree.png');
+    background-repeat: repeat-x;
+    z-index: -1;
+}
+
+.spouse {
+    position: relative;
+    display: flex;
+    gap: 18px;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.14);
+    box-sizing: border-box;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.spouseActive {
+    opacity: .6;
+    cursor: default;
+}
+
+.dates {
+    display: flex;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+.date {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.spouseIcon {
+    filter: brightness(0) saturate(100%) invert(16%) sepia(34%) saturate(5392%) hue-rotate(341deg) brightness(95%) contrast(127%);
+    opacity: .5;
+    object-fit: contain;
+    width: 12px;
+    height: 12px;
+    margin-bottom: -2px;
+}
+
+.about {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+}
+
+.photo {
+    flex-shrink: 0;
+    width: 112px;
+    height: 112px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(180, 120, 130, 0.25);
+    overflow: hidden;
+}
+
+.photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.name {
+    display: flex;
+    flex-direction: column;
+    font-size: 20px;
+    line-height: 1.2;
+    font-weight: 500;
+}
+
+.spouses {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 35px 30px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.title {
+    padding-right: 40px;
+}
+
+
+.sousesLabel {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    right: 8px;
+    top: 8px;
+    padding: 2px 4px;
+    border-radius: 4px;
+    background-color: rgba(159, 0, 4, 0.15);
+    font-size: 14px;
+    font-weight: 300;
+    font-family: inherit;
+}

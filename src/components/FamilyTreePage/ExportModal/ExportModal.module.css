@@ -1,0 +1,10 @@
+.exportModal {
+    width: 694px;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 42px 62px;
+}

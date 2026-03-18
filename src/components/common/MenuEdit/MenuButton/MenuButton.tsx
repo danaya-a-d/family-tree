@@ -7,7 +7,7 @@ interface MenuButtonProps {
 const MenuButton = ({ className = '' }: MenuButtonProps) => {
 
     return (
-        <button className={`${styles.button} ${className}`}></button>
+        <button type='button' className={`${styles.button} ${className}`}></button>
     );
 };
 

@@ -3,6 +3,17 @@ import ELK from 'elkjs/lib/elk.bundled.js';
 
 type Pos = { x: number; y: number };
 
+type ElkNode = {
+    id: string;
+    width?: number;
+    height?: number;
+    x?: number;
+    y?: number;
+    children?: ElkNode[];
+    layoutOptions?: Record<string, string>;
+};
+type ElkEdge = { id: string; sources: string[]; targets: string[] };
+
 export async function layoutWithELK(
     nodes: Node[],
     edges: Edge[],
@@ -11,43 +22,127 @@ export async function layoutWithELK(
 
     const elk = new ELK();
 
-    // Base options
+    // Base outer graph settings
     const baseLayoutOptions: Record<string, string> = {
         'elk.algorithm': 'layered',
         'elk.direction': 'DOWN',
         'elk.spacing.nodeNode': '40',
         'elk.layered.spacing.nodeNodeBetweenLayers': '90',
         'elk.layered.considerModelOrder': 'true',
+        'elk.hierarchyHandling': 'INCLUDE_CHILDREN',
     };
 
-    // RF -> ELK nodes
-    const elkChildren = nodes.map((n) => ({
-        id: n.id,
-        width:  n.width ?? 180,   // если в ноде нет width/height — ставим дефолт
-        height: n.height ?? 80,
-    }));
+    // Store node sizes by id
+    const sizeById = new Map<string, { w: number; h: number }>();
+    for (const n of nodes) {
+        sizeById.set(n.id, {
+            w: (n.width ?? 180) as number,
+            h: (n.height ?? 80) as number,
+        });
+    }
 
-    // RF -> ELK edges
-    const elkEdges = edges.map((e) => ({
+    // Collect spouse edges
+    const spouseEdgesByFamily = new Map<string, Edge[]>();
+    for (const e of edges) {
+        const role = (e.data as any)?.role;
+        if (role !== 'spouse') continue;
+
+        const familyId = e.target;
+        const arr = spouseEdgesByFamily.get(familyId) ?? [];
+        arr.push(e);
+        spouseEdgesByFamily.set(familyId, arr);
+    }
+
+    // Map nodeIds to their groups
+    const memberToGroup = new Map<string, string>();
+    const groupChildren = new Map<string, string[]>();
+
+    for (const [familyId, sEdges] of spouseEdgesByFamily.entries()) {
+        if (sEdges.length < 1 || sEdges.length > 2) continue;
+
+        const spouses = sEdges.map((e) => e.source);
+        const groupId = `g:${familyId}`;
+        const kids = [...spouses, familyId];
+
+        if (kids.some((id) => memberToGroup.has(id))) continue;
+
+        groupChildren.set(groupId, kids);
+        for (const id of kids) memberToGroup.set(id, groupId);
+    }
+
+    // Create top-level children for ELK
+    const elkChildrenTop: ElkNode[] = [];
+
+    for (const [groupId, kids] of groupChildren.entries()) {
+        const elkKids: ElkNode[] = kids.map((id) => {
+            const s = sizeById.get(id) ?? { w: 10, h: 10 };
+            return { id, width: s.w, height: s.h };
+        });
+
+        elkChildrenTop.push({
+            id: groupId,
+            width: 1,
+            height: 1,
+            children: elkKids,
+            layoutOptions: {
+                'elk.algorithm': 'layered',
+                'elk.direction': 'DOWN',
+
+                // Padding inside the group
+                'elk.padding': '[top=0,left=20,bottom=20,right=20]',
+                'elk.spacing.nodeNode': '40',
+                'elk.layered.spacing.nodeNodeBetweenLayers': '30',
+
+                'elk.layered.considerModelOrder': 'true',
+            },
+        });
+    }
+
+    // Regular nodes without a group
+    for (const n of nodes) {
+        if (memberToGroup.has(n.id)) continue;
+
+        const s = sizeById.get(n.id) ?? { w: 10, h: 10 };
+        elkChildrenTop.push({
+            id: n.id,
+            width: s.w,
+            height: s.h,
+        });
+    }
+
+    const elkEdges: ElkEdge[] = edges.map((e) => ({
         id: e.id,
         sources: [e.source],
         targets: [e.target],
     }));
 
-    const graph = {
+    // Root graph
+    const graph: ElkNode & { edges: ElkEdge[] } = {
         id: 'root',
         layoutOptions: { ...baseLayoutOptions, ...(opts ?? {}) },
-        children: elkChildren,
+        children: elkChildrenTop,
         edges: elkEdges,
     };
 
+    // Run the layout
     const res = await elk.layout(graph as any);
 
     const map: Record<string, Pos> = {};
 
-    for (const child of res.children ?? []) {
-        map[child.id] = { x: child.x ?? 0, y: child.y ?? 0 };
-    }
+    const walk = (node: ElkNode, ox: number, oy: number) => {
+        const x = (node.x ?? 0) + ox;
+        const y = (node.y ?? 0) + oy;
+
+        map[node.id] = { x, y };
+
+        if (node.children) {
+            for (const ch of node.children) {
+                walk(ch, x, y);
+            }
+        }
+    };
+
+    walk(res as any, 0, 0);
 
     return map;
 }
