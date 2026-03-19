@@ -1,9 +1,16 @@
 .card {
+    position: relative;
+    overflow: visible;
     padding: 15px;
     border-radius: 8px;
     background-color: white;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.14);
     z-index: 2;
+}
+
+:global(.react-flow__node:has([data-node-menu]:focus-within)),
+:global(.react-flow__node:has([data-node-menu]:hover)) {
+    z-index: 1000 !important;
 }
 
 .info {

@@ -6,12 +6,6 @@ import { store } from './app/store';
 import './index.css';
 import App from './App';
 
-import { seedStore } from './features/tree/seed';
-
-if (import.meta.env.DEV) {
-    seedStore(store.dispatch);
-}
-
 const container = document.getElementById('root')!;
 const root = createRoot(container);
 

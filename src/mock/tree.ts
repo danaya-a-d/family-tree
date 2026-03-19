@@ -571,8 +571,8 @@ export const mockFamilies: Family[] = [
     // Родители Daniel
     {
         id: 'f1',
-        spouses: [],
-        children: [],
+        spouses: ['p2', 'p3'],
+        children: ['p1'],
         relationshipStatus: 'endedByDeath',
         marriage: {
             date: {
@@ -586,7 +586,7 @@ export const mockFamilies: Family[] = [
     // Второй брак Grace
     {
         id: 'f2',
-        spouses: [],
+        spouses: ['p3', 'p23'],
         children: [],
         relationshipStatus: 'separated',
         marriage: {
@@ -601,8 +601,8 @@ export const mockFamilies: Family[] = [
     // Daniel + Oksana
     {
         id: 'f3',
-        spouses: [],
-        children: [],
+        spouses: ['p1', 'p4'],
+        children: ['p6', 'p7'],
         relationshipStatus: 'divorced',
         marriage: {
             date: {
@@ -623,8 +623,8 @@ export const mockFamilies: Family[] = [
     // Daniel + Chloe
     {
         id: 'f4',
-        spouses: [],
-        children: [],
+        spouses: ['p1', 'p5'],
+        children: ['p8', 'p27'],
         relationshipStatus: 'married',
         marriage: {
             date: {
@@ -638,8 +638,8 @@ export const mockFamilies: Family[] = [
     // Первый брак Taras
     {
         id: 'f5',
-        spouses: [],
-        children: [],
+        spouses: ['p9', 'p26'],
+        children: ['p25'],
         relationshipStatus: 'endedByDeath',
         marriage: {
             date: {
@@ -653,8 +653,8 @@ export const mockFamilies: Family[] = [
     // Второй брак Taras
     {
         id: 'f6',
-        spouses: [],
-        children: [],
+        spouses: ['p9', 'p10'],
+        children: ['p4', 'p11', 'p12'],
         relationshipStatus: 'married',
         marriage: {
             date: {
@@ -668,8 +668,8 @@ export const mockFamilies: Family[] = [
     // Solomiya + Marko
     {
         id: 'f7',
-        spouses: [],
-        children: [],
+        spouses: ['p11', 'p13'],
+        children: ['p15'],
         relationshipStatus: 'divorced',
         marriage: {
             date: {
@@ -690,8 +690,8 @@ export const mockFamilies: Family[] = [
     // Solomiya + Ethan
     {
         id: 'f8',
-        spouses: [],
-        children: [],
+        spouses: ['p11', 'p14'],
+        children: ['p16'],
         relationshipStatus: 'married',
         marriage: {
             date: {
@@ -705,15 +705,15 @@ export const mockFamilies: Family[] = [
     // Bohdan single-parent
     {
         id: 'f9',
-        spouses: [],
-        children: [],
+        spouses: ['p12'],
+        children: ['p17'],
     },
 
     // Родители Chloe
     {
         id: 'f10',
-        spouses: [],
-        children: [],
+        spouses: ['p18', 'p19'],
+        children: ['p5', 'p20'],
         relationshipStatus: 'endedByDeath',
         marriage: {
             date: {
@@ -727,8 +727,8 @@ export const mockFamilies: Family[] = [
     // Olivia + Jack
     {
         id: 'f11',
-        spouses: [],
-        children: [],
+        spouses: ['p20', 'p21'],
+        children: ['p22'],
         relationshipStatus: 'married',
         marriage: {
             date: {
@@ -742,8 +742,8 @@ export const mockFamilies: Family[] = [
     // Mila single-parent
     {
         id: 'f12',
-        spouses: [],
-        children: [],
+        spouses: ['p6'],
+        children: ['p24'],
     },
 ];
 
