@@ -91,11 +91,6 @@ const PersonNode = ({ id, data, selected }: NodeProps<RFPersonNode>) => {
             name: 'Add relative',
             onClick: () => setIsAddRelativeOpen(true),
         },
-        {
-            id: 3,
-            name: 'See details',
-            href: '#',
-        },
     ];
 
     const handlePickRelative = (kind: RelativeKind) => {
@@ -145,7 +140,13 @@ const PersonNode = ({ id, data, selected }: NodeProps<RFPersonNode>) => {
                     </button>
                 )}
 
-                <MenuEdit menuList={menuList} listPosition='top' className={styles.editList} />
+                <div data-node-menu="true">
+                    <MenuEdit
+                        menuList={menuList}
+                        listPosition='bottom'
+                        className={styles.editList}
+                    />
+                </div>
             </div>
 
             <Handle id='left' type='source' position={Position.Left} />

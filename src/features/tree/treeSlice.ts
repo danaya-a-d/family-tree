@@ -1,6 +1,7 @@
 import { createSlice, createEntityAdapter, type PayloadAction, type EntityState, nanoid } from '@reduxjs/toolkit';
 import { makeFamilyId, makePersonId } from './id';
 import { Person, Family, Id, AddRelativeContext } from './types';
+import { mockPersons, mockFamilies, mockRootPersonId } from '../../mock/tree';
 
 export const personsAdapter = createEntityAdapter<Person>({});
 export const familiesAdapter = createEntityAdapter<Family>({});
@@ -12,11 +13,31 @@ export interface TreeState {
     activeSpouseFamily: Record<string, string | null>;
 }
 
+const initialPersonsState = personsAdapter.setAll(
+    personsAdapter.getInitialState(),
+    mockPersons,
+);
+
+const initialFamiliesState = familiesAdapter.setAll(
+    familiesAdapter.getInitialState(),
+    mockFamilies,
+);
+
+const initialActiveSpouseFamily = mockFamilies.reduce<Record<string, string | null>>(
+    (acc, family) => {
+        family.spouses.forEach((personId) => {
+            acc[personId] = family.id;
+        });
+        return acc;
+    },
+    {},
+);
+
 const initialState: TreeState = {
-    persons: personsAdapter.getInitialState(),
-    families: familiesAdapter.getInitialState(),
-    rootPersonId: undefined,
-    activeSpouseFamily: {},
+    persons: initialPersonsState,
+    families: initialFamiliesState,
+    rootPersonId: mockRootPersonId,
+    activeSpouseFamily: initialActiveSpouseFamily,
 };
 
 type AddPersonWithRelationPayload = {
