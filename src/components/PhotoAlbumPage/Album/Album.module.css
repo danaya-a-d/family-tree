@@ -1,21 +1,47 @@
 .wrapper {
     display: flex;
     flex-direction: column;
-    box-sizing: content-box;
     width: 100%;
-    max-width: 1292px;
     margin: 0 auto;
+    box-sizing: border-box;
+    max-width: 1356px;
     padding-right: 32px;
     padding-left: 32px;
+
+    @media (--tablet-lg) {
+        padding-right: 24px;
+        padding-left: 24px;
+    }
+
+    @media (--tablet) {
+        padding-right: 16px;
+        padding-left: 16px;
+    }
 }
 
 .tags {
     margin-top: 60px;
+
+    @media (--tablet) {
+        margin-top: 40px;
+    }
+
+    @media (--phone) {
+        margin-top: 24px;
+    }
 }
 
 .photos {
     margin-top: 40px;
     padding-bottom: 200px;
+
+    @media (--tablet-lg) {
+        padding-bottom: 100px;
+    }
+
+    @media (--tablet) {
+        margin-top: 24px;
+    }
 }
 
 .nav {
@@ -35,6 +61,11 @@
     border: none;
     cursor: pointer;
     transition: all 300ms ease;
+
+    @media (--phone) {
+        width: 30px;
+        height: 30px;
+    }
 }
 
 .button:hover,

@@ -1,5 +1,17 @@
 .exportModal {
     width: 694px;
+
+    @media (--tablet-lg) {
+        width: 494px;
+    }
+
+    @media (--tablet) {
+        width: 320px;
+    }
+
+    @media (--phone) {
+        width: 280px;
+    }
 }
 
 .wrapper {
@@ -7,4 +19,13 @@
     flex-direction: column;
     gap: 24px;
     padding: 42px 62px;
+
+    @media (--tablet-lg) {
+        padding: 32px 52px;
+    }
+
+    @media (--tablet) {
+        padding: 22px 22px;
+        gap: 16px;
+    }
 }

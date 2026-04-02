@@ -17,20 +17,37 @@ type MenuItem = MenuItemLink | MenuItemAction;
 interface MenuListProps {
     list: MenuItem[];
     className?: string;
+    onItemClick?: () => void;
+    id?: string;
 }
 
-const MenuList = ({ list, className }: MenuListProps) => {
+const MenuList = ({ list, className = '', onItemClick, id }: MenuListProps) => {
     return (
-        <div className={`${styles.menu} ${className}`}>
+        <div id={id} className={`${styles.menu} ${className}`.trim()} role='menu'>
             <ul className={styles.list}>
-                {list.map((item, index) => (
-                    <li className={styles.item} key={index}>
+                {list.map((item) => (
+                    <li className={styles.item} key={item.id} role='none'>
                         {'href' in item ? (
-                            <a href={item.href} target="_blank" rel="noopener noreferrer" className={styles.link}>
+                            <a
+                                href={item.href}
+                                target='_blank'
+                                rel='noopener noreferrer'
+                                className={styles.link}
+                                role='menuitem'
+                                onClick={onItemClick}
+                            >
                                 {item.name}
                             </a>
                         ) : (
-                            <button onClick={item.onClick} className={styles.link}>
+                            <button
+                                type='button'
+                                onClick={() => {
+                                    item.onClick();
+                                    onItemClick?.();
+                                }}
+                                className={styles.link}
+                                role='menuitem'
+                            >
                                 {item.name}
                             </button>
                         )}

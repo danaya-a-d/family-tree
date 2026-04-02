@@ -15,7 +15,6 @@ const ImageWithTextBlock = ({ reverse, imageSrc, imageAlt, children, ...props }:
     return (
         <div className={`${styles.container} ${reverse ? styles.reverse : ''}`}>
             <img src={imageSrc} alt={imageAlt} className={styles.photo} />
-
             <TextBlock {...props}>{children}</TextBlock>
         </div>
     );

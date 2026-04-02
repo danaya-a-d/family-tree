@@ -14,6 +14,10 @@
     margin: 0;
     padding: 0;
     list-style: none;
+
+    @media (--tablet-lg) {
+        gap: 60px;
+    }
 }
 
 .navItem {
@@ -26,4 +30,26 @@
     color: inherit;
     font-size: 24px;
     text-decoration: none;
+}
+
+.active {
+    color: #A11216;
+}
+
+.mainNavMobile {
+    justify-content: center;
+    width: 100%;
+    padding-left: 0;
+    margin: 0;
+}
+
+.navMobile {
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+
+.navLinkMobile {
+    justify-content: center;
+    font-size: 24px;
 }

@@ -7,16 +7,26 @@ const IconsNav = () => {
     return (
         <ul className={styles.iconsNav}>
             <li className={styles.iconNav}>
-                <Link to="/">
-                    <img className={styles.icon} src={mailIcon} alt="Mail icon" />
+                <Link to='/'>
+                    <img
+                        className={styles.icon}
+                        src={mailIcon}
+                        alt='Mail icon'
+                    />
                 </Link>
             </li>
+
             <li className={styles.iconNav}>
-                <Link to="/">
-                    <img className={styles.icon} src={globeIcon} alt="Globe icon" />
+                <Link to='/'>
+                    <img
+                        className={styles.icon}
+                        src={globeIcon}
+                        alt='Globe icon'
+                    />
                 </Link>
             </li>
         </ul>
     );
 };
+
 export default IconsNav;

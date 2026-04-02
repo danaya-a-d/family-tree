@@ -10,24 +10,58 @@
     font-family: 'TriodPostnaja', Arial, sans-serif;
     font-weight: 500;
     line-height: 1.2;
+    white-space: pre-line;
     color: inherit;
     z-index: 2;
 }
 
 .title.large {
     font-size: 104px;
+    @media (--desktop-sm) {
+        font-size: 90px;
+    }
+    @media (--tablet-lg) {
+        font-size: 72px;
+    }
+    @media (--tablet) {
+        font-size: 60px;
+    }
+    @media (--phone) {
+        font-size: 45px;
+    }
 }
 
 .title.medium {
     font-size: 64px;
+    @media (--tablet-lg) {
+        font-size: 52px;
+    }
+    @media (--tablet) {
+        font-size: 48px;
+    }
+    @media (--phone) {
+        font-size: 32px;
+    }
 }
 
 .title.small {
     font-size: 48px;
+
+    @media (--tablet) {
+        font-size: 32px;
+    }
+
+    @media (--phone) {
+        font-size: 28px;
+    }
 }
 
 .title.extraSmall {
     font-size: 20px;
+
+    @media (--tablet) {
+        font-size: 18px;
+    }
 }
 
 .decoration {
@@ -36,7 +70,19 @@
     height: 20px;
     background-position: center;
     background-repeat: no-repeat;
+    background-size: contain;
     background-image: url("data:image/svg+xml;utf8,<svg width='60' height='20' viewBox='0 0 60 20' fill='none' xmlns='http://www.w3.org/2000/svg'><g clip-path='url(%23clip0_23_49)'><path d='M0.386688 17.6443C0.902351 18.1511 1.73802 18.1511 2.25382 17.6443C4.2589 15.6726 9.9461 10.0802 11.9858 8.07455L21.7177 17.6443C22.2331 18.151 23.0691 18.1512 23.5849 17.6443C23.8468 17.3868 33.0239 8.36274 33.317 8.07455L43.0489 17.6443C43.5646 18.1511 44.4003 18.1511 44.916 17.6443C45.3893 17.1789 58.3949 4.39007 59.6136 3.19172C60.1291 2.68478 60.1291 1.86278 59.6136 1.35571C59.0978 0.848774 58.2623 0.848904 57.7465 1.35571L48.0098 10.9303L38.2777 1.36039C38.03 1.11698 37.6943 0.980148 37.3442 0.980148C36.9941 0.980148 36.6583 1.11698 36.4107 1.36039L26.6787 10.9303L16.9467 1.36039C16.6991 1.11698 16.3634 0.980148 16.0132 0.980148C15.6631 0.980148 15.3274 1.11698 15.0797 1.36039C14.0864 2.33713 0.824192 15.3783 0.386951 15.8083C-0.128845 16.3152 -0.128841 17.1372 0.386688 17.6443ZM37.3439 4.11433L46.1424 12.7662L43.9822 14.8904L35.1837 6.23841L37.3439 4.11433ZM16.013 4.11433L24.8114 12.7662L22.6512 14.8904L13.8528 6.23854L16.013 4.11433Z' fill='%239F0004'/></g><defs><clipPath id='clip0_23_49'><rect width='60' height='20' fill='white' transform='matrix(-1 0 0 -1 60 20)'/></clipPath></defs></svg>");
+    z-index: 1;
+
+    @media (--tablet) {
+        width: 50px;
+        height: 16px;
+    }
+
+    @media (--phone) {
+        width: 40px;
+        height: 13px;
+    }
 }
 
 .highlightFirstLetter::first-letter {

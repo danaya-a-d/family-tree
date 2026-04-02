@@ -5,9 +5,14 @@
     margin: 0;
     padding: 0;
     list-style: none;
+
+    @media (--tablet) {
+        justify-content: center;
+    }
 }
 
 .icon {
+    display: block;
     width: 36px;
     height: 36px;
     object-fit: contain;

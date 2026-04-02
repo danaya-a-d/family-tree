@@ -6,9 +6,27 @@
     border-radius: 40px;
     background-color: rgba(159, 0, 4, 0.15);
     box-sizing: border-box;
+    overflow: hidden;
     z-index: 1;
-}
 
+    @media (--tablet-lg) {
+        width: 650px;
+        height: 405px;
+    }
+
+    @media (--tablet) {
+        width: 400px;
+        height: 500px;
+        margin-top: 20px;
+    }
+
+    @media (--phone) {
+        width: 296px;
+        height: 400px;
+        margin-top: 12px;
+        border-radius: 20px;
+    }
+}
 
 .wrapper::after {
     content: '';
@@ -38,6 +56,17 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.14);
     box-sizing: border-box;
     z-index: 2;
+
+    @media (--tablet) {
+        flex-direction: column;
+        width: auto;
+        padding: 12px;
+        gap: 10px;
+    }
+
+    @media (--phone) {
+        gap: 8px;
+    }
 }
 
 .about {
@@ -45,7 +74,16 @@
     flex: 1 1 auto;
     flex-direction: column;
     justify-content: center;
+    width: 100%;
     gap: 12px;
+
+    @media (--tablet) {
+        gap: 10px;
+    }
+
+    @media (--phone) {
+        gap: 8px;
+    }
 }
 
 .photo {
@@ -55,6 +93,11 @@
     border-radius: 4px;
     box-shadow: 0 1px 3px rgba(180, 120, 130, 0.25);
     overflow: hidden;
+
+    @media (--phone) {
+        width: 90px;
+        height: 90px;
+    }
 }
 
 .photo img {
@@ -69,12 +112,34 @@
     font-size: 20px;
     line-height: 1.2;
     font-weight: 500;
+
+    @media (--tablet) {
+        font-size: 16px;
+        width: min-content;
+    }
+
+    @media (--phone) {
+        font-size: 14px;
+    }
 }
 
 .dates {
     display: flex;
     font-size: 16px;
     font-weight: 300;
+
+    @media (--tablet) {
+        flex-direction: column;
+        font-size: 14px;
+
+        span {
+            display: none;
+        }
+    }
+
+    @media (--phone) {
+        font-size: 12px;
+    }
 }
 
 .date {
@@ -90,6 +155,11 @@
     height: 12px;
     margin-right: 2px;
     margin-bottom: -2px;
+
+    @media (--phone) {
+        width: 10px;
+        height: 10px;
+    }
 }
 
 .relatives {
@@ -135,6 +205,14 @@
     top: 70px;
     left: 50%;
     transform: translateX(-50%);
+
+    @media (--tablet-lg) {
+        top: 40px;
+    }
+
+    @media (--phone) {
+        top: 20px;
+    }
 }
 
 .relativeList:nth-child(1)::before {
@@ -154,6 +232,14 @@
     right: 70px;
     top: 50%;
     transform: translateY(-50%);
+
+    @media (--tablet-lg) {
+        right: 30px;
+    }
+
+    @media (--phone) {
+        right: 10px;
+    }
 }
 
 .relativeList:nth-child(2)::before {
@@ -165,12 +251,28 @@
     right: 30px;
     transform: translateX(-50%);
     z-index: -1;
+
+    @media (--tablet-lg) {
+        right: 38px;
+    }
+
+    @media (--phone) {
+        right: 20px;
+    }
 }
 
 .relativeList:nth-child(3) {
     bottom: 70px;
     left: 50%;
     transform: translateX(-50%);
+
+    @media (--tablet-lg) {
+        bottom: 40px;
+    }
+
+    @media (--phone) {
+        bottom: 20px;
+    }
 }
 
 .relativeList:nth-child(3)::before {
@@ -184,6 +286,10 @@
     left: 50%;
     transform: translateX(-50%) scaleY(-1);
     z-index: -1;
+
+    @media (--phone) {
+        top: 18px;
+    }
 }
 
 .relativeList:nth-child(4) {
@@ -191,12 +297,24 @@
     left: 70px;
     top: 50%;
     transform: translateY(-50%);
+
+    @media (--tablet-lg) {
+        left: 40px;
+    }
+
+    @media (--phone) {
+        left: 10px;
+    }
 }
 
 .relativeList:nth-child(4)::before {
     top: 50%;
     right: -34px;
     transform: translateY(-50%) rotate(90deg) scaleY(-1);
+
+    @media (--phone) {
+        right: -39px;
+    }
 }
 
 .relativeList:nth-child(4)::after {
@@ -217,6 +335,12 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.14);
     box-sizing: border-box;
     cursor: pointer;
+
+    @media (--phone) {
+        width: 68px;
+        height: 59px;
+        padding: 6px;
+    }
 }
 
 .relativeButton:disabled {

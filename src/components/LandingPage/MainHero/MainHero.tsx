@@ -1,14 +1,15 @@
 import TextBlock from '../../common/TextBlock/TextBlock';
-import PhotoWithTags from './PhotoWithTags/PhotoWithTags';
 import styles from './MainHero.module.css';
+import familyPhoto from '@/assets/img/family-photo.jpg';
 
 const MainHero = () => {
     return (
         <section className={styles.mainHero}>
             <div className={styles.wrapper}>
                 <TextBlock
-                    title='Save your history for the future'
-                    paragraph='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus egestas, erat eu molestie aliquet, eros turpis condimentum sem, et varius velit.'
+                    title='Save
+                     your history for the future'
+                    paragraph='Keep family stories, names, dates, and photographs in one place. Build a lasting archive that can be explored, shared, and passed on.'
                     titleLevel='h1'
                     titleSize='large'
                     showDecoration={true}
@@ -18,7 +19,7 @@ const MainHero = () => {
                 />
 
                 <div className={styles.photoBlock}>
-                    <PhotoWithTags />
+                    <img className={styles.photo} src={familyPhoto} alt='' />
                 </div>
             </div>
         </section>

@@ -22,8 +22,6 @@ interface FormProps<TValues extends FormValues = FormValues> {
     buttons?: ReadonlyArray<ButtonConfig>;
     onSubmit: (values: TValues) => void;
     formLayout?: string | ((values: TValues) => string);
-    formColumns?: string;
-    formRows?: string;
     className?: string;
     externalLocalErrors?: ErrorsMap;
     validate?: Validate<TValues>;
@@ -35,8 +33,6 @@ const Form = <TValues extends FormValues = FormValues>({
                                                            buttons,
                                                            onSubmit,
                                                            formLayout,
-                                                           formColumns,
-                                                           formRows,
                                                            className,
                                                            externalLocalErrors,
                                                            validate,
@@ -59,10 +55,8 @@ const Form = <TValues extends FormValues = FormValues>({
     const layoutStyle = useMemo(
         () => ({
             gridTemplateAreas: resLayout,
-            gridTemplateColumns: formColumns,
-            gridTemplateRows: formRows,
         }),
-        [resLayout, formColumns, formRows],
+        [resLayout],
     );
 
     const renderField = (field: FormField<TValues>): JSX.Element => {

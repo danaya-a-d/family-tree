@@ -2,15 +2,49 @@
     position: absolute;
     right: 0;
     top: 0;
-    transition: all 0.3s ease;
     z-index: 5;
+    transition: all 300ms ease;
+}
+
+.button {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+}
+
+.button::after {
+    content: "";
+    position: absolute;
+    display: block;
+    top: -6px;
+    right: -6px;
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    z-index: -1;
+}
+
+.button.shadow {
+    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.14);
+}
+
+.button.trans {
+    background: transparent;
 }
 
 .list {
     position: absolute;
-    transition: all 0.3s ease;
-    pointer-events: none;
     opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: all 300ms ease;
+    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.14);
+}
+
+.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
 }
 
 .list::before {
@@ -55,41 +89,41 @@
     top: 0;
 }
 
-.menu:hover .list,
-.menu:focus .list {
+@media (hover: hover) and (pointer: fine) {
+    .menu:hover .list,
+    .menu:focus-within .list {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateY(0);
+    }
+}
+
+.backdrop {
+    position: fixed;
+    inset: 0;
+    border: none;
+    padding: 0;
+    margin: 0;
+    background-color: rgba(159, 0, 4, 0.4);
+    backdrop-filter: blur(10px);
+    z-index: 5000;
+}
+
+.mobilePopup {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+}
+
+.mobileList {
+    position: static;
     opacity: 1;
-    pointer-events: all;
-}
-
-.list {
-    position: absolute;
-    right: 0;
-    top: -100px;
-    transition: all 0.3s ease;
-    pointer-events: none;
-    box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.14);
-}
-
-.list::before {
-    content: '';
-    position: absolute;
-    display: block;
-    width: 100%;
-    height: 18px;
-    left: 0;
-    bottom: -18px;
-}
-
-.button {
-    position: absolute;
-    top: 6px;
-    right: 6px;
-}
-
-.button.shadow {
-    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.14);
-}
-
-.button.trans {
-    background: transparent;
+    visibility: visible;
+    pointer-events: auto;
+    transform: none;
 }

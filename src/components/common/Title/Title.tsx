@@ -22,12 +22,13 @@ const Title = ({
 }: TitleProps) => {
     const HeadingTag: TitleLevel = level;
     return (
-        <div className={`${styles.titleWrapper} `}>
+        <div
+            className={`${styles.titleWrapper} 
+                        ${className ?? ''}`}>
             <HeadingTag
                 className={`${styles.title} 
                             ${styles[size]} 
-                            ${highlightFirstLetter ? styles.highlightFirstLetter : ''}
-                            ${className ?? ''}`}
+                            ${highlightFirstLetter ? styles.highlightFirstLetter : ''}`}
             >
                 {children}
             </HeadingTag>

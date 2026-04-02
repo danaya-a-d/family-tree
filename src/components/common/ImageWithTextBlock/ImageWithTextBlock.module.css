@@ -3,14 +3,32 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
+
+    @media (--tablet) {
+        flex-direction: column;
+    }
 }
 
 .reverse {
     flex-direction: row-reverse;
+
+    @media (--tablet) {
+        flex-direction: column;
+    }
 }
 
 .photo {
     width: 905px;
     height: 648px;
     object-fit: contain;
+
+    @media (--tablet-lg) {
+        width: 724px;
+        height: auto;
+    }
+
+    @media (--tablet) {
+        width: 100%;
+    }
 }
+

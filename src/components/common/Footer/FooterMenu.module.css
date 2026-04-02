@@ -14,6 +14,12 @@
     margin: 0;
     padding: 0;
     list-style: none;
+
+    @media (--tablet) {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
 }
 
 .navItem {
@@ -26,4 +32,8 @@
     color: inherit;
     font-size: 24px;
     text-decoration: none;
+
+    @media (--tablet) {
+        font-size: 20px;
+    }
 }

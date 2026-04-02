@@ -1,10 +1,19 @@
 .socialsList {
     display: flex;
     gap: 25px;
+
+    @media (--tablet) {
+        gap: 20px;
+    }
 }
 
 .logo {
     width: 40px;
     height: 40px;
     object-fit: contain;
+
+    @media (--tablet) {
+        width: 32px;
+        height: 32px;
+    }
 }
