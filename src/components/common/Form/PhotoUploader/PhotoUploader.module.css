@@ -31,14 +31,19 @@
     z-index: 1000;
 }
 
-.uploader:hover .overlay,
 .uploader.dragging .overlay,
 .uploader.noPreview .overlay {
     opacity: 1;
 }
 
-.wrapper:has(.uploader:hover) .editList {
-    opacity: 0;
+@media (hover: hover) and (pointer: fine) {
+    .uploader:hover .overlay {
+        opacity: 1;
+    }
+
+    .wrapper:has(.uploader:hover) .editList {
+        opacity: 0;
+    }
 }
 
 .image {
