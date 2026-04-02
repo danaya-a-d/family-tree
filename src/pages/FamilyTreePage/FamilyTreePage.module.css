@@ -1,6 +1,11 @@
 .familyTreePage {
     margin-top: 118px;
     padding-top: 80px;
+
+    @media (--tablet) {
+        margin-top: 80px;
+        padding-top: 60px;
+    }
 }
 
 .familyTreePage::after {

@@ -1,6 +1,6 @@
-import styles from './Photos.module.css';
 import Photo from './Photo';
 import type { PhotoItem } from '@/features/gallery/types';
+import styles from './Photos.module.css';
 
 type PhotoForList = Pick<PhotoItem, 'path' | 'alt'>;
 

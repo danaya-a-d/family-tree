@@ -1,13 +1,40 @@
 .personModal {
-    width: 794px;
+    width: 754px;
+
+    @media (--tablet-lg) {
+        width: 680px;
+    }
+
+    @media (--tablet) {
+        width: 416px;
+    }
+
+    @media (--phone) {
+        width: 296px;
+    }
 }
 
 .form {
     margin-top: 20px;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 160px;
+
+    @media (--tablet) {
+        grid-template-columns: 1fr;
+        grid-template-rows: 120px;
+    }
 }
 
 .header {
     display: flex;
     flex-direction: column;
     gap: 40px;
+
+    @media (--tablet) {
+        gap: 12px;
+    }
+
+    @media (--phone) {
+        gap: 8px;
+    }
 }

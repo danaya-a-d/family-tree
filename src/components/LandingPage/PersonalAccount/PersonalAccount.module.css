@@ -7,6 +7,21 @@
     background-size: inherit;
     overflow: hidden;
     z-index: 1;
+
+    @media (--tablet-lg) {
+        padding-top: 150px;
+        padding-bottom: 150px;
+    }
+
+    @media (--tablet) {
+        padding-top: 100px;
+        padding-bottom: 100px;
+    }
+
+    @media (--phone) {
+        padding-top: 60px;
+        padding-bottom: 60px;
+    }
 }
 
 .personalAccount::after {
@@ -32,12 +47,22 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-sizing: content-box;
+    box-sizing: border-box;
     width: 100%;
-    max-width: 1292px;
+    max-width: 1356px;
     margin: 0 auto;
     padding-right: 32px;
     padding-left: 32px;
+
+    @media (--tablet-lg) {
+        padding-right: 24px;
+        padding-left: 24px;
+    }
+
+    @media (--tablet) {
+        padding-right: 16px;
+        padding-left: 16px;
+    }
 }
 
 .container {
@@ -54,10 +79,18 @@
 
 .textBlock {
     margin-left: -376px;
+
+    @media (--tablet) {
+        margin-left: 0;
+    }
 }
 
 .textBlockReverse {
     margin-right: -376px;
+
+    @media (--tablet) {
+        margin-right: 0;
+    }
 }
 
 .textBlock::before,
@@ -66,7 +99,7 @@
     position: absolute;
     display: block;
     width: 598px;
-    height: 488px;
+    height: 152%;
     background-color: white;
     border-radius: 50%;
     z-index: 1;
@@ -76,12 +109,33 @@
     top: -110px;
     left: -75px;
     transform: rotate(-18deg);
+
+    @media (--tablet) {
+        left: auto;
+        right: -93px;
+    }
+
+    @media (--phone) {
+        top: -42px;
+    }
 }
 
 .textBlockReverse::before {
     top: -80px;
     right: -93px;
     transform: rotate(-16deg);
+
+    @media (--tablet) {
+        right: auto;
+        left: -93px;
+        top: -110px;
+    }
+
+    @media (--phone) {
+        top: -42px;
+        right: 0px;
+        left: auto;
+    }
 }
 
 .textBlock::after,

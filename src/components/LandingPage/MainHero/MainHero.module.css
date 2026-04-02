@@ -1,6 +1,15 @@
 .mainHero {
     display: flex;
     min-height: 1028px;
+    overflow: hidden;
+
+    @media (--tablet) {
+        min-height: 900px;
+    }
+
+    @media (--phone) {
+        min-height: 700px;
+    }
 }
 
 .mainHero::after {
@@ -21,12 +30,22 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-sizing: content-box;
     width: 100%;
-    max-width: 1292px;
     margin: 0 auto;
+    box-sizing: border-box;
+    max-width: 1356px;
     padding-right: 32px;
     padding-left: 32px;
+
+    @media (--tablet-lg) {
+        padding-right: 24px;
+        padding-left: 24px;
+    }
+
+    @media (--tablet) {
+        padding-right: 16px;
+        padding-left: 16px;
+    }
 }
 
 .textBlock {
@@ -42,11 +61,20 @@
     top: 0;
     left: -215px;
     width: 955px;
-    height: 688px;
+    height: 110%;
     background-color: white;
     border-radius: 50%;
     z-index: -1;
     transform: rotate(22deg);
+
+    @media (--desktop-sm) {
+        height: 120%;
+        transform: rotate(12deg);
+    }
+
+    @media (--tablet-lg) {
+        left: -350px;
+    }
 }
 
 .about {

@@ -80,13 +80,6 @@ const EditModal = ({ photo, onClose }: EditModalProps) => {
 
     const buttons = isEdit ? [...baseButtons, deleteButton] : baseButtons;
 
-    const formLayout = `"photo title"
-                        "photo tags"
-                        "buttons buttons"`;
-
-    const formColumns = '325px auto';
-    const formRows = '40px 265px auto';
-
     const initialValues: EditFormValues = photo
         ? {
             title: photo.title || '',
@@ -134,9 +127,6 @@ const EditModal = ({ photo, onClose }: EditModalProps) => {
                     buttons={buttons}
                     fields={fields}
                     initialValues={initialValues}
-                    formLayout={formLayout}
-                    formColumns={formColumns}
-                    formRows={formRows}
                     onSubmit={handleSubmit}
                     validate={validate}
                 />

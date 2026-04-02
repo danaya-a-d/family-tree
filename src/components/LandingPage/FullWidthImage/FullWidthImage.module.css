@@ -8,4 +8,12 @@
     height: 1024px;
     object-fit: cover;
     object-position: top center;
+
+    @media (--tablet) {
+        height: 700px;
+    }
+
+    @media (--phone) {
+        height: 500px;
+    }
 }

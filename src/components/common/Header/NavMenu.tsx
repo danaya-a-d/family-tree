@@ -1,27 +1,57 @@
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import styles from './NavMenu.module.css';
 
-const NavMenu = () => {
+type NavMenuProps = {
+    isMobile?: boolean;
+    onNavigate?: () => void;
+};
+
+const NavMenu = ({ isMobile = false, onNavigate }: NavMenuProps) => {
     return (
-        <div className={styles.mainNav}>
-            <ul className={styles.nav}>
+        <nav
+            className={`${styles.mainNav} ${isMobile ? styles.mainNavMobile : ''}`}
+            aria-label='Main navigation'>
+            <ul className={`${styles.nav} ${isMobile ? styles.navMobile : ''}`}>
                 <li className={styles.navItem}>
-                    <Link to="/" className={styles.navLink}>
+                    <NavLink
+                        to='/' end
+                        className={({ isActive }) =>
+                            `${styles.navLink} ${isMobile ? styles.navLinkMobile : ''} ${
+                                isActive ? styles.active : ''
+                            }`
+                        }
+                        onClick={onNavigate}>
                         Home
-                    </Link>
+                    </NavLink>
                 </li>
+
                 <li className={styles.navItem}>
-                    <Link to="/family-tree" className={styles.navLink}>
+                    <NavLink
+                        to='/family-tree'
+                        className={({ isActive }) =>
+                            `${styles.navLink} ${isMobile ? styles.navLinkMobile : ''} ${
+                                isActive ? styles.active : ''
+                            }`
+                        }
+                        onClick={onNavigate}>
                         Family tree
-                    </Link>
+                    </NavLink>
                 </li>
+
                 <li className={styles.navItem}>
-                    <Link to="/photo-album" className={styles.navLink}>
+                    <NavLink
+                        to='/photo-album'
+                        className={({ isActive }) =>
+                            `${styles.navLink} ${isMobile ? styles.navLinkMobile : ''} ${
+                                isActive ? styles.active : ''
+                            }`
+                        }
+                        onClick={onNavigate}>
                         My photos
-                    </Link>
+                    </NavLink>
                 </li>
             </ul>
-        </div>
+        </nav>
     );
 };
 export default NavMenu;

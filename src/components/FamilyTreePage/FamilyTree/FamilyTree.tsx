@@ -217,7 +217,11 @@ const FamilyTree = () => {
                     Export and Import
                 </button>
 
-                <Title level={'h1'} size={'medium'} showDecoration={false} highlightFirstLetter={false}>
+                <Title
+                    className={styles.title}
+                    level={'h1'}
+                    size={'medium'}
+                    showDecoration={false} highlightFirstLetter={false}>
                     {'Family tree'}
                 </Title>
 

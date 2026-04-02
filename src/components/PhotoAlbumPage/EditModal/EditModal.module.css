@@ -1,7 +1,38 @@
 .editModal {
     width: 794px;
+
+    @media (--tablet-lg) {
+        width: 633px;
+    }
+
+    @media (--tablet) {
+        width: 296px;
+    }
 }
 
 .form {
     margin-top: 40px;
+    grid-template-areas:
+        "photo title"
+        "photo tags"
+        "buttons buttons";
+    grid-template-columns: 325px minmax(0, 1fr);
+    grid-template-rows: 40px 265px auto;
+
+    @media (--tablet) {
+        margin-top: 20px;
+        grid-template-areas:
+            "photo"
+            "photo"
+            "title"
+            "tags"
+            "buttons";
+        grid-template-columns: 1fr;
+        grid-template-rows: 200px 40px auto 80px;
+    }
+
+    @media (--phone) {
+        margin-top: 12px;
+    }
 }
+

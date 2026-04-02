@@ -1,7 +1,7 @@
 .photo {
     display: block;
-    height: 300px;
     width: 100%;
+    aspect-ratio: 300 / 316;
     object-fit: cover;
     border-radius: 8px;
 }

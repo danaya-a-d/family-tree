@@ -2,8 +2,11 @@ import { PropsWithChildren, MouseEvent, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import styles from './Modal.module.css';
 
+type OverlaySize = 'big' | 'small';
+
 type ModalProps = PropsWithChildren<{
     onClose: () => void;
+    overlaySize?: OverlaySize;
     btnClose?: boolean;
     inline?: boolean;
     target?: HTMLElement | null;
@@ -23,6 +26,7 @@ const getDefaultTarget = () => {
 const Modal = ({
                    children,
                    onClose,
+                   overlaySize = 'small',
                    btnClose = false,
                    inline = false,
                    target,
@@ -42,14 +46,20 @@ const Modal = ({
     }, [onClose]);
 
     const handleOverlayClick = (e: MouseEvent<HTMLDivElement>): void => {
-        if (e.target === e.currentTarget) onClose(); // Закрытие при клике на оверлей
+        if (e.target === e.currentTarget) onClose(); // Close on the overlay
     };
 
     const content = (
-        <div className={styles.overlay} onClick={handleOverlayClick}>
-            <div className={styles.modal} role="dialog" aria-modal="true">
+        <div className={`
+                        ${styles.overlay}
+                        ${styles[overlaySize]} 
+                        `.trim()}
+             onClick={handleOverlayClick}>
+            <div className={styles.backdrop} />
+
+            <div className={styles.modal} role='dialog' aria-modal='true'>
                 {btnClose && (
-                    <button className={styles.modalClose} onClick={onClose} aria-label="Close">
+                    <button className={styles.modalClose} onClick={onClose} aria-label='Close'>
                         Close
                     </button>
                 )}

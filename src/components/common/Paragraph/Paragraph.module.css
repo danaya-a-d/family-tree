@@ -4,4 +4,15 @@
     font-size: 24px;
     color: inherit;
     z-index: 2;
+    @media (--tablet-lg) {
+        font-size: 20px;
+    }
+
+    @media (--tablet) {
+        font-size: 18px;
+    }
+
+    @media (--phone) {
+        font-size: 16px;
+    }
 }

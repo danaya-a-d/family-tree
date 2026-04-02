@@ -55,7 +55,7 @@ const PhotoModal = ({ photo, onClose }: PhotoModalProps) => {
     return (
         <>
             {isOpen && (
-                <Modal onClose={onClose}>
+                <Modal onClose={onClose} overlaySize='big'>
                     <div className={styles.photoModal}>
                         <MenuEdit menuList={menuList}
                                   listPosition='bottom'

@@ -8,4 +8,9 @@
 .logoLink {
     height: 60px;
     width: 120px;
+
+    @media (--tablet) {
+        height: 44px;
+        width: 90px;
+    }
 }

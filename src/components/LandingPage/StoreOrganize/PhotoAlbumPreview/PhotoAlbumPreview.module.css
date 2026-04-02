@@ -2,18 +2,25 @@
     list-style: none;
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 30px;
     margin: 0;
     padding: 0;
-}
 
-.item {
+    @media (--tablet) {
+        gap: 20px;
+    }
 }
 
 .item:nth-child(1),
 .item:nth-child(2) {
     margin-left: 110px;
     width: calc(50% - 140px);
+
+   @media (--tablet) {
+        margin-left: 55px;
+        width: calc(50% - 70px);
+    }
 }
 
 .item:nth-child(3),
@@ -27,6 +34,14 @@
     display: block;
     height: 200px;
     width: auto;
-    max-width: 410px;
+    max-width: 100%;
     object-fit: cover;
+
+    @media (--tablet) {
+        height: 100px;
+    }
+
+    @media (--phone) {
+        height: 80px;
+    }
 }

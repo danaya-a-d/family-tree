@@ -1,5 +1,5 @@
 .spouseModal {
-    max-width: 754px;
+    max-width: 784px;
 }
 
 .wrapper {
@@ -10,6 +10,16 @@
     background-color: rgba(159, 0, 4, 0.15);
     box-sizing: border-box;
     z-index: 1;
+
+    @media (--tablet) {
+        margin-top: 20px;
+    }
+
+    @media (--phone) {
+        padding: 12px;
+        border-radius: 20px;
+        margin-top: 12px;
+    }
 }
 
 .wrapper::after {
@@ -36,6 +46,19 @@
     box-sizing: border-box;
     cursor: pointer;
     z-index: 2;
+
+    @media (--tablet-lg) {
+        gap: 12px;
+        padding: 12px;
+    }
+
+    @media (--tablet) {
+        width: 352px;
+    }
+
+    @media (--phone) {
+        width: 100%;
+    }
 }
 
 .spouseActive {
@@ -53,6 +76,15 @@
     display: flex;
     gap: 4px;
     align-items: center;
+
+    @media (--tablet) {
+        font-size: 14px;
+    }
+
+    @media (--phone) {
+        font-size: 12px;
+        gap: 2px;
+    }
 }
 
 .spouseIcon {
@@ -62,6 +94,11 @@
     width: 12px;
     height: 12px;
     margin-bottom: -2px;
+
+    @media (--phone) {
+        width: 10px;
+        height: 10px;
+    }
 }
 
 .about {
@@ -79,6 +116,16 @@
     border-radius: 4px;
     box-shadow: 0 1px 3px rgba(180, 120, 130, 0.25);
     overflow: hidden;
+
+    @media (--tablet-lg) {
+        width: 90px;
+        height: 90px;
+    }
+
+    @media (--phone) {
+        width: 60px;
+        height: 60px;
+    }
 }
 
 .photo img {
@@ -93,6 +140,10 @@
     font-size: 20px;
     line-height: 1.2;
     font-weight: 500;
+
+    @media (--tablet) {
+        font-size: 16px;
+    }
 }
 
 .spouses {
@@ -102,12 +153,25 @@
     list-style: none;
     margin: 0;
     padding: 0;
+
+    @media (--tablet-lg) {
+        grid-gap: 16px;
+    }
+
+    @media (--tablet) {
+        grid-template-columns: 1fr;
+        grid-gap: 24px;
+        justify-items: center;
+    }
+
+    @media (--phone) {
+        grid-gap: 12px;
+    }
 }
 
 .title {
     padding-right: 40px;
 }
-
 
 .sousesLabel {
     position: absolute;

@@ -20,6 +20,7 @@ import { validateLifeEventDate } from '@/components/common/validation';
 import { selectPersonById, selectSpousesOfPerson, selectAttachSpouseFamilies } from '@/features/tree/selectors';
 import { getDefaultPortrait } from '@/features/tree/lib/getDefaultPortrait';
 import styles from './PersonModal.module.css';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 interface PersonModalProps {
     person?: Person;
@@ -57,9 +58,9 @@ const EMPTY_SPOUSES: SpousesForPerson[] = [];
 const EMPTY_FAMILIES: Family[] = [];
 
 const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
-
     const dispatch = useDispatch();
 
+    const isMobile = useMediaQuery('(max-width: 768px)');
     const isEdit = !!person;
     const isAddRelative = !!addContext;
     const isAddSpouse = isAddRelative && addContext.kind === 'spouse';
@@ -583,6 +584,60 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
     const buttons = isEdit ? [...baseButtons, deleteButton] : baseButtons;
 
     const formLayout = (v: PersonFormValues) => {
+        if (isMobile) {
+            const rows = [
+                `"personPhoto"`,
+                `"gender"`,
+                `"firstName"`,
+                `"lastName"`,
+            ];
+
+            if (v.gender === 'female') {
+                rows.push(`"maidenName"`);
+            }
+
+            rows.push(`"dateOfBirth"`);
+            rows.push(`"placeOfBirth"`);
+            rows.push(`"living"`);
+
+            if (v.lifeState === 'deceased') {
+                rows.push(`"dateOfDeath"`);
+                rows.push(`"placeOfDeath"`);
+            }
+
+            if (isAddSpouse && attachSpouseFamilies.length > 0) {
+                rows.push(`"spouseAttachFamilyId"`);
+            }
+
+            if ((spouses?.length ?? 0) > 0) {
+                rows.push(`"spouseFamilyId"`);
+            }
+
+            if (isAddChild) {
+                rows.push(`"parentFamilyId"`);
+            }
+
+            if (showSpouseSection && isCoupleFamilySelected(v)) {
+                const { showMarriage, showDivorce } = getRelFlags(v);
+
+                rows.push(`"relationshipStatus"`);
+
+                if (showMarriage) {
+                    rows.push(`"dateOfMarriage"`);
+                    rows.push(`"placeOfMarriage"`);
+                }
+
+                if (showDivorce) {
+                    rows.push(`"dateOfDivorce"`);
+                    rows.push(`"placeOfDivorce"`);
+                }
+            }
+
+            rows.push(`"buttons"`);
+
+            return rows.join('\n');
+        }
+
         const rows = [
             `"personPhoto ."`,
             `"gender ."`,
@@ -620,9 +675,6 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
         rows.push(`"buttons buttons"`);
         return rows.join('\n');
     };
-
-    const formColumns = '1fr 1fr';
-    const formRows = '160px';
 
     const PERSON_DATE_FIELDS = [
         'dateOfBirth',
@@ -667,7 +719,7 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
 
     return (
         <Modal onClose={onClose} btnClose>
-            <div className={styles.editModal}>
+            <div className={styles.personModal}>
                 <div className={styles.header}>
                     <Title level={'h2'} size={'small'}>
                         {isEdit ? 'Edit person' : 'Add person'}
@@ -684,8 +736,6 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
                     fields={fields}
                     initialValues={initialValues}
                     formLayout={formLayout}
-                    formColumns={formColumns}
-                    formRows={formRows}
                     onSubmit={handleSubmit}
                     externalLocalErrors={spouseErrors}
                     validate={validate}

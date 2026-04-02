@@ -5,10 +5,22 @@
 
 .group {
     gap: 30px;
+
+    @media (--phone) {
+        gap: 6px 12px;
+    }
 }
 
 .groupSmall {
     gap: 10px;
+
+    @media (--tablet-lg) {
+        gap: 8px;
+    }
+
+    @media (--phone) {
+        gap: 6px 12px;
+    }
 }
 
 .option, .optionSmall {
@@ -19,10 +31,22 @@
 
 .option {
     gap: 10px;
+
+    @media (--phone) {
+        gap: 8px;
+    }
 }
 
 .optionSmall {
     gap: 6px;
+
+    @media (--tablet-lg) {
+        gap: 4px;
+    }
+
+    @media (--phone) {
+        gap: 8px;
+    }
 }
 
 .disabled {
@@ -46,11 +70,32 @@
 .control {
     width: 18px;
     height: 18px;
+
+    @media (--phone) {
+        width: 14px;
+        height: 14px;
+    }
 }
 
 .controlSmall {
     width: 14px;
     height: 14px;
+
+    @media (--tablet-lg) {
+        width: 12px;
+        height: 12px;
+    }
+
+    @media (--phone) {
+        width: 14px;
+        height: 14px;
+    }
+}
+
+.text {
+    @media (--phone) {
+        font-size: 14px;
+    }
 }
 
 .textSmall {
@@ -70,11 +115,21 @@
 .input:checked + .control::after {
     width: 8px;
     height: 8px;
+
+    @media (--phone) {
+        width: 8px;
+        height: 8px;
+    }
 }
 
 .input:checked + .controlSmall::after {
     width: 6px;
     height: 6px;
+
+    @media (--phone) {
+        width: 8px;
+        height: 8px;
+    }
 }
 
 .input:checked + .control + .text,

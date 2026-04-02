@@ -63,7 +63,7 @@ const PhotoUploader = ({ name, value, className, onChange }: PhotoUploaderProps)
         <div className={styles.wrapper}>
             {preview && <MenuEdit menuList={menuList}
                                   listPosition='right'
-                                  buttonStyle='trans'
+                                  buttonStyle='shadow'
                                   className={styles.editList}
             />}
 

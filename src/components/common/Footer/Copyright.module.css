@@ -3,4 +3,8 @@
     font-weight: 200;
     text-align: center;
     margin: 0;
+
+    @media (--tablet) {
+        font-size: 16px;
+    }
 }

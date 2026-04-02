@@ -1,6 +1,6 @@
-import styles from './StoreOrganize.module.css';
 import Title from '../../common/Title/Title';
 import PhotoAlbumPreview from './PhotoAlbumPreview/PhotoAlbumPreview';
+import styles from './StoreOrganize.module.css';
 
 import image1 from '../../../assets/img/img-gal-5.jpg';
 import image2 from '../../../assets/img/img-gal-6.jpg';

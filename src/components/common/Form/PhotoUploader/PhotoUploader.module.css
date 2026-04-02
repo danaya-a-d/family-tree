@@ -28,12 +28,17 @@
     backdrop-filter: blur(10px);
     transition: all 500ms ease;
     opacity: 0;
+    z-index: 1000;
 }
 
 .uploader:hover .overlay,
 .uploader.dragging .overlay,
 .uploader.noPreview .overlay {
     opacity: 1;
+}
+
+.wrapper:has(.uploader:hover) .editList {
+    opacity: 0;
 }
 
 .image {
