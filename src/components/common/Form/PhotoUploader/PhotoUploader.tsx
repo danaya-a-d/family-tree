@@ -1,7 +1,9 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useDropzone } from 'react-dropzone';
 import styles from './PhotoUploader.module.css';
 import MenuEdit from '@/components/common/MenuEdit/MenuEdit';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { MenuItem } from '@/components/common/MenuEdit/MenuEdit.types';
 
 interface PhotoUploaderProps {
     name: string;
@@ -11,12 +13,24 @@ interface PhotoUploaderProps {
 }
 
 const PhotoUploader = ({ name, value, className, onChange }: PhotoUploaderProps) => {
+    const menuList: MenuItem[] = [];
     const [preview, setPreview] = useState<string | null>(value ?? null);
+
+    const isTouchDevice = useMediaQuery('(hover: none), (pointer: coarse)');
+    const [isNewUpload, setIsNewUpload] = useState(false);
+    const lastLocalUploadRef = useRef<string | null>(null);
 
     useEffect(() => {
         setPreview(value ?? null);
-    }, [value]);
 
+        if (!value) {
+            lastLocalUploadRef.current = null;
+            setIsNewUpload(false);
+            return;
+        }
+
+        setIsNewUpload(value === lastLocalUploadRef.current);
+    }, [value]);
 
     const onDrop = useCallback(
         (acceptedFiles: File[]): void => {
@@ -26,6 +40,10 @@ const PhotoUploader = ({ name, value, className, onChange }: PhotoUploaderProps)
             const reader = new FileReader();
             reader.onload = (e) => {
                 const result = reader.result as string;
+
+                lastLocalUploadRef.current = result;
+                setIsNewUpload(true);
+
                 setPreview(result);
                 onChange?.(result);
             };
@@ -34,30 +52,44 @@ const PhotoUploader = ({ name, value, className, onChange }: PhotoUploaderProps)
         [onChange],
     );
 
-    // Dropzone setting
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({
-        accept: { 'image/*': [] },
-        multiple: false,
-        onDrop,
-    });
-
     const handleDelete = () => {
+        lastLocalUploadRef.current = null;
+        setIsNewUpload(false);
         setPreview(null);
         onChange?.(null);
     };
 
-    const menuList = [
-        {
-            id: 1,
+    // Dropzone setting
+    const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
+        accept: { 'image/*': [] },
+        multiple: false,
+        onDrop,
+        noClick: Boolean(preview) && isTouchDevice,
+    });
+
+    if (isTouchDevice) {
+        menuList.push({
+            id: menuList.length + 1,
+            name: 'Change photo',
+            onClick: open,
+        });
+    }
+
+    if (preview && !isNewUpload) {
+        menuList.push({
+            id: menuList.length + 1,
             name: 'Open full',
             href: preview,
-        },
-        {
-            id: 2,
+        });
+    }
+
+    if (preview) {
+        menuList.push({
+            id: menuList.length + 1,
             name: 'Delete photo',
             onClick: handleDelete,
-        },
-    ];
+        });
+    }
 
     return (
         <div className={styles.wrapper}>

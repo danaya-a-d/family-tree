@@ -4,6 +4,7 @@ import LandingPage from './pages/LandingPage/LandingPage';
 import PhotoAlbumPage from './pages/PhotoAlbumPage/PhotoAlbumPage';
 import FamilyTreePage from './pages/FamilyTreePage/FamilyTreePage';
 import Footer from './components/common/Footer/Footer';
+import ScrollToTop from '@/components/common/ScrollToTop/ScrollToTop';
 
 const App = () => {
     return (
@@ -13,6 +14,7 @@ const App = () => {
                 v7_relativeSplatPath: true,
             }}
         >
+            <ScrollToTop />
             <Header />
             <Routes>
                 <Route path="/" element={<LandingPage />} />

@@ -26,14 +26,14 @@ const MenuEdit = ({
                   }: MenuEditProps) => {
     const [isOpen, setIsOpen] = useState(false);
 
-    const isMobile = useMediaQuery('(max-width: 768px)');
+    const isMobile = useMediaQuery('(hover: none), (pointer: coarse)');
 
     const menuRef = useRef<HTMLDivElement | null>(null);
     const popupRef = useRef<HTMLDivElement | null>(null);
     const menuId = useId();
 
     useEffect(() => {
-        if (!isOpen) return;
+        if (!isOpen || isMobile) return;
 
         const handlePointerDown = (event: PointerEvent) => {
             const target = event.target as Node | null;
@@ -59,7 +59,7 @@ const MenuEdit = ({
             document.removeEventListener('pointerdown', handlePointerDown, true);
             document.removeEventListener('keydown', handleKeyDown);
         };
-    }, [isOpen]);
+    }, [isOpen, isMobile]);
 
     useEffect(() => {
         setIsOpen(false);
@@ -77,7 +77,10 @@ const MenuEdit = ({
         <>
             <div ref={menuRef} className={`${styles.menu} ${className}`.trim()}>
                 <MenuButton
-                    className={`${styles.button} ${buttonStyle ? styles[buttonStyle] : ''}`.trim()}
+                    className={`
+                             ${styles.button}
+                             ${buttonStyle ? styles[buttonStyle] : ''}
+                             `.trim()}
                     onClick={handleToggleMenu}
                     ariaExpanded={isOpen}
                     ariaControls={menuId}
@@ -117,7 +120,7 @@ const MenuEdit = ({
                             />
                         </div>
                     </>,
-                    document.body
+                    document.body,
                 )}
         </>
     );

@@ -718,7 +718,7 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
         );
 
     return (
-        <Modal onClose={onClose} btnClose>
+        <Modal className={styles.modal} onClose={onClose} btnClose>
             <div className={styles.personModal}>
                 <div className={styles.header}>
                     <Title level={'h2'} size={'small'}>

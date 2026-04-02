@@ -1,18 +1,5 @@
 import styles from './MenuList.module.css';
-
-interface MenuItemLink {
-    id: number;
-    name: string;
-    href: string;
-}
-
-interface MenuItemAction {
-    id: number;
-    name: string;
-    onClick: () => void;
-}
-
-type MenuItem = MenuItemLink | MenuItemAction;
+import { MenuItem } from '@/components/common/MenuEdit/MenuEdit.types';
 
 interface MenuListProps {
     list: MenuItem[];

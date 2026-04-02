@@ -6,6 +6,7 @@ type OverlaySize = 'big' | 'small';
 
 type ModalProps = PropsWithChildren<{
     onClose: () => void;
+    className?: string;
     overlaySize?: OverlaySize;
     btnClose?: boolean;
     inline?: boolean;
@@ -26,6 +27,7 @@ const getDefaultTarget = () => {
 const Modal = ({
                    children,
                    onClose,
+                   className,
                    overlaySize = 'small',
                    btnClose = false,
                    inline = false,
@@ -64,7 +66,10 @@ const Modal = ({
                     </button>
                 )}
 
-                <div className={styles.modalContent}>{children}</div>
+                <div className={`
+                        ${styles.modalContent}
+                        ${className} 
+                        `.trim()}>{children}</div>
             </div>
         </div>
     );
