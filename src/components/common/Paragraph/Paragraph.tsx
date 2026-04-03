@@ -6,7 +6,7 @@ type ParagraphProps = PropsWithChildren<{
 }>;
 
 const Paragraph = ({ children, className = '' }: ParagraphProps) => {
-    return <p className={`${styles.text} ${className}`}>{children}</p>;
+    return <p className={`${styles.text} ${className}`.trim()}>{children}</p>;
 };
 
 export default Paragraph;

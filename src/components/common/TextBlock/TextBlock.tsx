@@ -15,21 +15,21 @@ export interface TextBlockProps {
 }
 
 const TextBlock = ({
-    title,
-    paragraph,
-    textRight = false,
-    titleLevel = 'h1',
-    titleSize = 'large',
-    showDecoration = false,
-    highlightFirstLetter = false,
-    paragraphClassName,
-    className,
-}: TextBlockProps) => {
+                       title,
+                       paragraph,
+                       textRight = false,
+                       titleLevel = 'h1',
+                       titleSize = 'large',
+                       showDecoration = false,
+                       highlightFirstLetter = false,
+                       paragraphClassName,
+                       className,
+                   }: TextBlockProps) => {
     return (
         <div
             className={`${styles.textBlock} 
                          ${className}
-                         ${textRight ? styles.textRight : ''}`}
+                         ${textRight ? styles.textRight : ''}`.trim()}
         >
             <Title
                 level={titleLevel}

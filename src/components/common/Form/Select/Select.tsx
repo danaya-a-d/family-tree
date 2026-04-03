@@ -20,10 +20,9 @@ const Select = ({ name, selectors, value, placeholder, className, onChange }: Se
         <div className={styles.inputWrapper}>
             <label className={styles.label}>
                 <select
-                    /*required*/
                     name={name}
                     value={value ?? ''}
-                    className={`${styles.field} ${className ?? ''}`}
+                    className={`${styles.field} ${className ?? ''}`.trim()}
                     onChange={handleChange}
                 >
                     <option disabled hidden value=''>{placeholder}</option>

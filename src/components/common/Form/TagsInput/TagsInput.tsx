@@ -101,7 +101,7 @@ const TagsInput = ({
                             value={input}
                             onChange={handleChange}
                             onKeyDown={handleKeyDown}
-                            className={`${styles.field} ${className}`}
+                            className={`${styles.field} ${className}`.trim()}
                             style={{ width: `${inputWidth}px` }}
                         />
                     </label>

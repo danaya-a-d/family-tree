@@ -12,7 +12,7 @@ const Input = ({ name, className, ...rest }: InputProps) => {
             <label className={styles.label}>
                 <input
                     name={name}
-                    className={`${styles.field} ${className ?? ''}`}
+                    className={`${styles.field} ${className ?? ''}`.trim()}
                     {...rest}
                 />
             </label>

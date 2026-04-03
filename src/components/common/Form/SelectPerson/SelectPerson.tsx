@@ -20,7 +20,6 @@ const SelectPerson = ({ name, selectors, value, placeholder, className, onChange
     const selectedOption = selectors.find(sel => sel.value === value) ?? selectors[0];
 
     return (
-
         <div className={styles.container}>
             {placeholder && <p className={styles.placeholder}>{placeholder}</p>}
 
@@ -37,7 +36,7 @@ const SelectPerson = ({ name, selectors, value, placeholder, className, onChange
                     <select
                         name={name}
                         value={value ?? ''}
-                        className={`${styles.field} ${className ?? ''}`}
+                        className={`${styles.field} ${className ?? ''}`.trim()}
                         onChange={handleChange}
                     >
                         {selectors.map(sel => {

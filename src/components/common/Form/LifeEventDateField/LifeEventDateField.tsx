@@ -1,7 +1,7 @@
 import styles from './LifeEventDateField.module.css';
 import DateInput from '@/components/common/Form/DateInput/DateInput';
 import RadioGroup from '@/components/common/Form/RadioGroup/RadioGroup';
-import {  RadioOption } from '@/components/common/Form/Form.types';
+import { RadioOption } from '@/components/common/Form/Form.types';
 import { DateModifier, LifeEventDate, PartialDate } from '@/features/tree/types';
 import { useEffect, useState } from 'react';
 import Title from '@/components/common/Title/Title';
@@ -28,7 +28,7 @@ const LifeEventDateField = ({
                                 value,
                                 placeholder,
                                 onChange,
-                                onError
+                                onError,
                             }: LifeEventDateFieldProps) => {
 
     const currentMod: DateModifier = value?.mod ?? 'exact';

@@ -232,7 +232,7 @@ const Form = <TValues extends FormValues = FormValues>({
                 if (!isFieldVisible(field)) return null;
 
                 return (
-                    <div key={field.name} className={styles[`input-${field.name}`]}>
+                    <div key={field.name} className={styles[`input-${field.name}`.trim()]}>
                         {renderField(field)}
                     </div>
                 );

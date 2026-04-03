@@ -66,7 +66,7 @@ const PersonSearchBar = ({ onPickPerson, className }: PersonSearchBarProps) => {
     }, [query]);
 
     return (
-        <div className={`${styles.wrapper} ${className ?? ''}`}
+        <div className={`${styles.wrapper} ${className ?? ''}`.trim()}
              ref={wrapRef}
              onBlurCapture={handleBlurCapture}>
             <Input

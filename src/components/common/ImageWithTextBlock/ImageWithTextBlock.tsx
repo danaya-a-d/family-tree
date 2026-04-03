@@ -13,7 +13,7 @@ type ImageWithTextBlockProps = PropsWithChildren<ImageWithTextBlockOwnProps & Te
 
 const ImageWithTextBlock = ({ reverse, imageSrc, imageAlt, children, ...props }: ImageWithTextBlockProps) => {
     return (
-        <div className={`${styles.container} ${reverse ? styles.reverse : ''}`}>
+        <div className={`${styles.container} ${reverse ? styles.reverse : ''}`.trim()}>
             <img src={imageSrc} alt={imageAlt} className={styles.photo} />
             <TextBlock {...props}>{children}</TextBlock>
         </div>

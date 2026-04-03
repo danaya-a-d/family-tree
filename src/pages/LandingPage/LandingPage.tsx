@@ -20,20 +20,20 @@ const LandingPage = () => {
         <div>
             <MainHero />
             <PersonalAccount
-                textTitle="Personal account for&nbsp;your family history"
-                textParagraph="Create a private space for relatives, records, notes, and connections. Update your tree anytime and keep every important detail organized."
+                textTitle='Personal account for&nbsp;your family history'
+                textParagraph='Create a private space for relatives, records, notes, and connections. Update your tree anytime and keep every important detail organized.'
                 familyPhoto={familyPhoto}
                 imagePaths={imagePaths1}
             />
-            <FullWidthImage src={bigPhoto} alt="Family photo" />
+            <FullWidthImage src={bigPhoto} alt='Family photo' />
             <PersonalAccount
                 textTitle="Preserve your family's precious memories"
-                textParagraph="Save old photographs, meaningful moments, and personal stories before they fade. Keep your family’s memory safe, accessible, and easy to revisit."
+                textParagraph='Save old photographs, meaningful moments, and personal stories before they fade. Keep your family’s memory safe, accessible, and easy to revisit.'
                 familyPhoto={familyPhoto2}
                 imagePaths={imagePaths2}
                 reverse={true}
             />
-            <FullWidthImage src={bigPhoto2} alt="Family photo" />
+            <FullWidthImage src={bigPhoto2} alt='Family photo' />
             <StoreOrganize />
         </div>
     );

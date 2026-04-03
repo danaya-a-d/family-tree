@@ -8,8 +8,8 @@ interface LogoProps {
 
 const Logo = ({ className = '' }: LogoProps) => {
     return (
-        <Link to="/" className={`${styles.logoLink} ${className}`}>
-            <img className={styles.logo} src={logo} alt="My Roots" />
+        <Link to='/' className={`${styles.logoLink} ${className}`.trim()}>
+            <img className={styles.logo} src={logo} alt='My Roots' />
         </Link>
     );
 };

@@ -17,9 +17,9 @@ const App = () => {
             <ScrollToTop />
             <Header />
             <Routes>
-                <Route path="/" element={<LandingPage />} />
-                <Route path="/photo-album" element={<PhotoAlbumPage />} />
-                <Route path="/family-tree" element={<FamilyTreePage />} />
+                <Route path='/' element={<LandingPage />} />
+                <Route path='/photo-album' element={<PhotoAlbumPage />} />
+                <Route path='/family-tree' element={<FamilyTreePage />} />
             </Routes>
             <Footer />
         </Router>
