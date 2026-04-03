@@ -13,22 +13,22 @@ type TitleProps = PropsWithChildren<{
 }>;
 
 const Title = ({
-    children,
-    level = 'h1',
-    size = 'large',
-    showDecoration = false,
-    highlightFirstLetter = false,
-    className,
-}: TitleProps) => {
+                   children,
+                   level = 'h1',
+                   size = 'large',
+                   showDecoration = false,
+                   highlightFirstLetter = false,
+                   className,
+               }: TitleProps) => {
     const HeadingTag: TitleLevel = level;
     return (
         <div
             className={`${styles.titleWrapper} 
-                        ${className ?? ''}`}>
+                        ${className ?? ''}`.trim()}>
             <HeadingTag
                 className={`${styles.title} 
                             ${styles[size]} 
-                            ${highlightFirstLetter ? styles.highlightFirstLetter : ''}`}
+                            ${highlightFirstLetter ? styles.highlightFirstLetter : ''}`.trim()}
             >
                 {children}
             </HeadingTag>

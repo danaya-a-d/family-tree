@@ -8,7 +8,7 @@ type TagProps = PropsWithChildren<{
 
 const Tag = ({ children, isActive, onClick }: TagProps) => {
     return (
-        <li className={`${styles.tag} ${isActive ? styles.active : ''}`} onClick={onClick}>
+        <li className={`${styles.tag} ${isActive ? styles.active : ''}`.trim()} onClick={onClick}>
             #{children}
         </li>
     );

@@ -99,7 +99,7 @@ const PersonNode = ({ id, data, selected }: NodeProps<RFPersonNode>) => {
     };
 
     return (
-        <div className={`${styles.card} ${selected ? styles.selected : ''}`} onClick={onClick}>
+        <div className={`${styles.card} ${selected ? styles.selected : ''}`.trim()} onClick={onClick}>
             <div className={styles.info}>
                 <div className={styles.photo}>
                     {photo && <img src={photo} alt={name} />}

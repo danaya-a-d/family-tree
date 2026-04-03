@@ -21,7 +21,7 @@ const StoreOrganize = () => {
         <section className={styles.storeOrganize}>
             <div className={styles.wrapper}>
                 <div className={styles.textBlock}>
-                    <Title level="h2" size="medium">
+                    <Title level='h2' size='medium'>
                         Store and organize your photos in the family album history
                     </Title>
                 </div>

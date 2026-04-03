@@ -19,10 +19,10 @@ type UseFormArgs<TValues extends FormValues = FormValues> = {
 };
 
 export const useForm = <TValues extends FormValues = FormValues>({
-                            initialValues,
-                            onSubmit,
-                            validate,
-                        }: UseFormArgs<TValues>): UseFormReturn<TValues> => {
+                                                                     initialValues,
+                                                                     onSubmit,
+                                                                     validate,
+                                                                 }: UseFormArgs<TValues>): UseFormReturn<TValues> => {
     const [values, setValues] = useState<TValues>(initialValues);
     const [submitCount, setSubmitCount] = useState<number>(0);
     const [globalErrors, setGlobalErrors] = useState<ErrorsMap>({});

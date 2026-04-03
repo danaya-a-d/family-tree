@@ -9,16 +9,16 @@ type NavMenuProps = {
 const NavMenu = ({ isMobile = false, onNavigate }: NavMenuProps) => {
     return (
         <nav
-            className={`${styles.mainNav} ${isMobile ? styles.mainNavMobile : ''}`}
+            className={`${styles.mainNav} ${isMobile ? styles.mainNavMobile : ''}`.trim()}
             aria-label='Main navigation'>
-            <ul className={`${styles.nav} ${isMobile ? styles.navMobile : ''}`}>
+            <ul className={`${styles.nav} ${isMobile ? styles.navMobile : ''}`.trim()}>
                 <li className={styles.navItem}>
                     <NavLink
                         to='/' end
                         className={({ isActive }) =>
                             `${styles.navLink} ${isMobile ? styles.navLinkMobile : ''} ${
                                 isActive ? styles.active : ''
-                            }`
+                            }`.trim()
                         }
                         onClick={onNavigate}>
                         Home
@@ -31,7 +31,7 @@ const NavMenu = ({ isMobile = false, onNavigate }: NavMenuProps) => {
                         className={({ isActive }) =>
                             `${styles.navLink} ${isMobile ? styles.navLinkMobile : ''} ${
                                 isActive ? styles.active : ''
-                            }`
+                            }`.trim()
                         }
                         onClick={onNavigate}>
                         Family tree
@@ -44,7 +44,7 @@ const NavMenu = ({ isMobile = false, onNavigate }: NavMenuProps) => {
                         className={({ isActive }) =>
                             `${styles.navLink} ${isMobile ? styles.navLinkMobile : ''} ${
                                 isActive ? styles.active : ''
-                            }`
+                            }`.trim()
                         }
                         onClick={onNavigate}>
                         My photos

@@ -61,13 +61,13 @@ const Toast = ({ id, message, onClose }: ToastProps) => {
             ${styles.toast}
             ${hide ? styles.show : ''}
             ${!show ? styles.hide : ''}
-            `}
+            `.trim()}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
             <div className={styles.content}>
                 <span className={styles.title}>{message}</span>
-                <button type="button" className={styles.close} onClick={handleClose}>
+                <button type='button' className={styles.close} onClick={handleClose}>
                     ×
                 </button>
             </div>

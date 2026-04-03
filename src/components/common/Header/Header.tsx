@@ -52,7 +52,7 @@ const Header = () => {
 
                 <button
                     type='button'
-                    className={`${styles.menuButton} ${isMenuOpen ? styles.menuButtonOpen : ''}`}
+                    className={`${styles.menuButton} ${isMenuOpen ? styles.menuButtonOpen : ''}`.trim()}
                     onClick={toggleMenu}
                     aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
                     aria-expanded={isMenuOpen}
@@ -66,7 +66,7 @@ const Header = () => {
 
             <div
                 id='mobile-menu'
-                className={`${styles.mobileMenu} ${isMenuOpen ? styles.mobileMenuOpen : ''}`}
+                className={`${styles.mobileMenu} ${isMenuOpen ? styles.mobileMenuOpen : ''}`.trim()}
             >
                 <div className={styles.mobileNav}>
                     <NavMenu isMobile onNavigate={closeMenu} />

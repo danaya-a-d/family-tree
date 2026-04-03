@@ -6,17 +6,17 @@ const FooterNav = () => {
         <div className={styles.mainNav}>
             <ul className={styles.nav}>
                 <li className={styles.navItem}>
-                    <Link to="/" className={styles.navLink}>
+                    <Link to='/' className={styles.navLink}>
                         Home
                     </Link>
                 </li>
                 <li className={styles.navItem}>
-                    <Link to="/" className={styles.navLink}>
+                    <Link to='/' className={styles.navLink}>
                         Family tree
                     </Link>
                 </li>
                 <li className={styles.navItem}>
-                    <Link to="/photo-album" className={styles.navLink}>
+                    <Link to='/photo-album' className={styles.navLink}>
                         My photos
                     </Link>
                 </li>

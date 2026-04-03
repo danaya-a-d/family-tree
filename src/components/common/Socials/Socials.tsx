@@ -7,16 +7,16 @@ import styles from './Socials.module.css';
 const Socials = () => {
     return (
         <div className={styles.socialsList}>
-            <Link to="/" className={styles.socialLink}>
-                <img className={styles.logo} src={instagramIcon} alt="Instagram" />
+            <Link to='/' className={styles.socialLink}>
+                <img className={styles.logo} src={instagramIcon} alt='Instagram' />
             </Link>
 
-            <Link to="/" className={styles.socialLink}>
-                <img className={styles.logo} src={facebookIcon} alt="Facebook" />
+            <Link to='/' className={styles.socialLink}>
+                <img className={styles.logo} src={facebookIcon} alt='Facebook' />
             </Link>
 
-            <Link to="/" className={styles.socialLink}>
-                <img className={styles.logo} src={twitterIcon} alt="Twitter" />
+            <Link to='/' className={styles.socialLink}>
+                <img className={styles.logo} src={twitterIcon} alt='Twitter' />
             </Link>
         </div>
     );

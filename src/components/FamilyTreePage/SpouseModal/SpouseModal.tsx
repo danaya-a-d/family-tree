@@ -57,7 +57,7 @@ const SpouseModal = ({ anchor, onClose }: RelativeModalProps) => {
                             return (
                                 <li
                                     key={`${s.familyId}-${s.spouseId ?? 'none'}`}
-                                    className={`${styles.spouse} ${s.familyId === activeFamilyId ? styles.spouseActive : ''}`}
+                                    className={`${styles.spouse} ${s.familyId === activeFamilyId ? styles.spouseActive : ''}`.trim()}
                                     role='button'
                                     tabIndex={0}
                                     onClick={(e) => {

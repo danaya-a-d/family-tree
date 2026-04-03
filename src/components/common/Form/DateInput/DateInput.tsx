@@ -137,7 +137,7 @@ const DateInput = ({
     );
 
     return (
-        <div className={`${styles.inputContainer} ${className ?? ''}`}>
+        <div className={`${styles.inputContainer} ${className ?? ''}`.trim()}>
             <div className={styles.inputWrapper}>
                 <label className={styles.label}>
                     <input

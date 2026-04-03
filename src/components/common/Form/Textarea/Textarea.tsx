@@ -12,7 +12,7 @@ const Textarea = ({ name, className, ...rest }: TextareaProps) => {
             <label className={styles.label}>
                 <textarea
                     name={name}
-                    className={`${styles.field} ${className ?? ''}`}
+                    className={`${styles.field} ${className ?? ''}`.trim()}
                     {...rest}
                 />
             </label>

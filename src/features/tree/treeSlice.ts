@@ -1,7 +1,7 @@
 import { createSlice, createEntityAdapter, type PayloadAction, type EntityState, nanoid } from '@reduxjs/toolkit';
 import { makeFamilyId, makePersonId } from './id';
 import { Person, Family, Id, AddRelativeContext } from './types';
-import { mockPersons, mockFamilies, mockRootPersonId } from '../../mock/tree';
+import { mockPersons, mockFamilies, mockRootPersonId } from '@/mock/tree';
 
 export const personsAdapter = createEntityAdapter<Person>({});
 export const familiesAdapter = createEntityAdapter<Family>({});
@@ -293,7 +293,7 @@ const treeSlice = createSlice({
 
         linkSpouses: (
             state,
-            action: PayloadAction<{ familyId: Id; spouseIds: Id[] }>
+            action: PayloadAction<{ familyId: Id; spouseIds: Id[] }>,
         ) => {
             const { familyId, spouseIds } = action.payload;
 
@@ -301,7 +301,7 @@ const treeSlice = createSlice({
             if (!fam) return;
 
             const nextSpouses: Id[] = [...new Set(spouseIds)].filter(
-                (id) => Boolean(state.persons.entities[id])
+                (id) => Boolean(state.persons.entities[id]),
             );
 
             fam.spouses = nextSpouses;
@@ -342,7 +342,7 @@ export const {
     setActiveSpouseFamily,
     linkSpouses,
     linkChild,
-    replaceTree
+    replaceTree,
 } = treeSlice.actions;
 
 export default treeSlice.reducer;

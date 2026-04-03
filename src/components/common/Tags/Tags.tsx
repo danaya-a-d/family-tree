@@ -10,7 +10,7 @@ interface TagsProps {
 
 const Tags = ({ tags, activeTags, toggleTag, className }: TagsProps) => {
     return (
-        <ul className={`${styles.tags} ${className}`}>
+        <ul className={`${styles.tags} ${className}`.trim()}>
             {tags.map((tag, index) => (
                 <Tag key={index} isActive={activeTags.includes(tag)} onClick={() => toggleTag(tag)}>
                     {tag}

@@ -7,7 +7,7 @@ interface SidePhotosProps {
 
 const SidePhotos = ({ imagePaths, leftSide = false }: SidePhotosProps) => {
     return (
-        <div className={`${leftSide ? styles.photoWrapper : styles.photoWrapperLeft}`}>
+        <div className={`${leftSide ? styles.photoWrapper : styles.photoWrapperLeft}`.trim()}>
             {imagePaths.map((path, index) => (
                 <img className={styles.photo} key={index} src={path} alt={`Side photo ${index + 1}`} />
             ))}
