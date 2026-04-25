@@ -36,17 +36,19 @@ const DateInput = ({
                        onError,
                    }: DateInputProps) => {
     const current: PartialDate = value ?? {};
+    const valueYear = value?.y;
+    const valueMonth = value?.m;
+    const valueDay = value?.d;
 
     const [year, setYear] = useState('');
     const [month, setMonth] = useState('');
     const [day, setDay] = useState('');
 
     useEffect(() => {
-        const v = value ?? {};
-        setYear(v.y != null ? v.y.toString() : '');
-        setMonth(formatTwoDigits(v.m));
-        setDay(formatTwoDigits(v.d));
-    }, [value?.y, value?.m, value?.d]);
+        setYear(valueYear != null ? valueYear.toString() : '');
+        setMonth(formatTwoDigits(valueMonth));
+        setDay(formatTwoDigits(valueDay));
+    }, [valueYear, valueMonth, valueDay]);
 
     const update = (patch: Partial<PartialDate>) => {
         setValue(name, { ...current, ...patch });

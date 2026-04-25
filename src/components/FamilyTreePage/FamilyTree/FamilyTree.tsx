@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ReactFlow, Controls, type Node, type Edge, ReactFlowInstance } from '@xyflow/react';
 import { useDispatch, useSelector, useStore } from 'react-redux';
 import { layoutWithELK } from '@/features/tree/layout/elk';
@@ -14,6 +14,12 @@ import Title from '@/components/common/Title/Title';
 import PersonSearchBar from '@/components/common/PersonSearchBar/PersonSearchBar';
 import ExportModal from '@/components/FamilyTreePage/ExportModal/ExportModal';
 import styles from './FamilyTree.module.css';
+
+type TreeEdgeData = {
+    role?: 'spouse' | 'child';
+};
+
+const getEdgeRole = (edge: Edge) => (edge.data as TreeEdgeData | undefined)?.role;
 
 const FamilyTree = () => {
     const graph = useSelector(selectGraph);
@@ -48,7 +54,7 @@ const FamilyTree = () => {
         });
     };
 
-    const applyLayout = async () => {
+    const applyLayout = useCallback(async () => {
         const posMap = await layoutWithELK(graph.nodes, graph.edges);
 
         // Node size
@@ -63,7 +69,7 @@ const FamilyTree = () => {
         // Center each family between spouses on the X and Y axes (using card centers)
         for (const family of graph.nodes.filter(n => n.type === 'family')) {
             const spouseEdges = graph.edges.filter(
-                (e) => e.target === family.id && (e.data as any)?.role === 'spouse',
+                (e) => e.target === family.id && getEdgeRole(e) === 'spouse',
             );
             if (spouseEdges.length === 2) {
                 const [e1, e2] = spouseEdges;
@@ -108,7 +114,7 @@ const FamilyTree = () => {
         // Edge handles to make the line start from the correct side of the card
         const enhancedEdges: Edge[] = graph.edges.map((e) => {
 
-            const role = (e.data as any)?.role as 'spouse' | 'child' | undefined;
+            const role = getEdgeRole(e);
 
             if (role === 'spouse') {
                 const sW = PERSON_SIZE.width;
@@ -161,7 +167,7 @@ const FamilyTree = () => {
             requestAnimationFrame(() => rf?.fitView({ padding: 0.2 }));
         }
 
-    };
+    }, [graph, rf, rootPersonId]);
 
     useEffect(() => {
         if (!rf) return;
@@ -173,7 +179,7 @@ const FamilyTree = () => {
         }
 
         void applyLayout();
-    }, [rf, graph, rootPersonId]);
+    }, [rf, graph.nodes.length, applyLayout]);
 
     const nodeTypes = useMemo(
         () => ({
