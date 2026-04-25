@@ -1,12 +1,9 @@
 import { memo } from 'react';
-import { Handle, Position, type Node as RFNode, type NodeProps } from '@xyflow/react';
+import { Handle, Position } from '@xyflow/react';
 import { FAMILY_SIZE } from '@/components/common/constants';
 import styles from './FamilyNode.module.css';
 
-type FamilyData = { familyId: string };
-type RFFamilyNode = RFNode<FamilyData>;
-
-const FamilyNode = (_: NodeProps<RFFamilyNode>) => {
+const FamilyNode = () => {
     return (
         <div className={styles.node}
             style={{

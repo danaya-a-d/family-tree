@@ -32,16 +32,17 @@ const LifeEventDateField = ({
                             }: LifeEventDateFieldProps) => {
 
     const currentMod: DateModifier = value?.mod ?? 'exact';
+    const betweenTo = value?.mod === 'between' ? value.to : undefined;
 
     const [cachedTo, setCachedTo] = useState<PartialDate | undefined>(
         () => value && value.mod === 'between' ? value.to : undefined,
     );
 
     useEffect(() => {
-        if (value && value.mod === 'between') {
-            setCachedTo(value.to);
+        if (currentMod === 'between') {
+            setCachedTo(betweenTo);
         }
-    }, [value?.mod === 'between' ? value?.to : undefined]);
+    }, [currentMod, betweenTo]);
 
     const handleModifierChange = (nextValue: string) => {
         const mod = nextValue as DateModifier;

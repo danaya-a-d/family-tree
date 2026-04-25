@@ -1,18 +1,13 @@
 import type { Node, Edge } from '@xyflow/react';
-import ELK from 'elkjs/lib/elk.bundled.js';
+import ELK, { type ElkExtendedEdge, type ElkNode } from 'elkjs/lib/elk.bundled.js';
 
 type Pos = { x: number; y: number };
 
-type ElkNode = {
-    id: string;
-    width?: number;
-    height?: number;
-    x?: number;
-    y?: number;
-    children?: ElkNode[];
-    layoutOptions?: Record<string, string>;
+type TreeEdgeData = {
+    role?: 'spouse' | 'child';
 };
-type ElkEdge = { id: string; sources: string[]; targets: string[] };
+
+const getEdgeRole = (edge: Edge) => (edge.data as TreeEdgeData | undefined)?.role;
 
 export async function layoutWithELK(
     nodes: Node[],
@@ -44,7 +39,7 @@ export async function layoutWithELK(
     // Collect spouse edges
     const spouseEdgesByFamily = new Map<string, Edge[]>();
     for (const e of edges) {
-        const role = (e.data as any)?.role;
+        const role = getEdgeRole(e);
         if (role !== 'spouse') continue;
 
         const familyId = e.target;
@@ -110,14 +105,14 @@ export async function layoutWithELK(
         });
     }
 
-    const elkEdges: ElkEdge[] = edges.map((e) => ({
+    const elkEdges: ElkExtendedEdge[] = edges.map((e) => ({
         id: e.id,
         sources: [e.source],
         targets: [e.target],
     }));
 
     // Root graph
-    const graph: ElkNode & { edges: ElkEdge[] } = {
+    const graph: ElkNode = {
         id: 'root',
         layoutOptions: { ...baseLayoutOptions, ...(opts ?? {}) },
         children: elkChildrenTop,
@@ -125,7 +120,7 @@ export async function layoutWithELK(
     };
 
     // Run the layout
-    const res = await elk.layout(graph as any);
+    const res = await elk.layout(graph);
 
     const map: Record<string, Pos> = {};
 
@@ -142,7 +137,7 @@ export async function layoutWithELK(
         }
     };
 
-    walk(res as any, 0, 0);
+    walk(res, 0, 0);
 
     return map;
 }

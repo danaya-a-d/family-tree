@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import type { FormValues, ErrorsMap, Validate, FormValue } from '../components/common/ui.types';
 
@@ -26,11 +26,14 @@ export const useForm = <TValues extends FormValues = FormValues>({
     const [values, setValues] = useState<TValues>(initialValues);
     const [submitCount, setSubmitCount] = useState<number>(0);
     const [globalErrors, setGlobalErrors] = useState<ErrorsMap>({});
+    const initialValuesRef = useRef(initialValues);
+    initialValuesRef.current = initialValues;
+    const initialValuesKey = JSON.stringify(initialValues);
 
     // Watch for changes in initialValues and update values
     useEffect(() => {
-        setValues(initialValues);
-    }, [JSON.stringify(initialValues)]);
+        setValues(initialValuesRef.current);
+    }, [initialValuesKey]);
 
     // Update text inputs
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
