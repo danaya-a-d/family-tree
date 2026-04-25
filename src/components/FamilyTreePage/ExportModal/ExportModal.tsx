@@ -1,21 +1,22 @@
-import { ChangeEventHandler, useRef } from 'react';
+import type { ChangeEventHandler } from 'react';
+import { useRef } from 'react';
 import { useDispatch, useStore } from 'react-redux';
 import Modal from '../../common/Modal/Modal';
 import Button from '@/components/common/Button/Button';
 import type { RootState } from '@/app/store';
-import type { TreeState } from '@/features/tree/treeSlice';
 import { replaceTree } from '@/features/tree/treeSlice';
+import { exportGedcom, importGedcom } from '@/features/tree/gedcom';
+import { embedRemotePortraits } from './embedRemotePortraits';
+import { showToastMessages } from './showToastMessages';
 import styles from './ExportModal.module.css';
 
 interface ExportModalProps {
     onClose: () => void;
 }
 
-type ExportFile = {
-    schemaVersion: 1;
-    exportedAt: string;
-    tree: TreeState;
-};
+const GEDCOM_ACCEPT = '.ged,.gedcom,text/plain,application/x-gedcom,text/x-gedcom';
+const GEDCOM_BLOB_TYPE = 'text/plain;charset=utf-8';
+const GEDCOM_FILE_NAME = 'family-tree.ged';
 
 const ExportModal = ({ onClose }: ExportModalProps) => {
     const dispatch = useDispatch();
@@ -24,20 +25,19 @@ const ExportModal = ({ onClose }: ExportModalProps) => {
 
     const doExport = () => {
         const state = store.getState();
+        const result = exportGedcom(state.tree);
 
-        const payload: ExportFile = {
-            schemaVersion: 1,
-            exportedAt: new Date().toISOString(),
-            tree: state.tree,
-        };
+        if (result.warnings.length > 0) {
+            console.warn('GEDCOM export warnings', result.warnings);
+            showToastMessages(['Some details could not be exported']);
+        }
 
-        const json = JSON.stringify(payload, null, 2);
-        const blob = new Blob([json], { type: 'application/json' });
+        const blob = new Blob([result.data], { type: GEDCOM_BLOB_TYPE });
 
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'family-tree.json';
+        a.download = GEDCOM_FILE_NAME;
         a.click();
         URL.revokeObjectURL(url);
     };
@@ -51,21 +51,37 @@ const ExportModal = ({ onClose }: ExportModalProps) => {
 
         try {
             const text = await file.text();
-            const parsed = JSON.parse(text) as Partial<ExportFile>;
+            const result = importGedcom(text);
 
-            if (parsed?.schemaVersion !== 1 || !parsed.tree) {
-                alert('Invalid file format');
-                return;
-            }
-            if (!parsed.tree.persons || !parsed.tree.families || !parsed.tree.activeSpouseFamily) {
-                alert('Invalid tree data');
+            if (result.error) {
+                showToastMessages(['Could not import this GEDCOM file']);
                 return;
             }
 
-            dispatch(replaceTree(parsed.tree));
+            const portraitResult = await embedRemotePortraits(result.data);
+
+            dispatch(replaceTree(portraitResult.tree));
+
+            if (result.warnings.length > 0) {
+                console.warn('GEDCOM import warnings', result.warnings);
+            }
+
+            if (portraitResult.warnings.length > 0) {
+                console.warn('GEDCOM portrait embedding warnings', portraitResult.warnings);
+            }
+
+            showToastMessages([
+                result.warnings.length > 0
+                    ? 'Some GEDCOM details could not be imported'
+                    : '',
+                    portraitResult.warnings.length > 0
+                        ? 'Some portraits could not be saved'
+                        : '',
+            ]);
+
             onClose();
         } catch {
-            alert('Failed to import file');
+            showToastMessages(['Could not import this GEDCOM file']);
         }
     };
 
@@ -94,7 +110,7 @@ const ExportModal = ({ onClose }: ExportModalProps) => {
                     <input
                         ref={fileRef}
                         type="file"
-                        accept="application/json"
+                        accept={GEDCOM_ACCEPT}
                         style={{ display: 'none' }}
                         onChange={onImportFile}
                     />
