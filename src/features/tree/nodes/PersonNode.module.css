@@ -23,6 +23,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    max-width: 155px;
     padding-top: 5px;
     padding-bottom: 5px;
     font-size: 14px;
@@ -32,8 +33,9 @@
 .photo {
     width: 68px;
     height: 68px;
-    box-shadow: 0 1px 3px rgba(180, 120, 130, 0.25);
+    flex-shrink: 0;
     border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(180, 120, 130, 0.25);
     overflow: hidden;
 }
 
@@ -46,6 +48,8 @@
 .name {
     display: flex;
     flex-direction: column;
+    max-height: 36px;
+    overflow: hidden;
     font-weight: 500;
     line-height: 1.2;
 }
