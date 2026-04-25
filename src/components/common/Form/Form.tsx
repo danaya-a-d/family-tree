@@ -71,7 +71,7 @@ const Form = <TValues extends FormValues = FormValues>({
         };
 
         const assertNever = (x: never): never => {
-            throw new Error('Unknown field type');
+            throw new Error(`Unknown field type: ${x}`);
         };
 
         switch (field.type) {
@@ -240,7 +240,7 @@ const Form = <TValues extends FormValues = FormValues>({
 
             {buttons && buttons.length > 0 && (
                 <div className={styles.buttons}>
-                    {buttons.map((button, index) => (
+                    {buttons.map((button) => (
                         <Button
                             key={`${button.type}-${button.label}`}
                             type={button.type}
