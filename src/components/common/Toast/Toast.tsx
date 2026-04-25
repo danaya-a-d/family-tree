@@ -35,7 +35,7 @@ const Toast = ({ id, message, onClose }: ToastProps) => {
         const node = nodeRef.current;
         if (!node) return;
 
-        const handleTransitionEnd = (e) => {
+        const handleTransitionEnd = () => {
             onClose(id);
         };
 

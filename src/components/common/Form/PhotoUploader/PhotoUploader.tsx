@@ -38,7 +38,7 @@ const PhotoUploader = ({ name, value, className, onChange }: PhotoUploaderProps)
             const file = acceptedFiles[0];
 
             const reader = new FileReader();
-            reader.onload = (e) => {
+            reader.onload = () => {
                 const result = reader.result as string;
 
                 lastLocalUploadRef.current = result;

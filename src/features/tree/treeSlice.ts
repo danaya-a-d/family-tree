@@ -50,10 +50,6 @@ const addUnique = (arr: Id[], id: Id) => {
     if (!arr.includes(id)) arr.push(id);
 };
 
-const addManyUnique = (arr: Id[], ids: Id[]) => {
-    for (const id of ids) if (!arr.includes(id)) arr.push(id);
-};
-
 const removeFrom = (arr: Id[], id: Id) => {
     const i = arr.indexOf(id);
     if (i >= 0) arr.splice(i, 1);

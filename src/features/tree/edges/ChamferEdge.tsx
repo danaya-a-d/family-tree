@@ -51,7 +51,6 @@ export default memo(function ChamferEdge(p: EdgeProps) {
 
     // CHILDREN CASE
     const dx = targetX - sourceX;
-    const dy = targetY - sourceY;
 
     // Nearly vertical line - draw as a straight line
     if (Math.abs(dx) <= 2) {
