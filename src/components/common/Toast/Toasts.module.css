@@ -1,4 +1,7 @@
 .list {
+    /* Keep app toasts above modal overlays, which use z-index: 2000. */
+    --toast-layer: 2100;
+
     position: fixed;
     top: 24px;
     left: 50%;
@@ -9,7 +12,8 @@
     margin: 0;
     padding: 20px;
     list-style: none;
-    z-index: 1000;
+    z-index: var(--toast-layer);
+    pointer-events: none;
 
     @media (--tablet-lg) {
         width: 400px;
