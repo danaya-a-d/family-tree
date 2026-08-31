@@ -9,6 +9,7 @@ type ModalProps = PropsWithChildren<{
     className?: string;
     overlaySize?: OverlaySize;
     btnClose?: boolean;
+    closeDisabled?: boolean;
     inline?: boolean;
     target?: HTMLElement | null;
 }>;
@@ -25,51 +26,67 @@ const getDefaultTarget = () => {
 };
 
 const Modal = ({
-                   children,
-                   onClose,
-                   className,
-                   overlaySize = 'small',
-                   btnClose = false,
-                   inline = false,
-                   target,
-               }: ModalProps) => {
-
+    children,
+    onClose,
+    className,
+    overlaySize = 'small',
+    btnClose = false,
+    closeDisabled = false,
+    inline = false,
+    target,
+}: ModalProps) => {
     const portalTarget = target ?? getDefaultTarget();
 
     useEffect(() => {
-        const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === 'Escape' && !closeDisabled) {
+                onClose();
+            }
+        };
+
         window.addEventListener('keydown', onKey);
+
         const prev = document.body.style.overflow;
         document.body.style.overflow = 'hidden';
+
         return () => {
             window.removeEventListener('keydown', onKey);
             document.body.style.overflow = prev;
         };
-    }, [onClose]);
+    }, [onClose, closeDisabled]);
 
+    // Close on the overlay
     const handleOverlayClick = (e: MouseEvent<HTMLDivElement>): void => {
-        if (e.target === e.currentTarget) onClose(); // Close on the overlay
+        if (!closeDisabled && e.target === e.currentTarget) {
+            onClose();
+        }
     };
 
     const content = (
-        <div className={`
+        <div
+            className={`
                         ${styles.overlay}
                         ${styles[overlaySize]} 
                         `.trim()}
-             onClick={handleOverlayClick}>
+            onClick={handleOverlayClick}
+        >
             <div className={styles.backdrop} />
 
-            <div className={styles.modal} role='dialog' aria-modal='true'>
-                {btnClose && (
-                    <button className={styles.modalClose} onClick={onClose} aria-label='Close'>
+            <div className={styles.modal} role="dialog" aria-modal="true">
+                {btnClose && !closeDisabled && (
+                    <button className={styles.modalClose} onClick={onClose} aria-label="Close">
                         Close
                     </button>
                 )}
 
-                <div className={`
+                <div
+                    className={`
                         ${styles.modalContent}
                         ${className} 
-                        `.trim()}>{children}</div>
+                        `.trim()}
+                >
+                    {children}
+                </div>
             </div>
         </div>
     );

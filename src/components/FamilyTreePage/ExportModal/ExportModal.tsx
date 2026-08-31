@@ -1,5 +1,5 @@
 import type { ChangeEventHandler } from 'react';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useDispatch, useStore } from 'react-redux';
 import Modal from '../../common/Modal/Modal';
 import Button from '@/components/common/Button/Button';
@@ -22,6 +22,7 @@ const ExportModal = ({ onClose }: ExportModalProps) => {
     const dispatch = useDispatch();
     const store = useStore<RootState>();
     const fileRef = useRef<HTMLInputElement | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const doExport = () => {
         const state = store.getState();
@@ -47,7 +48,10 @@ const ExportModal = ({ onClose }: ExportModalProps) => {
     const onImportFile: ChangeEventHandler<HTMLInputElement> = async (e) => {
         const file = e.target.files?.[0];
         e.target.value = '';
+
         if (!file) return;
+
+        setIsLoading(true);
 
         try {
             const text = await file.text();
@@ -71,41 +75,55 @@ const ExportModal = ({ onClose }: ExportModalProps) => {
             }
 
             showToastMessages([
-                result.warnings.length > 0
-                    ? 'Some GEDCOM details could not be imported'
-                    : '',
-                    portraitResult.warnings.length > 0
-                        ? 'Some portraits could not be saved'
-                        : '',
+                result.warnings.length > 0 ? 'Some GEDCOM details could not be imported' : '',
+                portraitResult.warnings.length > 0 ? 'Some portraits could not be saved' : '',
             ]);
 
             onClose();
         } catch {
             showToastMessages(['Could not import this GEDCOM file']);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     return (
-        <Modal onClose={onClose} btnClose>
-            <div className={styles.exportModal}>
+        <Modal
+            onClose={onClose}
+            btnClose
+            closeDisabled={isLoading}
+        >
+            <div
+                className={styles.exportModal}
+                aria-busy={isLoading}
+            >
                 <div className={styles.wrapper}>
-                    <Button
-                        type="button"
-                        style="red"
-                        actionType="button"
-                        onClick={doExport}
-                    >
-                        Export family tree
-                    </Button>
+                    {isLoading ? (
+                        <div className={styles.loaderWrapper}>
+                            <div className={styles.loader} />
+                            <span>Just a moment, your family tree is loading...</span>
+                        </div>
+                    ) : (
+                        <>
+                            <Button
+                                type="button"
+                                style="red"
+                                actionType="button"
+                                onClick={doExport}
+                            >
+                                Export family tree
+                            </Button>
 
-                    <Button
-                        type="button"
-                        style="red"
-                        actionType="button"
-                        onClick={doImportClick}
-                    >
-                        Import family tree
-                    </Button>
+                            <Button
+                                type="button"
+                                style="red"
+                                actionType="button"
+                                onClick={doImportClick}
+                            >
+                                Import family tree
+                            </Button>
+                        </>
+                    )}
 
                     <input
                         ref={fileRef}
