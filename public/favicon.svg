@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 33 561 561" role="img" aria-labelledby="title desc">
+  <title id="title">My Roots ornament favicon</title>
+  <desc id="desc">An adaptive red and black geometric folk ornament.</desc>
+  <style>
+    .ink { fill: url(#black); }
+    @media (prefers-color-scheme: dark) {
+      .ink { fill: #fffaf5; }
+    }
+  </style>
+  <defs>
+    <linearGradient id="red" x1="90" y1="75" x2="455" y2="565" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#d51a24"/>
+      <stop offset="1" stop-color="#a70e17"/>
+    </linearGradient>
+    <linearGradient id="black" x1="80" y1="100" x2="470" y2="550" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#202020"/>
+      <stop offset="1" stop-color="#111111"/>
+    </linearGradient>
+    <path id="cross" d="M-9-34H9v11h13v11h12v24H22v11H9v11H-9V23h-13V12h-12v-24h12v-11H-9Z"/>
+  </defs>
+
+  <g class="ink">
+    <path d="M151 104h23v24h22v25h23v25h22v25h-90ZM63 202h88v117h-24v-24h-21v-22H84v-23H63Z"/>
+    <path d="M416 104h-23v24h-22v25h-23v25h-22v25h90ZM504 202h-88v117h24v-24h21v-22h22v-23h21Z"/>
+    <path d="M63 464v-24h21v-23h22v-23h22v-23h23v93ZM151 464h90v23h-22v24h-23v24h-22v24h-23Z"/>
+    <path d="M504 464v-24h-21v-23h-22v-23h-22v-23h-23v93ZM416 464h-90v23h22v24h23v24h22v24h23Z"/>
+  </g>
+
+  <g fill="url(#red)" fill-rule="evenodd">
+    <path d="M151 203h116v116H151ZM176 228h19v19h-19Zm19 19h19v19h-19Zm19 19h19v19h-19Z"/>
+    <path d="M300 203h116v116H300ZM371 228h19v19h-19Zm-19 19h19v19h-19Zm-19 19h19v19h-19Z"/>
+    <path d="M151 348h116v116H151ZM214 373h19v19h-19Zm-19 19h19v19h-19Zm-19 19h19v19h-19Z"/>
+    <path d="M300 348h116v116H300ZM325 373h19v19h-19Zm19 19h19v19h-19Zm19 19h19v19h-19Z"/>
+  </g>
+
+  <g fill="url(#red)">
+    <use href="#cross" xlink:href="#cross" transform="translate(283.5 106)"/>
+    <use href="#cross" xlink:href="#cross" transform="translate(73 334)"/>
+    <use href="#cross" xlink:href="#cross" transform="translate(283.5 334) scale(.86)"/>
+    <use href="#cross" xlink:href="#cross" transform="translate(494 334)"/>
+    <use href="#cross" xlink:href="#cross" transform="translate(283.5 548)"/>
+  </g>
+</svg>
