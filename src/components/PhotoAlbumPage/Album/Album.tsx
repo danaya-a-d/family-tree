@@ -13,8 +13,8 @@ interface AlbumProps {
 }
 
 const Album = ({ tags, photos }: AlbumProps) => {
-    const [activeTags, setActiveTags] = useState([]);
-    const [activePhoto, setActivePhoto] = useState(null);
+    const [activeTags, setActiveTags] = useState<Tag[]>([]);
+    const [activePhoto, setActivePhoto] = useState<PhotoItem | null>(null);
     const [isAddOpen, setIsAddOpen] = useState(false);
 
     // Tags filter
