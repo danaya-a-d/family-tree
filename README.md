@@ -8,8 +8,6 @@ The project includes a landing page, a family tree page, and a photo album page.
 
 ## Screenshots
 
-> Store screenshots in a `screenshots` folder inside the repository and link them like this:
-
 ![Home page](./screenshots/home-page.png)
 ![Family tree page](./screenshots/tree-page.png)
 ![Photo album page](./screenshots/album-page.png)
@@ -22,7 +20,7 @@ The project includes a landing page, a family tree page, and a photo album page.
 - Add and edit relationships, including marriages
 - Support for multiple spouses and active family branch switching
 - Structured date input with date modifiers
-- Basic JSON import and export for tree data
+- GEDCOM import and export for tree data
 - Built-in photo album with tag-based filtering
 - Add, edit, and delete photos
 - Responsive design for desktop and mobile
@@ -37,8 +35,10 @@ The project includes a landing page, a family tree page, and a photo album page.
 - ELK.js
 - Vite
 - CSS Modules
+- Vitest
 - ESLint
 - Prettier
+- GitHub Actions
 - Figma
 
 ## Project Overview
@@ -72,3 +72,5 @@ npm run build
 npm run preview
 npm run lint
 npm run typecheck
+npm run test
+```
