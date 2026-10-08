@@ -234,7 +234,7 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
             familyName: values.lastName,
             maidenName: values.maidenName,
             gender: values.gender,
-            portrait: values.portrait,
+            portrait: values.portrait ?? undefined,
             lifeStatus: values.lifeState,
             birth: makeLifeEvent(values.dateOfBirth, values.placeOfBirth),
             death: values.lifeState === 'deceased'
