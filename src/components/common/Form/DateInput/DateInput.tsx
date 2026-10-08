@@ -7,7 +7,7 @@ interface DateInputProps {
     name: string;
     className?: string;
     value?: PartialDate;
-    setValue?: (name: string, value: PartialDate) => void;
+    setValue: (name: string, value: PartialDate) => void;
     onError?: (msg: string) => void;
 }
 
