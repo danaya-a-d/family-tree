@@ -12,7 +12,7 @@ const getEdgeRole = (edge: Edge) => (edge.data as TreeEdgeData | undefined)?.rol
 export async function layoutWithELK(
     nodes: Node[],
     edges: Edge[],
-    opts?: Partial<Record<string, string>>,
+    opts?: Record<string, string>,
 ): Promise<Record<string, Pos>> {
 
     const elk = new ELK();

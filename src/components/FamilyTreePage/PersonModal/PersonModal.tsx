@@ -35,11 +35,11 @@ type PersonFormValues = {
     gender: Gender;
     portrait: string | null;
 
-    dateOfBirth: LifeEventDate;
+    dateOfBirth?: LifeEventDate;
     placeOfBirth: LifeEvent['place'];
 
     lifeState: LifeState;
-    dateOfDeath: LifeEventDate;
+    dateOfDeath?: LifeEventDate;
     placeOfDeath: LifeEvent['place'];
 
     parentFamilyId?: Id | '';
@@ -171,7 +171,7 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
             firstName: '',
             lastName: '',
             maidenName: '',
-            gender: GENDER_BY_KIND[addContext.kind] ?? 'unknown',
+            gender: (addContext && GENDER_BY_KIND[addContext.kind]) ?? 'unknown',
             portrait: null,
 
             lifeState: 'unknown',
@@ -254,13 +254,6 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
                 : undefined,
         };
 
-        const ctxForDispatch: AddRelativeContext =
-            isAddChild && values.parentFamilyId
-                ? { ...addContext, familyId: values.parentFamilyId }
-                : isAddSpouse && values.spouseAttachFamilyId
-                    ? { ...addContext, familyId: values.spouseAttachFamilyId }
-                    : addContext;
-
         if (isEdit) {
             const draftsToSave: Record<Id, SpouseDraft> = { ...spouseDrafts };
 
@@ -299,6 +292,13 @@ const PersonModal = ({ person, addContext, onClose }: PersonModalProps) => {
                 }),
             );
         } else if (isAddRelative) {
+            const ctxForDispatch: AddRelativeContext =
+                isAddChild && values.parentFamilyId
+                    ? { ...addContext, familyId: values.parentFamilyId }
+                    : isAddSpouse && values.spouseAttachFamilyId
+                        ? { ...addContext, familyId: values.spouseAttachFamilyId }
+                        : addContext;
+
             dispatch(
                 addPersonWithRelation({
                     person: basePerson,
