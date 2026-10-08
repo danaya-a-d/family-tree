@@ -7,7 +7,7 @@ interface TagsInputProps {
     value?: string[];
     placeholder?: string;
     className?: string;
-    setValue?: (name: string, value: string[]) => void;
+    setValue: (name: string, value: string[]) => void;
     onError?: (msg: string) => void;
 }
 

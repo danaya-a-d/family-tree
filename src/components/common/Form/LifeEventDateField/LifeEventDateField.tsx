@@ -50,7 +50,7 @@ const LifeEventDateField = ({
 
         if (mod === 'between') {
             const to = cachedTo ?? (value && 'to' in value ? value.to : undefined);
-            const next: LifeEventDate = { mod: 'between', from, to };
+            const next: LifeEventDate = { mod: 'between', from, to: to ?? {} };
             onChange(next);
         } else {
             const next: LifeEventDate = { mod, from };

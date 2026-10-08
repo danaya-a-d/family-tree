@@ -43,7 +43,7 @@ const PhotoModal = ({ photo, onClose }: PhotoModalProps) => {
         {
             id: 2,
             name: 'Open full',
-            href: photo.bigPath,
+            href: photo.bigPath ?? photo.path,
         },
         {
             id: 3,

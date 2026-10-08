@@ -35,8 +35,10 @@ The project includes a landing page, a family tree page, and a photo album page.
 - ELK.js
 - Vite
 - CSS Modules
+- Vitest
 - ESLint
 - Prettier
+- GitHub Actions
 - Figma
 
 ## Project Overview

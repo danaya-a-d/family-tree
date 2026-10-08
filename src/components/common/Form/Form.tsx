@@ -152,7 +152,7 @@ const Form = <TValues extends FormValues = FormValues>({
                 return (
                     <RadioGroup
                         {...commonProps}
-                        options={field.options}
+                        options={field.options ?? []}
                         value={(values[field.name] as string) ?? ''}
                         onChange={(v) => {
                             setCustomValue(field.name, v);
@@ -171,7 +171,7 @@ const Form = <TValues extends FormValues = FormValues>({
                 return (
                     <Select
                         {...commonProps}
-                        selectors={field.selectors}
+                        selectors={field.selectors ?? []}
                         value={(values[field.name] as string) ?? ''}
                         onChange={(v) => {
                             setCustomValue(field.name, v);
@@ -190,7 +190,7 @@ const Form = <TValues extends FormValues = FormValues>({
                 return (
                     <SelectPerson
                         {...commonProps}
-                        selectors={field.selectors}
+                        selectors={field.selectors ?? []}
                         value={(values[field.name] as string) ?? ''}
                         onChange={(v) => {
                             setCustomValue(field.name, v);
@@ -210,7 +210,7 @@ const Form = <TValues extends FormValues = FormValues>({
                     <PhotoUploader
                         {...commonProps}
                         value={(values[field.name] as string) || null}
-                        onChange={(base64: string) => setCustomValue(field.name, base64)}
+                        onChange={(base64) => setCustomValue(field.name, base64)}
                     />
                 );
             }

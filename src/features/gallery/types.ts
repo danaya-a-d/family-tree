@@ -8,7 +8,7 @@ export type PhotoItem = {
     alt: string;
     bigPath?: string;
     title?: string;
-    tags?: Tag[];
+    tags: Tag[];
 };
 
 export interface GalleryState {

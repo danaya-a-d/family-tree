@@ -16,7 +16,7 @@ export const firstChild = (node: TreeNode, tag: string): TreeNode | undefined =>
     childTags(node, tag)[0];
 
 export const childValue = (node: TreeNode | undefined, tag: string): string | undefined =>
-    firstChild(node, tag)?.value?.trim() || undefined;
+    node ? firstChild(node, tag)?.value?.trim() || undefined : undefined;
 
 export const normalizePointer = (pointer: string | null | undefined): string | undefined =>
     pointer?.trim() || undefined;

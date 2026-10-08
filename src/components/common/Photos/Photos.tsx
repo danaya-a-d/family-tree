@@ -4,13 +4,13 @@ import styles from './Photos.module.css';
 
 type PhotoForList = Pick<PhotoItem, 'path' | 'alt'>;
 
-interface PhotosProps {
-    photos: PhotoForList[];
-    onPhotoClick: (photo: PhotoForList) => void;
+interface PhotosProps<T extends PhotoForList> {
+    photos: T[];
+    onPhotoClick: (photo: T) => void;
     className?: string;
 }
 
-const Photos = ({ photos, onPhotoClick, className }: PhotosProps) => {
+const Photos = <T extends PhotoForList>({ photos, onPhotoClick, className }: PhotosProps<T>) => {
     return (
         <ul className={`${styles.photos} ${className}`.trim()}>
             {photos.map((photo, index) => (

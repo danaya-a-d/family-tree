@@ -143,7 +143,6 @@ export const mockPersons: Person[] = [
             place: 'Prague',
         },
         death: null,
-        portrait: null,
     },
     {
         id: 'p7',
@@ -159,7 +158,6 @@ export const mockPersons: Person[] = [
             place: 'Prague',
         },
         death: null,
-        portrait: null,
     },
     {
         id: 'p8',
@@ -191,7 +189,6 @@ export const mockPersons: Person[] = [
             place: 'Bristol',
         },
         death: null,
-        portrait: null,
     },
 
     // Чешская ветка Oksana
@@ -215,7 +212,6 @@ export const mockPersons: Person[] = [
             },
             place: 'Prague',
         },
-        portrait: null,
     },
     {
         id: 'p10',
@@ -283,7 +279,6 @@ export const mockPersons: Person[] = [
             },
             place: 'Prague',
         },
-        portrait: null,
     },
     {
         id: 'p13',
@@ -306,7 +301,6 @@ export const mockPersons: Person[] = [
             },
             place: 'Olomouc',
         },
-        portrait: null,
     },
     {
         id: 'p14',
@@ -344,7 +338,6 @@ export const mockPersons: Person[] = [
             place: 'Prague',
         },
         death: null,
-        portrait: null,
     },
     {
         id: 'p16',
@@ -376,7 +369,6 @@ export const mockPersons: Person[] = [
             place: 'Prague',
         },
         death: null,
-        portrait: null,
     },
     {
         id: 'p25',
@@ -398,7 +390,6 @@ export const mockPersons: Person[] = [
             },
             place: 'Jihlava',
         },
-        portrait: null,
     },
     {
         id: 'p26',
@@ -421,7 +412,6 @@ export const mockPersons: Person[] = [
             },
             place: 'Vysočina Region',
         },
-        portrait: null,
     },
 
     // Английская ветка Chloe
@@ -445,7 +435,6 @@ export const mockPersons: Person[] = [
             },
             place: 'Bath',
         },
-        portrait: null,
     },
     {
         id: 'p19',
@@ -468,7 +457,6 @@ export const mockPersons: Person[] = [
             },
             place: 'Bath',
         },
-        portrait: null,
     },
     {
         id: 'p20',
@@ -523,7 +511,6 @@ export const mockPersons: Person[] = [
             place: 'Bristol',
         },
         death: null,
-        portrait: null,
     },
 
     // Дополнительные связи
@@ -547,7 +534,6 @@ export const mockPersons: Person[] = [
             },
             place: 'York',
         },
-        portrait: null,
     },
     {
         id: 'p24',
@@ -563,7 +549,6 @@ export const mockPersons: Person[] = [
             place: 'Leeds',
         },
         death: null,
-        portrait: null,
     },
 ];
 

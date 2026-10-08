@@ -49,7 +49,7 @@ const PersonNode = ({ id, data, selected }: NodeProps<RFPersonNode>) => {
 
     const birth = formatPartialDate(person?.birth?.date?.from);
     const death = formatPartialDate(person?.death?.date?.from);
-    const lifeStatus = person?.lifeStatus;
+    const lifeStatus = person?.lifeStatus ?? 'unknown';
 
     const photo = person?.portrait || getDefaultPortrait(person?.gender);
 

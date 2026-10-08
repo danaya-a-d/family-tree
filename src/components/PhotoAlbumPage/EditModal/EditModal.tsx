@@ -30,6 +30,9 @@ const EditModal = ({ photo, onClose }: EditModalProps) => {
     };
 
     const handleSubmit = (values: EditFormValues) => {
+
+        if (!values.photo) return;
+
         const newPhoto = {
             ...values,
             alt: values.title,
