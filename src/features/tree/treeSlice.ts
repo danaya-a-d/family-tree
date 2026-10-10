@@ -182,7 +182,15 @@ const treeSlice = createSlice({
                     case 'brother':
                     case 'sister': {
                         const fam = ensureParentsFamilyForChild(a);
-                        if (!fam.children.includes(b)) fam.children.push(b);
+
+                        addUnique(fam.children, b);
+
+                        const sibling = state.persons.entities[b];
+
+                        if (sibling) {
+                            sibling.parentFamilyId = fam.id;
+                        }
+
                         break;
                     }
                 }
