@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import reducer, {
     addPerson,
-    addPersonWithRelation,
+    addPersonWithRelation, removePerson, setActiveSpouseFamily,
     setRootPerson,
     type TreeState,
 } from './treeSlice';
@@ -352,5 +352,126 @@ describe('treeSlice', () => {
 
         expect(newState.activeSpouseFamily['p:anna']).toBe('f:anna');
         expect(newState.activeSpouseFamily[spouseId]).toBe('f:anna');
+    });
+
+    it('removes a person and cleans up related family state', () => {
+        const state = createState({
+            persons: [
+                createPerson({
+                    id: 'p:anna',
+                    givenName: 'Anna',
+                    gender: 'female',
+                }),
+
+                createPerson({
+                    id: 'p:bob',
+                    givenName: 'Bob',
+                    gender: 'male',
+                    parentFamilyId: 'f:parents',
+                }),
+
+                createPerson({
+                    id: 'p:kate',
+                    givenName: 'Kate',
+                    gender: 'female',
+                    parentFamilyId: 'f:parents',
+                }),
+
+                createPerson({
+                    id: 'p:emma',
+                    givenName: 'Emma',
+                    gender: 'female',
+                }),
+            ],
+
+            families: [
+                createFamily({
+                    id: 'f:parents',
+                    spouses: ['p:anna'],
+                    children: ['p:bob', 'p:kate'],
+                }),
+
+                createFamily({
+                    id: 'f:couple',
+                    spouses: ['p:bob', 'p:emma'],
+                    children: [],
+                }),
+            ],
+        });
+
+        state.rootPersonId = 'p:bob';
+
+        state.activeSpouseFamily['p:bob'] = 'f:couple';
+        state.activeSpouseFamily['p:emma'] = 'f:couple';
+
+        const action = removePerson('p:bob');
+
+        const newState = reducer(state, action);
+
+        expect(
+            newState.persons.entities['p:bob'],
+        ).toBeUndefined();
+
+        const parentFamily =
+            newState.families.entities['f:parents'];
+
+        expect(parentFamily).toBeDefined();
+        expect(parentFamily?.spouses).toEqual(['p:anna']);
+        expect(parentFamily?.children).toEqual(['p:kate']);
+
+        expect(
+            newState.families.entities['f:couple'],
+        ).toBeUndefined();
+
+        expect(
+            newState.activeSpouseFamily['p:bob'],
+        ).toBeUndefined();
+
+        expect(
+            newState.activeSpouseFamily['p:emma'],
+        ).toBeNull();
+
+        expect(newState.rootPersonId).toBeUndefined();
+    });
+
+    it('rejects a spouse family that does not belong to the person', () => {
+        const state = createState({
+            persons: [
+                createPerson({
+                    id: 'p:anna',
+                    givenName: 'Anna',
+                    gender: 'female',
+                }),
+
+                createPerson({
+                    id: 'p:bob',
+                    givenName: 'Bob',
+                    gender: 'male',
+                }),
+            ],
+
+            families: [
+                createFamily({
+                    id: 'f:anna',
+                    spouses: ['p:anna'],
+                }),
+
+                createFamily({
+                    id: 'f:bob',
+                    spouses: ['p:bob'],
+                }),
+            ],
+        });
+
+        state.activeSpouseFamily['p:anna'] = 'f:anna';
+
+        const action = setActiveSpouseFamily({
+            personId: 'p:anna',
+            familyId: 'f:bob',
+        });
+
+        const newState = reducer(state, action);
+
+        expect(newState.activeSpouseFamily['p:anna']).toBeNull();
     });
 });
